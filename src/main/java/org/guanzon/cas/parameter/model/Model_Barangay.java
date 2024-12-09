@@ -170,7 +170,7 @@ public class Model_Barangay implements GEntity{
                 
                 //connect to other table
                 poTownCity.openRecord((String) getValue("sTownIDxx"));
-
+                
                 pnEditMode = EditMode.UPDATE;
 
                 poJSON.put("result", "success");

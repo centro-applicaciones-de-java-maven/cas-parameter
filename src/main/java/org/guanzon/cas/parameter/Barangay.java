@@ -5,6 +5,7 @@ import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.iface.GRecord;
 import org.guanzon.cas.parameter.model.Model_Barangay;
 import org.json.simple.JSONObject;
@@ -22,8 +23,11 @@ public class Barangay implements GRecord{
         poGRider = foGRider;
         pbWthParent = fbWthParent;
 
+        psRecdStat = Logical.YES;
         poModel = new Model_Barangay(foGRider);
+        
         pnEditMode = EditMode.UNKNOWN;
+        
     }
 
     @Override
@@ -157,13 +161,13 @@ public class Barangay implements GRecord{
                 lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
             }
 
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
         } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-
+        
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 fsValue,
@@ -172,10 +176,10 @@ public class Barangay implements GRecord{
                 "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
                 fbByCode ? 0 : 1);
 
-        if (poJSON
-                != null) {
+        if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
         } else {
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded to update.");
             return poJSON;
@@ -183,8 +187,41 @@ public class Barangay implements GRecord{
     }
 
     @Override
-    public Object getModel() {
+    public Model_Barangay getModel() {
         return poModel;
+    }
+    
+    public JSONObject searchBarangayWithStatus(String fsValue, boolean fbByCode) {
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                fsValue,
+                "ID»Barangay»Town»Province»Has Route»Blacklisted»Record Status",
+                "sBrgyIDxx»sBrgyName»sTownName»sProvName»cHasRoute»cBlackLst»cRecdStat",
+                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')»a.cHasRoute»a.cBlackLst»a.cRecdStat",
+                fbByCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded to update.");
+            return poJSON;
+        }
     }
     
     private String getSQ_Browse(){
@@ -199,8 +236,9 @@ public class Barangay implements GRecord{
                     ", IFNULL(b.sZippCode, '') sZippCode" +
                     ", IFNULL(b.sMuncplCd, '') sMuncplCd" +
                     ", IFNULL(c.sProvName, '') sProvName" +
+                    ", IFNULL(c.sProvIDxx, '') sProvIDxx" +
                 " FROM Barangay a" +
                     " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
-                    " LEFT JOIN Province c ON c.sProvIDxx = c.sProvIDxx";
+                    " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx";
     }
 }
