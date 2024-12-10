@@ -118,6 +118,7 @@ public class Model_Barangay implements GEntity{
             poJSON.put("value", getValue(columnIndex));
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
@@ -133,6 +134,7 @@ public class Model_Barangay implements GEntity{
             return setValue(MiscUtil.getColumnIndex(poEntity, colunmName), value);
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
@@ -168,23 +170,45 @@ public class Model_Barangay implements GEntity{
                     setValue(lnCtr, loRS.getObject(lnCtr));
                 }
                 
-                //connect to other table
-                poTownCity.openRecord((String) getValue("sTownIDxx"));
+                MiscUtil.close(loRS);
                 
-                pnEditMode = EditMode.UPDATE;
+                //connect to other table
+                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
+                if (!((String)poJSON.get("result")).equals("success")) 
+                    System.err.println("TownCity.openRecord: " + poJSON.toJSONString());
+                
+                pnEditMode = EditMode.READY;
 
+                poJSON = new JSONObject();
                 poJSON.put("result", "success");
                 poJSON.put("message", "Record loaded successfully.");
             } else {
+                poJSON = new JSONObject();
                 poJSON.put("result", "error");
                 poJSON.put("message", "No record to load.");
             }
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
 
+        return poJSON;
+    }
+    
+    @Override
+    public JSONObject updateRecord() {
+        poJSON = new JSONObject();
+        
+        if (pnEditMode != EditMode.READY){
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record was loaded.");
+        } else {
+            pnEditMode = EditMode.UPDATE;
+            poJSON.put("result", "success");
+        }
+        
         return poJSON;
     }
 
@@ -206,13 +230,16 @@ public class Model_Barangay implements GEntity{
 
                 if (!lsSQL.isEmpty()) {
                     if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
+                        poJSON = new JSONObject();
                         poJSON.put("result", "success");
                         poJSON.put("message", "Record saved successfully.");
                     } else {
+                        poJSON = new JSONObject();
                         poJSON.put("result", "error");
                         poJSON.put("message", poGRider.getErrMsg());
                     }
                 } else {
+                    poJSON = new JSONObject();
                     poJSON.put("result", "error");
                     poJSON.put("message", "No record to save.");
                 }
@@ -220,34 +247,41 @@ public class Model_Barangay implements GEntity{
                 Model_Barangay loOldEntity = new Model_Barangay(poGRider);
 
                 //replace with the primary key column info
-                JSONObject loJSON = loOldEntity.openRecord(this.getBarangayId());
+                poJSON = loOldEntity.openRecord(this.getBarangayId());
 
-                if ("success".equals((String) loJSON.get("result"))) {
+                if ("success".equals((String) poJSON.get("result"))) {
                     //replace the condition based on the primary key column of the record
                     lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sBrgyIDxx = " + SQLUtil.toSQL(this.getBarangayId()));
 
                     if (!lsSQL.isEmpty()) {
                         if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
+                            poJSON = new JSONObject();
                             poJSON.put("result", "success");
                             poJSON.put("message", "Record saved successfully.");
                         } else {
+                            poJSON = new JSONObject();
                             poJSON.put("result", "error");
                             poJSON.put("message", poGRider.getErrMsg());
                         }
                     } else {
+                        poJSON = new JSONObject();
                         poJSON.put("result", "success");
                         poJSON.put("message", "No updates has been made.");
                     }
                 } else {
+                    poJSON = new JSONObject();
                     poJSON.put("result", "error");
                     poJSON.put("message", "Record discrepancy. Unable to save record.");
                 }
             }
         } else {
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", "Invalid update mode. Unable to save record.");
             return poJSON;
         }
+        
+        if (((String) poJSON.get("result")).equals("success")) openRecord((String) getValue(0));
 
         return poJSON;
     }
@@ -269,7 +303,10 @@ public class Model_Barangay implements GEntity{
     }
     
     public JSONObject setTownId(String townId){
-        return setValue("sTownIDxx", townId);
+        setValue("sTownIDxx", townId);
+        poTownCity.openRecord((String) getValue("sTownIDxx"));
+        
+        return poJSON;
     }
     
     public String getTownId(){
@@ -279,6 +316,20 @@ public class Model_Barangay implements GEntity{
     public String getTownName(){
         if (poTownCity.getEditMode() == EditMode.UPDATE)
             return poTownCity.getTownName();
+        else
+            return "";
+    }
+    
+    public String getProvinceId(){
+        if (poTownCity.getEditMode() == EditMode.UPDATE)
+            return poTownCity.getProvinceId();
+        else
+            return "";
+    }
+    
+    public String getProvinceName(){
+        if (poTownCity.getEditMode() == EditMode.UPDATE)
+            return poTownCity.getProvinceName();
         else
             return "";
     }

@@ -117,6 +117,7 @@ public class Model_TownCity implements GEntity{
             poJSON.put("value", getValue(columnIndex));
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
@@ -132,6 +133,7 @@ public class Model_TownCity implements GEntity{
             return setValue(MiscUtil.getColumnIndex(poEntity, colunmName), value);
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
@@ -167,23 +169,45 @@ public class Model_TownCity implements GEntity{
                     setValue(lnCtr, loRS.getObject(lnCtr));
                 }
 
-                //connect to other table
-                poProvince.openRecord((String) getValue("sProvIDxx"));
+                MiscUtil.close(loRS);
                 
-                pnEditMode = EditMode.UPDATE;
+                //connect to other table
+                poJSON = poProvince.openRecord((String) getValue("sProvIDxx"));
+                if (!((String)poJSON.get("result")).equals("success")) 
+                    System.err.println("Province.openRecord: " + poJSON.toJSONString());
+                
+                pnEditMode = EditMode.READY;
 
+                poJSON = new JSONObject();
                 poJSON.put("result", "success");
                 poJSON.put("message", "Record loaded successfully.");
             } else {
+                poJSON = new JSONObject();
                 poJSON.put("result", "error");
                 poJSON.put("message", "No record to load.");
             }
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
 
+        return poJSON;
+    }
+    
+    @Override
+    public JSONObject updateRecord() {
+        poJSON = new JSONObject();
+        
+        if (pnEditMode != EditMode.READY){
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record was loaded.");
+        } else {
+            pnEditMode = EditMode.UPDATE;
+            poJSON.put("result", "success");
+        }
+        
         return poJSON;
     }
 
@@ -205,13 +229,16 @@ public class Model_TownCity implements GEntity{
 
                 if (!lsSQL.isEmpty()) {
                     if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
+                        poJSON = new JSONObject();
                         poJSON.put("result", "success");
                         poJSON.put("message", "Record saved successfully.");
                     } else {
+                        poJSON = new JSONObject();
                         poJSON.put("result", "error");
                         poJSON.put("message", poGRider.getErrMsg());
                     }
                 } else {
+                    poJSON = new JSONObject();
                     poJSON.put("result", "error");
                     poJSON.put("message", "No record to save.");
                 }
@@ -219,34 +246,41 @@ public class Model_TownCity implements GEntity{
                 Model_TownCity loOldEntity = new Model_TownCity(poGRider);
 
                 //replace with the primary key column info
-                JSONObject loJSON = loOldEntity.openRecord(this.getTownId());
+                poJSON = loOldEntity.openRecord(this.getTownId());
 
-                if ("success".equals((String) loJSON.get("result"))) {
+                if ("success".equals((String) poJSON.get("result"))) {
                     //replace the condition based on the primary key column of the record
                     lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sTownIDxx = " + SQLUtil.toSQL(this.getTownId()));
 
                     if (!lsSQL.isEmpty()) {
                         if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
+                            poJSON = new JSONObject();
                             poJSON.put("result", "success");
                             poJSON.put("message", "Record saved successfully.");
                         } else {
+                            poJSON = new JSONObject();
                             poJSON.put("result", "error");
                             poJSON.put("message", poGRider.getErrMsg());
                         }
                     } else {
+                        poJSON = new JSONObject();
                         poJSON.put("result", "success");
                         poJSON.put("message", "No updates has been made.");
                     }
                 } else {
+                    poJSON = new JSONObject();
                     poJSON.put("result", "error");
                     poJSON.put("message", "Record discrepancy. Unable to save record.");
                 }
             }
         } else {
+            poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", "Invalid update mode. Unable to save record.");
             return poJSON;
         }
+        
+        if (((String) poJSON.get("result")).equals("success")) openRecord((String) getValue(0));
 
         return poJSON;
     }
@@ -276,7 +310,10 @@ public class Model_TownCity implements GEntity{
     }
     
     public JSONObject setProvinceId(String provinceId){
-        return setValue("sProvIDxx", provinceId);
+        setValue("sProvIDxx", provinceId);
+        poProvince.openRecord((String) getValue("sProvIDxx"));
+        
+        return poJSON;
     }
     
     public String getProvinceId(){

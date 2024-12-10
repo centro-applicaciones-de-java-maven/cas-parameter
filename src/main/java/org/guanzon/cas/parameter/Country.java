@@ -7,23 +7,23 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.iface.GRecord;
-import org.guanzon.cas.parameter.model.Model_Province;
+import org.guanzon.cas.parameter.model.Model_Country;
 import org.json.simple.JSONObject;
 
-public class Province implements GRecord{
+public class Country implements GRecord{
     GRider poGRider;
     boolean pbWthParent;
     String psRecdStat;
 
-    Model_Province poModel;
+    Model_Country poModel;
     JSONObject poJSON;
 
-    public Province(GRider appDriver, boolean withParent) {
+    public Country(GRider appDriver, boolean withParent) {
         poGRider = appDriver;
         pbWthParent = withParent;
 
         psRecdStat = Logical.YES;
-        poModel = new Model_Province(appDriver);
+        poModel = new Model_Country(appDriver);
     }
 
     @Override
@@ -42,8 +42,8 @@ public class Province implements GRecord{
     }
 
     @Override
-    public JSONObject openRecord(String provinceId) {
-        return poModel.openRecord(provinceId);
+    public JSONObject openRecord(String countryId) {
+        return poModel.openRecord(countryId);
     }
 
     @Override
@@ -150,13 +150,13 @@ public class Province implements GRecord{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Province",
-                "sProvIDxx»sProvName",
-                "sProvIDxx»sProvName",
+                "ID»Country",
+                "sCntryCde»sCntryNme",
+                "sCntryCde»sCntryNme",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
+            return poModel.openRecord((String) poJSON.get("sCntryCde"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -166,7 +166,7 @@ public class Province implements GRecord{
     }
 
     @Override
-    public Model_Province getModel() {
+    public Model_Country getModel() {
         return poModel;
     }
     
@@ -188,13 +188,13 @@ public class Province implements GRecord{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Province»Record Status",
-                "sProvIDxx»sProvName»cRecdStat",
-                "sProvIDxx»sProvName»cRecdStat",
+                "ID»Country»Record Status",
+                "sCntryCde»sCntryNme»cRecdStat",
+                "sCntryCde»sCntryNme»cRecdStats",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
+            return poModel.openRecord((String) poJSON.get("sCntryCde"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");

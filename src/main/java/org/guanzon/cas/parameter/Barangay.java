@@ -13,76 +13,42 @@ import org.json.simple.JSONObject;
 public class Barangay implements GRecord{
     GRider poGRider;
     boolean pbWthParent;
-    int pnEditMode;
     String psRecdStat;
 
     Model_Barangay poModel;
     JSONObject poJSON;
 
-    public Barangay(GRider foGRider, boolean fbWthParent) {
-        poGRider = foGRider;
-        pbWthParent = fbWthParent;
+    public Barangay(GRider appDriver, boolean withParent) {
+        poGRider = appDriver;
+        pbWthParent = withParent;
 
         psRecdStat = Logical.YES;
-        poModel = new Model_Barangay(foGRider);
-        
-        pnEditMode = EditMode.UNKNOWN;
-        
+        poModel = new Model_Barangay(appDriver);
     }
 
     @Override
-    public void setRecordStatus(String fsValue) {
-        psRecdStat = fsValue;
+    public void setRecordStatus(String recordStatus) {
+        psRecdStat = recordStatus;
     }
 
     @Override
     public int getEditMode() {
-        return pnEditMode;
+        return poModel.getEditMode();
     }
 
     @Override
-    public JSONObject setMaster(int fnCol, Object foData) {
-        return poModel.setValue(fnCol, foData);
-    }
-
-    @Override
-    public JSONObject setMaster(String fsCol, Object foData) {
-        return poModel.setValue(fsCol, foData);
-    }
-
-    @Override
-    public Object getMaster(int fnCol) {
-        return poModel.getValue(fnCol);
-    }
-
-    @Override
-    public Object getMaster(String fsCol) {
-        return poModel.getValue(fsCol);
-    }
-
-    @Override
-    public JSONObject newRecord() {
+    public JSONObject newRecord() {        
         return poModel.newRecord();
     }
 
     @Override
-    public JSONObject openRecord(String fsValue) {
-        return poModel.openRecord(fsValue);
+    public JSONObject openRecord(String barangayId) {
+        return poModel.openRecord(barangayId);
     }
 
     @Override
     public JSONObject updateRecord() {
-        JSONObject loJSON = new JSONObject();
-
-        if (poModel.getEditMode() == EditMode.UPDATE) {
-            loJSON.put("result", "success");
-            loJSON.put("message", "Edit mode has changed to update.");
-        } else {
-            loJSON.put("result", "error");
-            loJSON.put("message", "No record loaded to update.");
-        }
-
-        return loJSON;
+        return poModel.updateRecord();
     }
 
     @Override
@@ -107,74 +73,73 @@ public class Barangay implements GRecord{
     }
 
     @Override
-    public JSONObject deleteRecord(String fsValue) {
+    public JSONObject deleteRecord() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public JSONObject deactivateRecord(String fsValue) {
+    public JSONObject deactivateRecord() {
         poJSON = new JSONObject();
-
-        if (poModel.getEditMode() == EditMode.UPDATE) {
-            poJSON = poModel.setRecordStatus("0");
-
-            if ("error".equals((String) poJSON.get("result"))) {
-                return poJSON;
-            }
-
-            poJSON = poModel.saveRecord();
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-        }
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject activateRecord(String fsValue) {
-        poJSON = new JSONObject();
-
-        if (poModel.getEditMode() == EditMode.UPDATE) {
-            poJSON = poModel.setRecordStatus("1");
-
-            if ("error".equals((String) poJSON.get("result"))) {
-                return poJSON;
-            }
-
-            poJSON = poModel.saveRecord();
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-        }
-
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject searchRecord(String fsValue, boolean fbByCode) {
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
         
+        if (poModel.getEditMode() != EditMode.READY ||
+            poModel.getEditMode() != EditMode.UPDATE){
+        
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+        }
+        
+        
+        if (poModel.getEditMode() == EditMode.READY) {
+            poJSON = updateRecord();
+            if ("error".equals((String) poJSON.get("result"))) return poJSON;
+        } 
+
+        poJSON = poModel.setRecordStatus("0");
+
+        if ("error".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        return poModel.saveRecord();
+    }
+
+    @Override
+    public JSONObject activateRecord() {
+        poJSON = new JSONObject();
+        
+        if (poModel.getEditMode() != EditMode.READY ||
+            poModel.getEditMode() != EditMode.UPDATE){
+        
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+        }
+        
+        
+        if (poModel.getEditMode() == EditMode.READY) {
+            poJSON = updateRecord();
+            if ("error".equals((String) poJSON.get("result"))) return poJSON;
+        } 
+
+        poJSON = poModel.setRecordStatus("1");
+
+        if ("error".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        return poModel.saveRecord();
+    }
+
+    @Override
+    public JSONObject searchRecord(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                fsValue,
+                getSQ_Browse(),
+                value,
                 "ID»Barangay»Town»Province",
                 "sBrgyIDxx»sBrgyName»sTownName»sProvName",
                 "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
-                fbByCode ? 0 : 1);
+                byCode ? 0 : 1);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
@@ -191,28 +156,79 @@ public class Barangay implements GRecord{
         return poModel;
     }
     
-    public JSONObject searchBarangayWithStatus(String fsValue, boolean fbByCode) {
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+    public JSONObject searchBarangayByTown(String value, boolean byCode, String townId){
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
-                fsValue,
+                value,
+                "ID»Barangay»Town»Province",
+                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
+                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded to update.");
+            return poJSON;
+        }
+    }
+    
+    public JSONObject searchBarangayByProvince(String value, boolean byCode, String provinceId){
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "b.sProvIDxx = " + SQLUtil.toSQL(provinceId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Barangay»Town»Province",
+                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
+                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded to update.");
+            return poJSON;
+        }
+    }
+    
+    public JSONObject searchBarangayByTownAndProvince(String value, boolean byCode, String townId, String provinceId){
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), 
+                                                    "a.sTownIDxx = " + SQLUtil.toSQL(townId) +
+                                                        " AND b.sProvIDxx = " + SQLUtil.toSQL(provinceId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Barangay»Town»Province",
+                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
+                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded to update.");
+            return poJSON;
+        }
+    }
+    
+    public JSONObject searchBarangayWithStatus(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
                 "ID»Barangay»Town»Province»Has Route»Blacklisted»Record Status",
                 "sBrgyIDxx»sBrgyName»sTownName»sProvName»cHasRoute»cBlackLst»cRecdStat",
                 "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')»a.cHasRoute»a.cBlackLst»a.cRecdStat",
-                fbByCode ? 0 : 1);
+                byCode ? 0 : 1);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
@@ -225,20 +241,36 @@ public class Barangay implements GRecord{
     }
     
     private String getSQ_Browse(){
-        return "SELECT" +
-                    "  a.sBrgyIDxx" +
-                    ", a.sBrgyName" +
-                    ", a.sTownIDxx" +
-                    ", a.cHasRoute" +
-                    ", a.cBlackLst" +
-                    ", a.cRecdStat" +
-                    ", IFNULL(b.sTownName, '') sTownName" +
-                    ", IFNULL(b.sZippCode, '') sZippCode" +
-                    ", IFNULL(b.sMuncplCd, '') sMuncplCd" +
-                    ", IFNULL(c.sProvName, '') sProvName" +
-                    ", IFNULL(c.sProvIDxx, '') sProvIDxx" +
-                " FROM Barangay a" +
-                    " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
-                    " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx";
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+        
+        return MiscUtil.addCondition(
+                    "SELECT" +
+                        "  a.sBrgyIDxx" +
+                        ", a.sBrgyName" +
+                        ", a.sTownIDxx" +
+                        ", a.cHasRoute" +
+                        ", a.cBlackLst" +
+                        ", a.cRecdStat" +
+                        ", IFNULL(b.sTownName, '') sTownName" +
+                        ", IFNULL(b.sZippCode, '') sZippCode" +
+                        ", IFNULL(b.sMuncplCd, '') sMuncplCd" +
+                        ", IFNULL(c.sProvName, '') sProvName" +
+                        ", IFNULL(c.sProvIDxx, '') sProvIDxx" +
+                    " FROM Barangay a" +
+                        ", TownCity b" +
+                        ", Province c" +
+                    " WHERE a.sTownIDxx = b.sTownIDxx" +
+                        " AND b.sProvIDxx = c.sProvIDxx",
+            lsCondition);
     }
 }

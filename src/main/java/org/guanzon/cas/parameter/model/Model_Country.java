@@ -14,17 +14,17 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.iface.GEntity;
 import org.json.simple.JSONObject;
 
-public class Model_Province implements GEntity{
-    LogWrapper logwrapr = new LogWrapper("Model_Province", "cas-error.log");
+public class Model_Country implements GEntity{
+    LogWrapper logwrapr = new LogWrapper("Model_Country", "cas-error.log");
     
-    private final String XML = "Model_Province.xml";
+    private final String XML = "Model_Country.xml";
     
     GRider poGRider;                //application driver
     CachedRowSet poEntity;          //rowset
     JSONObject poJSON;              //json container
     int pnEditMode;                 //edit mode
     
-    public Model_Province(GRider value) {
+    public Model_Country(GRider value) {
         if (value == null) {
             System.err.println("Application Driver is not set.");
             System.exit(1);
@@ -73,7 +73,7 @@ public class Model_Province implements GEntity{
 
     @Override
     public String getTable() {
-        return "Province";
+        return "Country";
     }
 
     @Override
@@ -140,7 +140,7 @@ public class Model_Province implements GEntity{
         pnEditMode = EditMode.ADDNEW;
 
         //replace with the primary key column info
-        setProvinceId(MiscUtil.getNextCode(getTable(), "sProvIDxx", false, poGRider.getConnection(), ""));
+        setCountryId(MiscUtil.getNextCode(getTable(), "sCntryCde", false, poGRider.getConnection(), ""));
 
         poJSON = new JSONObject();
         poJSON.put("result", "success");
@@ -154,7 +154,7 @@ public class Model_Province implements GEntity{
         String lsSQL = MiscUtil.makeSelect(this);
 
         //replace the condition based on the primary key column of the record
-        lsSQL = MiscUtil.addCondition(lsSQL, "sProvIDxx = " + SQLUtil.toSQL(provinceId));
+        lsSQL = MiscUtil.addCondition(lsSQL, "sCntryCde = " + SQLUtil.toSQL(provinceId));
 
         ResultSet loRS = poGRider.executeQuery(lsSQL);
 
@@ -213,7 +213,7 @@ public class Model_Province implements GEntity{
             
             if (pnEditMode == EditMode.ADDNEW) {
                 //replace with the primary key column info
-                setProvinceId(MiscUtil.getNextCode(getTable(), "sProvIDxx", false, poGRider.getConnection(), ""));
+                setCountryId(MiscUtil.getNextCode(getTable(), "sCntryCde", false, poGRider.getConnection(), ""));
 
                 lsSQL = MiscUtil.makeSQL(this);
 
@@ -233,14 +233,14 @@ public class Model_Province implements GEntity{
                     poJSON.put("message", "No record to save.");
                 }
             } else {
-                Model_Province loOldEntity = new Model_Province(poGRider);
+                Model_Country loOldEntity = new Model_Country(poGRider);
 
                 //replace with the primary key column info
-                poJSON = loOldEntity.openRecord(this.getProvinceId());
+                poJSON = loOldEntity.openRecord(this.getCountryId());
 
                 if ("success".equals((String) poJSON.get("result"))) {
                     //replace the condition based on the primary key column of the record
-                    lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sProvIDxx = " + SQLUtil.toSQL(this.getProvinceId()));
+                    lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sCntryCde = " + SQLUtil.toSQL(this.getCountryId()));
 
                     if (!lsSQL.isEmpty()) {
                         if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
@@ -270,34 +270,33 @@ public class Model_Province implements GEntity{
             return poJSON;
         }
         
-        
         if (((String) poJSON.get("result")).equals("success")) openRecord((String) getValue(0));
 
         return poJSON;
     }
     
-    public JSONObject setProvinceId(String provinceId){
-        return setValue("sProvIDxx", provinceId);
+    public JSONObject setCountryId(String countryId){
+        return setValue("sCntryCde", countryId);
     }
     
-    public String getProvinceId(){
-        return (String) getValue("sProvIDxx");
+    public String getCountryId(){
+        return (String) getValue("sCntryCde");
     }
     
-    public JSONObject setProvinceName(String provinceName){
-        return setValue("sProvName", provinceName);
+    public JSONObject setCountryName(String countryName){
+        return setValue("sCntryNme", countryName);
     }
     
-    public String getProvinceName(){
-        return (String) getValue("sProvName");
+    public String getCountryName(){
+        return (String) getValue("sCntryNme");
     }
     
-    public JSONObject setRegionId(String regionId){
-        return setValue("sRegionID", regionId);
+    public JSONObject setNationality(String nationality){
+        return setValue("sNational", nationality);
     }
     
-    public String getRegionId(){
-        return (String) getValue("sRegionID");
+    public String getNationality(){
+        return (String) getValue("sNational");
     }
     
     public JSONObject setRecordStatus(String recordStatus){
