@@ -7,23 +7,23 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.iface.GRecord;
-import org.guanzon.cas.parameter.model.Model_TownCity;
+import org.guanzon.cas.parameter.model.Model_Provincex;
 import org.json.simple.JSONObject;
 
-public class TownCity implements GRecord{
+public class Provincex implements GRecord{
     GRider poGRider;
     boolean pbWthParent;
     String psRecdStat;
 
-    Model_TownCity poModel;
+    Model_Provincex poModel;
     JSONObject poJSON;
 
-    public TownCity(GRider appDriver, boolean withParent) {
+    public Provincex(GRider appDriver, boolean withParent) {
         poGRider = appDriver;
         pbWthParent = withParent;
 
         psRecdStat = Logical.YES;
-        poModel = new Model_TownCity(appDriver);
+        poModel = new Model_Provincex(appDriver);
     }
 
     @Override
@@ -42,8 +42,8 @@ public class TownCity implements GRecord{
     }
 
     @Override
-    public JSONObject openRecord(String townId) {
-        return poModel.openRecord(townId);
+    public JSONObject openRecord(String provinceId) {
+        return poModel.openRecord(provinceId);
     }
 
     @Override
@@ -133,16 +133,30 @@ public class TownCity implements GRecord{
 
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
-                "ID»Town»Province»Zip Code»Muni Code",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd",
+                "ID»Province",
+                "sProvIDxx»sProvName",
+                "sProvIDxx»sProvName",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -152,42 +166,35 @@ public class TownCity implements GRecord{
     }
 
     @Override
-    public Model_TownCity getModel() {
+    public Model_Provincex getModel() {
         return poModel;
     }
     
-    public JSONObject searchTownByProvince(String value, boolean byCode, String provinceId){
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
-        
+    public JSONObject searchProvinceWithStatus(String value, boolean byCode) {
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Town»Province»Zip Code»Muni Code",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd",
+                "ID»Province»Record Status",
+                "sProvIDxx»sProvName»cRecdStat",
+                "sProvIDxx»sProvName»cRecdStat",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchTownWithStatus(String value, boolean byCode) {
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»Town»Province»Zip Code»Muni Code»Has Route»Blacklisted»Record Status",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd»cHasRoute»cBlackLst»cRecdStat",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd»a.cHasRoute»a.cBlackLst»a.cRecdStat",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -198,32 +205,7 @@ public class TownCity implements GRecord{
     
     @Override
     public String getSQ_Browse(){
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-        
-        return MiscUtil.addCondition(
-                    "SELECT" +
-                        "  a.sTownIDxx" +
-                        ", a.sTownName" +
-                        ", a.sZippCode" +
-                        ", a.sProvIDxx" +
-                        ", a.sMuncplCd" +
-                        ", a.cHasRoute" +
-                        ", a.cBlackLst" +
-                        ", a.cRecdStat" +
-                        ", IFNULL(b.sProvName, '') sProvName" +
-                    " FROM TownCity a" +
-                        " LEFT JOIN Province b ON a.sProvIDxx = b.sProvIDxx", 
-            lsCondition);
+        return MiscUtil.makeSelect(poModel);
     }
 
     @Override

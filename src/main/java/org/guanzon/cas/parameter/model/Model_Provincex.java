@@ -10,24 +10,21 @@ import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.iface.GEntity;
 import org.json.simple.JSONObject;
 
-public class Model_TownCity implements GEntity{
-    LogWrapper logwrapr = new LogWrapper("Model_TownCity", "cas-error.log");
+public class Model_Provincex implements GEntity{
+    LogWrapper logwrapr = new LogWrapper("Model_Province", "cas-error.log");
     
-    private final String XML = "Model_TownCity.xml";
+    private final String XML = "Model_Province.xml";
     
     GRider poGRider;                //application driver
     CachedRowSet poEntity;          //rowset
     JSONObject poJSON;              //json container
     int pnEditMode;                 //edit mode
     
-    Model_Provincex poProvince;
-    
-    public Model_TownCity(GRider value) {
+    public Model_Provincex(GRider value) {
         if (value == null) {
             System.err.println("Application Driver is not set.");
             System.exit(1);
@@ -35,8 +32,6 @@ public class Model_TownCity implements GEntity{
 
         poGRider = value;
 
-        poProvince = new Model_Provincex(poGRider);
-        
         initialize();
     }
 
@@ -78,7 +73,7 @@ public class Model_TownCity implements GEntity{
 
     @Override
     public String getTable() {
-        return "TownCity";
+        return "Province";
     }
 
     @Override
@@ -145,7 +140,7 @@ public class Model_TownCity implements GEntity{
         pnEditMode = EditMode.ADDNEW;
 
         //replace with the primary key column info
-        setTownId(MiscUtil.getNextCode(getTable(), "sTownIDxx", false, poGRider.getConnection(), ""));
+        setProvinceId(MiscUtil.getNextCode(getTable(), "sProvIDxx", false, poGRider.getConnection(), ""));
 
         poJSON = new JSONObject();
         poJSON.put("result", "success");
@@ -153,13 +148,13 @@ public class Model_TownCity implements GEntity{
     }
 
     @Override
-    public JSONObject openRecord(String townId) {
+    public JSONObject openRecord(String provinceId) {
         poJSON = new JSONObject();
 
         String lsSQL = MiscUtil.makeSelect(this);
 
         //replace the condition based on the primary key column of the record
-        lsSQL = MiscUtil.addCondition(lsSQL, "sTownIDxx = " + SQLUtil.toSQL(townId));
+        lsSQL = MiscUtil.addCondition(lsSQL, "sProvIDxx = " + SQLUtil.toSQL(provinceId));
 
         ResultSet loRS = poGRider.executeQuery(lsSQL);
 
@@ -168,14 +163,9 @@ public class Model_TownCity implements GEntity{
                 for (int lnCtr = 1; lnCtr <= loRS.getMetaData().getColumnCount(); lnCtr++) {
                     setValue(lnCtr, loRS.getObject(lnCtr));
                 }
-
+                
                 MiscUtil.close(loRS);
-                
-                //connect to other table
-                poJSON = poProvince.openRecord((String) getValue("sProvIDxx"));
-                if (!((String)poJSON.get("result")).equals("success")) 
-                    System.err.println("Province.openRecord: " + poJSON.toJSONString());
-                
+
                 pnEditMode = EditMode.READY;
 
                 poJSON = new JSONObject();
@@ -223,7 +213,7 @@ public class Model_TownCity implements GEntity{
             
             if (pnEditMode == EditMode.ADDNEW) {
                 //replace with the primary key column info
-                setTownId(MiscUtil.getNextCode(getTable(), "sTownIDxx", false, poGRider.getConnection(), ""));
+                setProvinceId(MiscUtil.getNextCode(getTable(), "sProvIDxx", false, poGRider.getConnection(), ""));
 
                 lsSQL = MiscUtil.makeSQL(this);
 
@@ -243,14 +233,14 @@ public class Model_TownCity implements GEntity{
                     poJSON.put("message", "No record to save.");
                 }
             } else {
-                Model_TownCity loOldEntity = new Model_TownCity(poGRider);
+                Model_Provincex loOldEntity = new Model_Provincex(poGRider);
 
                 //replace with the primary key column info
-                poJSON = loOldEntity.openRecord(this.getTownId());
+                poJSON = loOldEntity.openRecord(this.getProvinceId());
 
                 if ("success".equals((String) poJSON.get("result"))) {
                     //replace the condition based on the primary key column of the record
-                    lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sTownIDxx = " + SQLUtil.toSQL(this.getTownId()));
+                    lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sProvIDxx = " + SQLUtil.toSQL(this.getProvinceId()));
 
                     if (!lsSQL.isEmpty()) {
                         if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
@@ -280,75 +270,34 @@ public class Model_TownCity implements GEntity{
             return poJSON;
         }
         
+        
         if (((String) poJSON.get("result")).equals("success")) openRecord((String) getValue(0));
 
         return poJSON;
     }
     
-    public JSONObject setTownId(String townId){
-        return setValue("sTownIDxx", townId);
-    }
-    
-    public String getTownId(){
-        return (String) getValue("sTownIDxx");
-    }
-    
-    public JSONObject setTownName(String townName){
-        return setValue("sTownName", townName);
-    }
-    
-    public String getTownName(){
-        return (String) getValue("sTownName");
-    }
-    
-    public JSONObject setZipCode(String zipCode){
-        return setValue("sZippCode", zipCode);
-    }
-    
-    public String getZipCode(){
-        return (String) getValue("sZippCode");
-    }
-    
     public JSONObject setProvinceId(String provinceId){
-        setValue("sProvIDxx", provinceId);
-        poProvince.openRecord((String) getValue("sProvIDxx"));
-        
-        return poJSON;
+        return setValue("sProvIDxx", provinceId);
     }
     
     public String getProvinceId(){
         return (String) getValue("sProvIDxx");
     }
     
+    public JSONObject setProvinceName(String provinceName){
+        return setValue("sProvName", provinceName);
+    }
+    
     public String getProvinceName(){
-        if (poProvince.getEditMode() == EditMode.UPDATE)
-            return poProvince.getProvinceName();
-        else
-            return "";
+        return (String) getValue("sProvName");
     }
     
-    public JSONObject setMunicpalCode(String municipalCode){
-        return setValue("sMuncplCd", municipalCode);
+    public JSONObject setRegionId(String regionId){
+        return setValue("sRegionID", regionId);
     }
     
-    public String getMunicpalCode(){
-        return (String) getValue("sMuncplCd");
-    }
-    
-    public JSONObject hasRoute(boolean hasRoute){
-        return setValue("cHasRoute", hasRoute == true ? "1" : "0");
-    }
-    
-    public boolean hasRoute(){
-        return "1".equals((String) getValue("cHasRoute"));
-    }
-    
-    public JSONObject isBlacklisted(boolean isBlacklisted){
-        return setValue("cBlackLst", isBlacklisted == true ? "1" : "0");
-    }
-    
-    public boolean isBlacklisted(){
-        return "1".equals((String) getValue("cBlackLst"));
+    public String getRegionId(){
+        return (String) getValue("sRegionID");
     }
     
     public JSONObject setRecordStatus(String recordStatus){
@@ -395,9 +344,7 @@ public class Model_TownCity implements GEntity{
             poEntity.moveToInsertRow();
 
             MiscUtil.initRowSet(poEntity);
-            
-            poEntity.updateString("cBlackLst", Logical.NO);
-            poEntity.updateString("cHasRoute", Logical.YES);
+
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
 
             poEntity.insertRow();

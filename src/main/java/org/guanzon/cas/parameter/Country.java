@@ -203,7 +203,13 @@ public class Country implements GRecord{
         }
     }
     
-    private String getSQ_Browse(){
+    @Override
+    public String getSQ_Browse(){
         return MiscUtil.makeSelect(poModel);
+    }
+
+    @Override
+    public JSONObject isEntryOkay() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

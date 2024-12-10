@@ -240,7 +240,8 @@ public class Barangay implements GRecord{
         }
     }
     
-    private String getSQ_Browse(){
+    @Override
+    public String getSQ_Browse(){
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -272,5 +273,10 @@ public class Barangay implements GRecord{
                     " WHERE a.sTownIDxx = b.sTownIDxx" +
                         " AND b.sProvIDxx = c.sProvIDxx",
             lsCondition);
+    }
+
+    @Override
+    public JSONObject isEntryOkay() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

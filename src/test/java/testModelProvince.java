@@ -20,7 +20,11 @@ public class testModelProvince {
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
 
         instance = MiscUtil.Connect();
-        record = new Model_Province(instance);
+        record = new Model_Province();
+        record.setApplicationDriver(instance);
+        record.setXML("Model_Province");
+        record.setTableName("Province");
+        record.initialize();
     }
 
 //    @Test
@@ -41,37 +45,52 @@ public class testModelProvince {
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }     
-//
+//        
+//        loJSON = record.setModifyingId(instance.getUserID());
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }     
+//        
+//        loJSON = record.setModifiedDate(instance.getServerDate());
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }     
+//        
 //        loJSON = record.saveRecord();
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }  
 //    }
     
-    @Test
-    public void testLoadRecord() {
-        JSONObject loJSON;
-
-        loJSON = record.openRecord("99");
-        if ("error".equals((String) loJSON.get("result"))) {
-            Assert.fail((String) loJSON.get("message"));
-        }       
-        
-        System.out.println(record.getProvinceId());
-        System.out.println(record.getProvinceName());
-        System.out.println(record.getRegionId());
-        System.out.println(record.getModifyingId());
-        System.out.println(record.getModifiedDate());
-    }
-    
+//    @Test
+//    public void testLoadRecord() {
+//        JSONObject loJSON;
+//
+//        loJSON = record.openRecord("99");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }       
+//        
+//        System.out.println(record.getProvinceId());
+//        System.out.println(record.getProvinceName());
+//        System.out.println(record.getRegionId());
+//        System.out.println(record.getModifyingId());
+//        System.out.println(record.getModifiedDate());
+//    }
+//    
     @Test
     public void testUpdateRecord() {
         JSONObject loJSON;
 
-        loJSON = record.openRecord("99");
+        loJSON = record.openRecord("0100");
         if ("error".equals((String) loJSON.get("result"))) {
             Assert.fail((String) loJSON.get("message"));
-        }       
+        }      
+        
+        loJSON = record.updateRecord();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }      
         
         loJSON = record.setProvinceName("Yeh Yeh");
         if ("error".equals((String) loJSON.get("result"))) {
