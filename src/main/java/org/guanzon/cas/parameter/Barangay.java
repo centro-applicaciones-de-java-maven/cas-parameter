@@ -1,136 +1,61 @@
 package org.guanzon.cas.parameter;
 
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
-import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.iface.GRecord;
+import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Barangay;
 import org.json.simple.JSONObject;
 
-public class Barangay implements GRecord{
-    GRider poGRider;
-    boolean pbWthParent;
-    String psRecdStat;
-
+public class Barangay extends Parameter{
     Model_Barangay poModel;
-    JSONObject poJSON;
-
-    public Barangay(GRider appDriver, boolean withParent) {
-        poGRider = appDriver;
-        pbWthParent = withParent;
-
+    
+    @Override
+    public void initialize() {
         psRecdStat = Logical.YES;
-        poModel = new Model_Barangay(appDriver);
+        
+        poModel = new Model_Barangay();
+        poModel.setApplicationDriver(poGRider);
+        poModel.setXML("Model_Barangay");
+        poModel.setTableName("Barangay");
+        poModel.initialize();
     }
-
+    
     @Override
-    public void setRecordStatus(String recordStatus) {
-        psRecdStat = recordStatus;
-    }
-
-    @Override
-    public int getEditMode() {
-        return poModel.getEditMode();
-    }
-
-    @Override
-    public JSONObject newRecord() {        
-        return poModel.newRecord();
-    }
-
-    @Override
-    public JSONObject openRecord(String barangayId) {
-        return poModel.openRecord(barangayId);
-    }
-
-    @Override
-    public JSONObject updateRecord() {
-        return poModel.updateRecord();
-    }
-
-    @Override
-    public JSONObject saveRecord() {
-        if (!pbWthParent) {
-            poGRider.beginTrans();
-        }
-
-        poJSON = poModel.saveRecord();
-
-        if ("success".equals((String) poJSON.get("result"))) {
-            if (!pbWthParent) {
-                poGRider.commitTrans();
-            }
+    public JSONObject isEntryOkay() {
+        poJSON = new JSONObject();
+        
+        if (poGRider.getUserLevel() < UserRight.SYSADMIN){
+            poJSON.put("result", "error");
+            poJSON.put("message", "User is not allowed to save record.");
+            return poJSON;
         } else {
-            if (!pbWthParent) {
-                poGRider.rollbackTrans();
+            poJSON = new JSONObject();
+            
+            if (poModel.getBarangayName().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Barangay must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getTownId().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Town must not be empty.");
+                return poJSON;
             }
         }
-
+        
+        poJSON.put("result", "success");
         return poJSON;
     }
-
+    
     @Override
-    public JSONObject deleteRecord() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Model_Barangay getModel() {
+        return poModel;
     }
-
-    @Override
-    public JSONObject deactivateRecord() {
-        poJSON = new JSONObject();
-        
-        if (poModel.getEditMode() != EditMode.READY ||
-            poModel.getEditMode() != EditMode.UPDATE){
-        
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-        }
-        
-        
-        if (poModel.getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals((String) poJSON.get("result"))) return poJSON;
-        } 
-
-        poJSON = poModel.setRecordStatus("0");
-
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        return poModel.saveRecord();
-    }
-
-    @Override
-    public JSONObject activateRecord() {
-        poJSON = new JSONObject();
-        
-        if (poModel.getEditMode() != EditMode.READY ||
-            poModel.getEditMode() != EditMode.UPDATE){
-        
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-        }
-        
-        
-        if (poModel.getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals((String) poJSON.get("result"))) return poJSON;
-        } 
-
-        poJSON = poModel.setRecordStatus("1");
-
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        return poModel.saveRecord();
-    }
-
+    
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
@@ -146,14 +71,9 @@ public class Barangay implements GRecord{
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
+            poJSON.put("message", "No record loaded.");
             return poJSON;
         }
-    }
-
-    @Override
-    public Model_Barangay getModel() {
-        return poModel;
     }
     
     public JSONObject searchBarangayByTown(String value, boolean byCode, String townId){
@@ -172,7 +92,7 @@ public class Barangay implements GRecord{
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
+            poJSON.put("message", "No record loaded.");
             return poJSON;
         }
     }
@@ -193,7 +113,7 @@ public class Barangay implements GRecord{
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
+            poJSON.put("message", "No record loaded.");
             return poJSON;
         }
     }
@@ -273,10 +193,5 @@ public class Barangay implements GRecord{
                     " WHERE a.sTownIDxx = b.sTownIDxx" +
                         " AND b.sProvIDxx = c.sProvIDxx",
             lsCondition);
-    }
-
-    @Override
-    public JSONObject isEntryOkay() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

@@ -1,136 +1,61 @@
 package org.guanzon.cas.parameter;
 
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
-import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.iface.GRecord;
+import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Country;
 import org.json.simple.JSONObject;
 
-public class Country implements GRecord{
-    GRider poGRider;
-    boolean pbWthParent;
-    String psRecdStat;
-
+public class Country extends Parameter{
     Model_Country poModel;
-    JSONObject poJSON;
-
-    public Country(GRider appDriver, boolean withParent) {
-        poGRider = appDriver;
-        pbWthParent = withParent;
-
+    
+    @Override
+    public void initialize() {
         psRecdStat = Logical.YES;
-        poModel = new Model_Country(appDriver);
+        
+        poModel = new Model_Country();
+        poModel.setApplicationDriver(poGRider);
+        poModel.setXML("Model_Country");
+        poModel.setTableName("Country");
+        poModel.initialize();
     }
-
+    
     @Override
-    public void setRecordStatus(String recordStatus) {
-        psRecdStat = recordStatus;
-    }
-
-    @Override
-    public int getEditMode() {
-        return poModel.getEditMode();
-    }
-
-    @Override
-    public JSONObject newRecord() {        
-        return poModel.newRecord();
-    }
-
-    @Override
-    public JSONObject openRecord(String countryId) {
-        return poModel.openRecord(countryId);
-    }
-
-    @Override
-    public JSONObject updateRecord() {
-        return poModel.updateRecord();
-    }
-
-    @Override
-    public JSONObject saveRecord() {
-        if (!pbWthParent) {
-            poGRider.beginTrans();
-        }
-
-        poJSON = poModel.saveRecord();
-
-        if ("success".equals((String) poJSON.get("result"))) {
-            if (!pbWthParent) {
-                poGRider.commitTrans();
-            }
+    public JSONObject isEntryOkay() {
+        poJSON = new JSONObject();
+        
+        if (poGRider.getUserLevel() < UserRight.SYSADMIN){
+            poJSON.put("result", "error");
+            poJSON.put("message", "User is not allowed to save record.");
+            return poJSON;
         } else {
-            if (!pbWthParent) {
-                poGRider.rollbackTrans();
+            poJSON = new JSONObject();
+            
+            if (poModel.getCountryName().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Country must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getNationality().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Nationality must not be empty.");
+                return poJSON;
             }
         }
-
+        
+        poJSON.put("result", "success");
         return poJSON;
     }
-
+    
     @Override
-    public JSONObject deleteRecord() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Model_Country getModel() {
+        return poModel;
     }
-
-    @Override
-    public JSONObject deactivateRecord() {
-        poJSON = new JSONObject();
-        
-        if (poModel.getEditMode() != EditMode.READY ||
-            poModel.getEditMode() != EditMode.UPDATE){
-        
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-        }
-        
-        
-        if (poModel.getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals((String) poJSON.get("result"))) return poJSON;
-        } 
-
-        poJSON = poModel.setRecordStatus("0");
-
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        return poModel.saveRecord();
-    }
-
-    @Override
-    public JSONObject activateRecord() {
-        poJSON = new JSONObject();
-        
-        if (poModel.getEditMode() != EditMode.READY ||
-            poModel.getEditMode() != EditMode.UPDATE){
-        
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-        }
-        
-        
-        if (poModel.getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals((String) poJSON.get("result"))) return poJSON;
-        } 
-
-        poJSON = poModel.setRecordStatus("1");
-
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        return poModel.saveRecord();
-    }
-
+    
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
         String lsCondition = "";
@@ -160,17 +85,12 @@ public class Country implements GRecord{
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
+            poJSON.put("message", "No record loaded.");
             return poJSON;
         }
     }
-
-    @Override
-    public Model_Country getModel() {
-        return poModel;
-    }
     
-    public JSONObject searchProvinceWithStatus(String value, boolean byCode) {
+    public JSONObject searchCountryWithStatus(String value, boolean byCode) {
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -198,18 +118,8 @@ public class Country implements GRecord{
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
+            poJSON.put("message", "No record loaded.");
             return poJSON;
         }
-    }
-    
-    @Override
-    public String getSQ_Browse(){
-        return MiscUtil.makeSelect(poModel);
-    }
-
-    @Override
-    public JSONObject isEntryOkay() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

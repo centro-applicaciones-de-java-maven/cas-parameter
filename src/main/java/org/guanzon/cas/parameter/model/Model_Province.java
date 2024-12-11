@@ -21,6 +21,7 @@ public class Model_Province extends Model{
             
             //assign default values
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            //end - assign default values
 
             poEntity.insertRow();
             poEntity.moveToCurrentRow();

@@ -8,7 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Country extends Model{
+public class Model_Region extends Model{
     @Override
     public void initialize() {
         try {
@@ -37,28 +37,20 @@ public class Model_Country extends Model{
         }
     }
     
-    public JSONObject setCountryId(String countryId){
-        return setValue("sCntryCde", countryId);
+    public JSONObject setRegionId(String regionId){
+        return setValue("sRegionID", regionId);
     }
     
-    public String getCountryId(){
-        return (String) getValue("sCntryCde");
+    public String getRegionId(){
+        return (String) getValue("sRegionID");
     }
     
-    public JSONObject setCountryName(String countryName){
-        return setValue("sCntryNme", countryName);
+    public JSONObject setRegionName(String regionName){
+        return setValue("sRegionNm", regionName);
     }
     
-    public String getCountryName(){
-        return (String) getValue("sCntryNme");
-    }
-    
-    public JSONObject setNationality(String nationality){
-        return setValue("sNational", nationality);
-    }
-    
-    public String getNationality(){
-        return (String) getValue("sNational");
+    public String getRegioneName(){
+        return (String) getValue("sRegionNm");
     }
     
     public JSONObject setRecordStatus(String recordStatus){

@@ -4,20 +4,20 @@ import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Province;
+import org.guanzon.cas.parameter.model.Model_Region;
 import org.json.simple.JSONObject;
 
-public class Province extends Parameter{
-    Model_Province poModel;
+public class Region extends Parameter{
+    Model_Region poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Province();
+        poModel = new Model_Region();
         poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Province");
-        poModel.setTableName("Province");
+        poModel.setXML("Model_Region");
+        poModel.setTableName("Region");
         poModel.initialize();
     }
     
@@ -32,13 +32,7 @@ public class Province extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getProvinceName().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Province must not be empty.");
-                return poJSON;
-            }
-            
-            if (poModel.getRegionId().isEmpty()){
+            if (poModel.getRegioneName().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Region must not be empty.");
                 return poJSON;
@@ -50,7 +44,7 @@ public class Province extends Parameter{
     }
     
     @Override
-    public Model_Province getModel() {
+    public Model_Region getModel() {
         return poModel;
     }
     
@@ -59,9 +53,9 @@ public class Province extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
-                "ID»Province",
-                "sProvIDxx»sProvName",
-                "sProvIDxx»sProvName",
+                "ID»Region",
+                "sRegionID»sRegionNm",
+                "sRegionID»sRegionNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -78,9 +72,9 @@ public class Province extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
-                "ID»Province»Record Status",
-                "sProvIDxx»sProvName»cRecdStat",
-                "sProvIDxx»sProvName»cRecdStat",
+                "ID»Region»Record Status",
+                "sRegionID»sRegionNm»cRecdStat",
+                "sRegionID»sRegionNm»cRecdStat",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

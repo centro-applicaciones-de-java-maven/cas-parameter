@@ -1,7 +1,7 @@
 
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.Province;
+import org.guanzon.cas.parameter.Region;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -11,9 +11,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class testProvince {
+public class testRegion {
     static GRider instance;
-    static Province record;
+    static Region record;
 
     @BeforeClass
     public static void setUpClass() {
@@ -21,7 +21,7 @@ public class testProvince {
 
         instance = MiscUtil.Connect();
         
-        record = new Province();
+        record = new Region();
         record.setApplicationDriver(instance);
         record.setWithParentClass(false);
         record.initialize();
@@ -36,12 +36,7 @@ public class testProvince {
             Assert.fail((String) loJSON.get("message"));
         }           
         
-        loJSON = record.getModel().setProvinceName("Bagong Province");
-        if ("error".equals((String) loJSON.get("result"))) {
-            Assert.fail((String) loJSON.get("message"));
-        }     
-        
-        loJSON = record.getModel().setRegionId("15");
+        loJSON = record.getModel().setRegionName("Bagong Region");
         if ("error".equals((String) loJSON.get("result"))) {
             Assert.fail((String) loJSON.get("message"));
         }     
@@ -66,7 +61,7 @@ public class testProvince {
     public void testUpdateRecord() {
         JSONObject loJSON;
 
-        loJSON = record.openRecord("0100");
+        loJSON = record.openRecord("000002");
         if ("error".equals((String) loJSON.get("result"))) {
             Assert.fail((String) loJSON.get("message"));
         }      
@@ -76,7 +71,7 @@ public class testProvince {
             Assert.fail((String) loJSON.get("message"));
         }      
         
-        loJSON = record.getModel().setProvinceName("Yeh Yeh");
+        loJSON = record.getModel().setRegionName("Yeh Yeh");
         if ("error".equals((String) loJSON.get("result"))) {
             Assert.fail((String) loJSON.get("message"));
         }    
@@ -101,8 +96,8 @@ public class testProvince {
 //    public void testSearch(){
 //        JSONObject loJSON = record.searchRecord("", false);        
 //        if ("success".equals((String) loJSON.get("result"))){
-//            System.out.println(record.getModel().getProvinceId());
-//            System.out.println(record.getModel().getProvinceName());
+//            System.out.println(record.getModel().getRegionId());
+//            System.out.println(record.getModel().getRegioneName());
 //        } else System.out.println("No record was selected.");
 //    }
     
