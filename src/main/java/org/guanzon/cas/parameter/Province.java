@@ -74,7 +74,7 @@ public class Province extends Parameter{
         }
     }
     
-    public JSONObject searchProvinceWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,

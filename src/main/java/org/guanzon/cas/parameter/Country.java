@@ -90,7 +90,7 @@ public class Country extends Parameter{
         }
     }
     
-    public JSONObject searchCountryWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {

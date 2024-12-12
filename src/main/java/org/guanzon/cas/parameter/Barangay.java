@@ -76,7 +76,7 @@ public class Barangay extends Parameter{
         }
     }
     
-    public JSONObject searchBarangayByTown(String value, boolean byCode, String townId){
+    public JSONObject searchRecord(String value, boolean byCode, String townId){
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
         
         poJSON = ShowDialogFX.Search(poGRider,
@@ -97,51 +97,7 @@ public class Barangay extends Parameter{
         }
     }
     
-    public JSONObject searchBarangayByProvince(String value, boolean byCode, String provinceId){
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "b.sProvIDxx = " + SQLUtil.toSQL(provinceId));
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Barangay»Town»Province",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchBarangayByTownAndProvince(String value, boolean byCode, String townId, String provinceId){
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), 
-                                                    "a.sTownIDxx = " + SQLUtil.toSQL(townId) +
-                                                        " AND b.sProvIDxx = " + SQLUtil.toSQL(provinceId));
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Barangay»Town»Province",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchBarangayWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -160,6 +116,27 @@ public class Barangay extends Parameter{
         }
     }
     
+    public JSONObject searchRecordWithStatus(String value, boolean byCode, String townId){
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Barangay»Town»Province»Has Route»Blacklisted»Record Status",
+                "sBrgyIDxx»sBrgyName»sTownName»sProvName»cHasRoute»cBlackLst»cRecdStat",
+                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')»a.cHasRoute»a.cBlackLst»a.cRecdStat",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded to update.");
+            return poJSON;
+        }
+    }
+        
     @Override
     public String getSQ_Browse(){
         String lsCondition = "";
