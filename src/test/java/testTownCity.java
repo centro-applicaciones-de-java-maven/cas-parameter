@@ -1,0 +1,136 @@
+
+import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.cas.parameter.TownCity;
+import org.json.simple.JSONObject;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
+
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class testTownCity {
+    static GRider instance;
+    static TownCity record;
+
+    @BeforeClass
+    public static void setUpClass() {
+        System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
+
+        instance = MiscUtil.Connect();
+        
+        record = new TownCity();
+        record.setApplicationDriver(instance);
+        record.setWithParentClass(false);
+        record.initialize();
+    }
+
+    @Test
+    public void testNewRecord() {
+        JSONObject loJSON;
+
+        loJSON = record.newRecord();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }           
+        
+        loJSON = record.getModel().setTownName("Bagong Town");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }     
+        
+        loJSON = record.getModel().setZipCode("1109");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.getModel().setProvinceId("12");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        } 
+        
+        loJSON = record.getModel().setMunicpalCode("621109");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        } 
+
+        loJSON = record.getModel().hasRoute(true);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }     
+        
+        loJSON = record.getModel().isBlacklisted(false);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.getModel().setModifyingId(instance.getUserID());
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }     
+        
+        loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }     
+        
+        loJSON = record.saveRecord();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }  
+    }
+   
+    @Test
+    public void testUpdateRecord() {
+        JSONObject loJSON;
+
+        loJSON = record.openRecord("1864");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }       
+        
+        loJSON = record.updateRecord();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.getModel().setTownName("Town Hall");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }    
+        
+        loJSON = record.getModel().setModifyingId(instance.getUserID());
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }     
+        
+        loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }     
+        
+        loJSON = record.saveRecord();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        } 
+    }
+    
+//    @Test
+//    public void testSearch(){
+//        JSONObject loJSON = record.searchRecord("", false);        
+//        if ("success".equals((String) loJSON.get("result"))){
+//            System.out.println(record.getModel().getTownId());
+//            System.out.println(record.getModel().getTownName());
+//            System.out.println(record.getModel().getProvinceId());
+//            System.out.println(record.getModel().getProvinceName());
+//        } else System.out.println("No record was selected.");
+//    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+        record = null;
+        instance = null;
+    }
+}

@@ -8,10 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Province extends Model{
-    //other model connections
-    private Model_Region poRegion;
-    
+public class Model_Country extends Model{
     @Override
     public void initialize() {
         try {
@@ -33,14 +30,6 @@ public class Model_Province extends Model{
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poRegion = new Model_Region();
-            poRegion.setApplicationDriver(poGRider);
-            poRegion.setXML("Model_Region");
-            poRegion.setTableName("Region");
-            poRegion.initialize();
-            //end - initialize other connections
-            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -48,49 +37,28 @@ public class Model_Province extends Model{
         }
     }
     
-    public Model_Region Region(){
-        if (!"".equals((String) getValue("sRegionID"))){
-            if (poRegion.getEditMode() == EditMode.READY && 
-                poRegion.getRegionId().equals((String) getValue("sRegionID")))
-                return poRegion;
-            else{
-                poJSON = poRegion.openRecord((String) getValue("sRegionID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poRegion;
-                else {
-                    poRegion.initialize();
-                    return poRegion;
-                }
-            }
-        } else {
-            poRegion.initialize();
-            return poRegion;
-        }
+    public JSONObject setCountryId(String countryId){
+        return setValue("sCntryCde", countryId);
     }
     
-    public JSONObject setProvinceId(String provinceId){
-        return setValue("sProvIDxx", provinceId);
+    public String getCountryId(){
+        return (String) getValue("sCntryCde");
     }
     
-    public String getProvinceId(){
-        return (String) getValue("sProvIDxx");
+    public JSONObject setCountryName(String countryName){
+        return setValue("sCntryNme", countryName);
     }
     
-    public JSONObject setProvinceName(String provinceName){
-        return setValue("sProvName", provinceName);
+    public String getCountryName(){
+        return (String) getValue("sCntryNme");
     }
     
-    public String getProvinceName(){
-        return (String) getValue("sProvName");
+    public JSONObject setNationality(String nationality){
+        return setValue("sNational", nationality);
     }
     
-    public JSONObject setRegionId(String regionId){
-        return setValue("sRegionID", regionId);
-    }
-    
-    public String getRegionId(){
-        return (String) getValue("sRegionID");
+    public String getNationality(){
+        return (String) getValue("sNational");
     }
     
     public JSONObject setRecordStatus(String recordStatus){

@@ -8,10 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Province extends Model{
-    //other model connections
-    private Model_Region poRegion;
-    
+public class Model_Region extends Model{
     @Override
     public void initialize() {
         try {
@@ -33,56 +30,11 @@ public class Model_Province extends Model{
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poRegion = new Model_Region();
-            poRegion.setApplicationDriver(poGRider);
-            poRegion.setXML("Model_Region");
-            poRegion.setTableName("Region");
-            poRegion.initialize();
-            //end - initialize other connections
-            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
         }
-    }
-    
-    public Model_Region Region(){
-        if (!"".equals((String) getValue("sRegionID"))){
-            if (poRegion.getEditMode() == EditMode.READY && 
-                poRegion.getRegionId().equals((String) getValue("sRegionID")))
-                return poRegion;
-            else{
-                poJSON = poRegion.openRecord((String) getValue("sRegionID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poRegion;
-                else {
-                    poRegion.initialize();
-                    return poRegion;
-                }
-            }
-        } else {
-            poRegion.initialize();
-            return poRegion;
-        }
-    }
-    
-    public JSONObject setProvinceId(String provinceId){
-        return setValue("sProvIDxx", provinceId);
-    }
-    
-    public String getProvinceId(){
-        return (String) getValue("sProvIDxx");
-    }
-    
-    public JSONObject setProvinceName(String provinceName){
-        return setValue("sProvName", provinceName);
-    }
-    
-    public String getProvinceName(){
-        return (String) getValue("sProvName");
     }
     
     public JSONObject setRegionId(String regionId){
@@ -91,6 +43,14 @@ public class Model_Province extends Model{
     
     public String getRegionId(){
         return (String) getValue("sRegionID");
+    }
+    
+    public JSONObject setRegionName(String regionName){
+        return setValue("sRegionNm", regionName);
+    }
+    
+    public String getRegioneName(){
+        return (String) getValue("sRegionNm");
     }
     
     public JSONObject setRecordStatus(String recordStatus){
