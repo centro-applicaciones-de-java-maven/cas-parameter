@@ -8,8 +8,8 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Brand extends Model {
-private Model_Category poCategory;
+public class Model_Model_Series extends Model {
+private Model_Brand poBrand;
     @Override
     public void initialize() {
         try {
@@ -32,11 +32,11 @@ private Model_Category poCategory;
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poCategory = new Model_Category();
-            poCategory.setApplicationDriver(poGRider);
-            poCategory.setXML("Model_Category");
-            poCategory.setTableName("Category");
-            poCategory.initialize();
+            poBrand = new Model_Brand();
+            poBrand.setApplicationDriver(poGRider);
+            poBrand.setXML("Model_Brand");
+            poBrand.setTableName("Brand");
+            poBrand.initialize();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -46,42 +46,35 @@ private Model_Category poCategory;
         }
     }
     
-    public Model_Category Category(){
+    public Model_Brand Brand(){
         if (!"".equals((String) getValue("s"))){
-            if (poCategory.getEditMode() == EditMode.READY && 
-                poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
-                return poCategory;
+            if (poBrand.getEditMode() == EditMode.READY && 
+                poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
+                return poBrand;
             else{
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
+                poJSON = poBrand.openRecord((String) getValue("sBrandIDx"));
 
                 if ("success".equals((String) poJSON.get("result")))
-                    return poCategory;
+                    return poBrand;
                 else {
-                    poCategory.initialize();
-                    return poCategory;
+                    poBrand.initialize();
+                    return poBrand;
                 }
             }
         } else {
-            poCategory.initialize();
-            return poCategory;
+            poBrand.initialize();
+            return poBrand;
         }
     }
     
-    public JSONObject setBrandId(String brandId) {
-        return setValue("sModelIDx", brandId);
+    public JSONObject setSeriesID(String seriesId) {
+        return setValue("sSeriesID", seriesId);
     }
 
-    public String getBrandId() {
-        return (String) getValue("sModelIDx");
+    public String getSeriesID() {
+        return (String) getValue("sSeriesID");
     }
 
-    public JSONObject setModelCode(String modelCode) {
-        return setValue("sModelIDx", modelCode);
-    }
-
-    public String getModelCode() {
-        return (String) getValue("sModelIDx");
-    }
 
     public JSONObject setDescription(String description) {
         return setValue("sDescript", description);
@@ -92,14 +85,22 @@ private Model_Category poCategory;
     }
 
     
-    public JSONObject setCategoryCode(String categoryCode) {
-        return setValue("sCategrCd", categoryCode);
+    public JSONObject setBrandId(String brandId) {
+        return setValue("sBrandIDx", brandId);
     }
 
-    public String getCategoryCode() {
-        return (String) getValue("sCategrCd");
+    public String getBrandId() {
+        return (String) getValue("sBrandIDx");
+    }
+    
+    public JSONObject setEndOfLife(String endOfLife) {
+        return setValue("cEndOfLfe", endOfLife);
     }
 
+    public String getEndOfLife() {
+        return (String) getValue("cEndOfLfe");
+    }
+    
     public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }

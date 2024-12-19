@@ -34,8 +34,8 @@ public class Model_Category_Level2 extends Model {
             //initialize other connections
             poCategory = new Model_Category();
             poCategory.setApplicationDriver(poGRider);
-            poCategory.setXML("Model_Region");
-            poCategory.setTableName("Region");
+            poCategory.setXML("Model_Category");
+            poCategory.setTableName("Category");
             poCategory.initialize();
             //end - initialize other connections
             
@@ -46,7 +46,7 @@ public class Model_Category_Level2 extends Model {
         }
     }
     
-    public Model_Category Region(){
+    public Model_Category Category(){
         if (!"".equals((String) getValue("s"))){
             if (poCategory.getEditMode() == EditMode.READY && 
                 poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
