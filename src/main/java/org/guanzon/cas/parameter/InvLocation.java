@@ -6,21 +6,21 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Model_Series;
+import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.json.simple.JSONObject;
 
-public class ModelSeries extends Parameter{
-    Model_Model_Series poModelSeries;
+public class InvLocation extends Parameter{
+    Model_Inv_Location poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModelSeries = new Model_Model_Series();
-        poModelSeries.setApplicationDriver(poGRider);
-        poModelSeries.setXML("Model_Model_Series");
-        poModelSeries.setTableName("Model_Series");
-        poModelSeries.initialize();
+        poModel = new Model_Inv_Location();
+        poModel.setApplicationDriver(poGRider);
+        poModel.setXML("Model_Inv_Location");
+        poModel.setTableName("Inv_Location");
+        poModel.initialize();
     }
     
     @Override
@@ -34,17 +34,17 @@ public class ModelSeries extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModelSeries.getSeriesID().isEmpty()){
+            if (poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Model Series must not be empty.");
+                poJSON.put("message", "Country must not be empty.");
                 return poJSON;
             }
             
-            if (poModelSeries.getDescription().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Description must not be empty.");
-                return poJSON;
-            }
+//            if (poModel.getWarehouseId().isEmpty()){
+//                poJSON.put("result", "error");
+//                poJSON.put("message", "Warehouse must not be empty.");
+//                return poJSON;
+//            }
         }
         
         poJSON.put("result", "success");
@@ -52,8 +52,8 @@ public class ModelSeries extends Parameter{
     }
     
     @Override
-    public Model_Model_Series getModel() {
-        return poModelSeries;
+    public Model_Inv_Location getModel() {
+        return poModel;
     }
     
     @Override
@@ -76,12 +76,12 @@ public class ModelSeries extends Parameter{
                 lsSQL,
                 value,
                 "ID»Description",
-                "sSeriesID»sDescript",
-                "sSeriesID»sDescript",
+                "sLocatnID»sDescript",
+                "sLocatnID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModelSeries.openRecord((String) poJSON.get("sSeriesID"));
+            return poModel.openRecord((String) poJSON.get("sLocatnID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -109,12 +109,12 @@ public class ModelSeries extends Parameter{
                 lsSQL,
                 value,
                 "ID»Description",
-                "sSeriesID»sDescript",
-                "sSeriesID»sDescript",
+                "sLocatnID»sDescript",
+                "sLocatnID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModelSeries.openRecord((String) poJSON.get("sSeriesID"));
+            return poModel.openRecord((String) poJSON.get("sLocatnID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");

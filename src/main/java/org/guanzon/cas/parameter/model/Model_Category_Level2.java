@@ -47,7 +47,7 @@ public class Model_Category_Level2 extends Model {
     }
     
     public Model_Category Category(){
-        if (!"".equals((String) getValue("s"))){
+        if (!"".equals((String) getValue("sCategrCd"))){
             if (poCategory.getEditMode() == EditMode.READY && 
                 poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
                 return poCategory;

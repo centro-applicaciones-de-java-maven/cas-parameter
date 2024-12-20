@@ -6,21 +6,21 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Model_Series;
+import org.guanzon.cas.parameter.model.Model_Inv_Type;
 import org.json.simple.JSONObject;
 
-public class ModelSeries extends Parameter{
-    Model_Model_Series poModelSeries;
+public class InvType extends Parameter{
+    Model_Inv_Type poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModelSeries = new Model_Model_Series();
-        poModelSeries.setApplicationDriver(poGRider);
-        poModelSeries.setXML("Model_Model_Series");
-        poModelSeries.setTableName("Model_Series");
-        poModelSeries.initialize();
+        poModel = new Model_Inv_Type();
+        poModel.setApplicationDriver(poGRider);
+        poModel.setXML("Model_Inv_Type");
+        poModel.setTableName("Inv_Type");
+        poModel.initialize();
     }
     
     @Override
@@ -34,15 +34,15 @@ public class ModelSeries extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModelSeries.getSeriesID().isEmpty()){
+            if (poModel.getInventoryTypeId().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Model Series must not be empty.");
+                poJSON.put("message", "Inventory must not be empty.");
                 return poJSON;
             }
             
-            if (poModelSeries.getDescription().isEmpty()){
+            if (poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Description must not be empty.");
+                poJSON.put("message", "Inventory must not be empty.");
                 return poJSON;
             }
         }
@@ -52,8 +52,8 @@ public class ModelSeries extends Parameter{
     }
     
     @Override
-    public Model_Model_Series getModel() {
-        return poModelSeries;
+    public Model_Inv_Type getModel() {
+        return poModel;
     }
     
     @Override
@@ -76,12 +76,12 @@ public class ModelSeries extends Parameter{
                 lsSQL,
                 value,
                 "ID»Description",
-                "sSeriesID»sDescript",
-                "sSeriesID»sDescript",
+                "sInvTypCd»sMeasurNm",
+                "sInvTypCd»sMeasurNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModelSeries.openRecord((String) poJSON.get("sSeriesID"));
+            return poModel.openRecord((String) poJSON.get("sInvTypCd"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -108,13 +108,13 @@ public class ModelSeries extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Description",
-                "sSeriesID»sDescript",
-                "sSeriesID»sDescript",
+               "ID»Description",
+                "sInvTypCd»sMeasurNm",
+                "sInvTypCd»sMeasurNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModelSeries.openRecord((String) poJSON.get("sSeriesID"));
+            return poModel.openRecord((String) poJSON.get("sInvTypCd"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");

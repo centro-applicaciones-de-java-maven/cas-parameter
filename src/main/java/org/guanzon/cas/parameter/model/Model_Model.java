@@ -5,12 +5,13 @@ import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_Model extends Model {
-@Override
+private Model_Model_Series poModelSeries;
+private Model_Brand poBrand;
+    @Override
     public void initialize() {
         try {
             poEntity = MiscUtil.xml2ResultSet(System.getProperty("sys.default.path.metadata") + XML, getTable());
@@ -22,6 +23,7 @@ public class Model_Model extends Model {
             
             //assign default values
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            poEntity.updateString("cEndOfLfe", RecordStatus.ACTIVE);
             //end - assign default values
 
             poEntity.insertRow();
@@ -31,10 +33,66 @@ public class Model_Model extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
+            //initialize other connections
+            poModelSeries = new Model_Model_Series();
+            poModelSeries.setApplicationDriver(poGRider);
+            poModelSeries.setXML("Model_Model_Series");
+            poModelSeries.setTableName("ModelSeries");
+            poModelSeries.initialize();
+//            
+            poBrand = new Model_Brand();
+            poBrand.setApplicationDriver(poGRider);
+            poBrand.setXML("Model_Brand");
+            poBrand.setTableName("Brand");
+            poBrand.initialize();
+            //end - initialize other connections
+            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
+        }
+    }
+    
+    public Model_Brand Brand(){
+        if (!"".equals((String) getValue("sBrandIDx"))){
+            if (poBrand.getEditMode() == EditMode.READY && 
+                poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
+                return poBrand;
+            else{
+                poJSON = poBrand.openRecord((String) getValue("sBrandIDx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poBrand;
+                else {
+                    poBrand.initialize();
+                    return poBrand;
+                }
+            }
+        } else {
+            poBrand.initialize();
+            return poBrand;
+        }
+    }
+    
+    public Model_Model_Series ModelSeries(){
+        if (!"".equals((String) getValue("sSeriesID"))){
+            if (poModelSeries.getEditMode() == EditMode.READY && 
+                poModelSeries.getBrandId().equals((String) getValue("sSeriesID")))
+                return poModelSeries;
+            else{
+                poJSON = poModelSeries.openRecord((String) getValue("sSeriesID"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poModelSeries;
+                else {
+                    poModelSeries.initialize();
+                    return poModelSeries;
+                }
+            }
+        } else {
+            poModelSeries.initialize();
+            return poModelSeries;
         }
     }
     
@@ -47,11 +105,11 @@ public class Model_Model extends Model {
     }
 
     public JSONObject setModelCode(String modelCode) {
-        return setValue("sModelIDx", modelCode);
+        return setValue("sModelCde", modelCode);
     }
 
     public String getModelCode() {
-        return (String) getValue("sModelIDx");
+        return (String) getValue("sModelCde");
     }
 
     public JSONObject setDescription(String description) {
@@ -79,11 +137,11 @@ public class Model_Model extends Model {
     }
 
     public JSONObject setYearModel(Integer yearModel) {
-        return setValue("nYearModel", yearModel);
+        return setValue("nYearModl", yearModel);
     }
 
     public Integer getYearModel() {
-        return (Integer) getValue("nYearModel");
+        return (Integer) getValue("nYearModl");
     }
 
     public JSONObject setEndOfLife(String endOfLife) {

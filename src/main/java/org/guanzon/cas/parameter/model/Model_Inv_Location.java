@@ -8,8 +8,8 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Brand extends Model {
-private Model_Category poCategory;
+public class Model_Inv_Location extends Model {
+    private Model_Warehouse poWarehouse;
     @Override
     public void initialize() {
         try {
@@ -32,11 +32,11 @@ private Model_Category poCategory;
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poCategory = new Model_Category();
-            poCategory.setApplicationDriver(poGRider);
-            poCategory.setXML("Model_Category");
-            poCategory.setTableName("Category");
-            poCategory.initialize();
+            poWarehouse = new Model_Warehouse();
+            poWarehouse.setApplicationDriver(poGRider);
+            poWarehouse.setXML("Model_Warehouse");
+            poWarehouse.setTableName("Warehouse");
+            poWarehouse.initialize();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -46,41 +46,33 @@ private Model_Category poCategory;
         }
     }
     
-    public Model_Category Category(){
-        if (!"".equals((String) getValue("sCategrCd"))){
-            if (poCategory.getEditMode() == EditMode.READY && 
-                poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
-                return poCategory;
+    public Model_Warehouse Warehouse(){
+        if (!"".equals((String) getValue("sWHouseID"))){
+            if (poWarehouse.getEditMode() == EditMode.READY && 
+                poWarehouse.getWarehouseId().equals((String) getValue("sWHouseID")))
+                return poWarehouse;
             else{
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
+                poJSON = poWarehouse.openRecord((String) getValue("sWHouseID"));
 
                 if ("success".equals((String) poJSON.get("result")))
-                    return poCategory;
+                    return poWarehouse;
                 else {
-                    poCategory.initialize();
-                    return poCategory;
+                    poWarehouse.initialize();
+                    return poWarehouse;
                 }
             }
         } else {
-            poCategory.initialize();
-            return poCategory;
+            poWarehouse.initialize();
+            return poWarehouse;
         }
     }
-    
-    public JSONObject setBrandId(String brandId) {
-        return setValue("sModelIDx", brandId);
+
+    public JSONObject setLocationId(String locationId) {
+        return setValue("sLocatnID", locationId);
     }
 
-    public String getBrandId() {
-        return (String) getValue("sModelIDx");
-    }
-
-    public JSONObject setModelCode(String modelCode) {
-        return setValue("sModelIDx", modelCode);
-    }
-
-    public String getModelCode() {
-        return (String) getValue("sModelIDx");
+    public String getLocationId() {
+        return (String) getValue("sLocatnID");
     }
 
     public JSONObject setDescription(String description) {
@@ -90,37 +82,44 @@ private Model_Category poCategory;
     public String getDescription() {
         return (String) getValue("sDescript");
     }
-
     
-    public JSONObject setCategoryCode(String categoryCode) {
-        return setValue("sCategrCd", categoryCode);
+    public JSONObject setWarehouseId(String warehouseId) {
+        return setValue("sWHouseID", warehouseId);
     }
 
-    public String getCategoryCode() {
-        return (String) getValue("sCategrCd");
+    public String getWarehouseId() {
+        return (String) getValue("sWHouseID");
+    }
+    
+    public JSONObject setSectionId(String sectionId) {
+        return setValue("sSectnIDx", sectionId);
     }
 
-    public JSONObject setRecordStatus(String recordStatus) {
+    public String getSectionId() {
+        return (String) getValue("sSectnIDx");
+    }
+    
+    public JSONObject setRecordStatus(String recordStatus){
         return setValue("cRecdStat", recordStatus);
     }
 
     public String getRecordStatus() {
         return (String) getValue("cRecdStat");
-    } 
-    
-    public JSONObject setModifyingId(String modifyingId){
+    }
+
+    public JSONObject setModifyingId(String modifyingId) {
         return setValue("sModified", modifyingId);
     }
-    
-    public String getModifyingId(){
+
+    public String getModifyingId() {
         return (String) getValue("sModified");
     }
-    
-    public JSONObject setModifiedDate(Date modifiedDate){
+
+    public JSONObject setModifiedDate(Date modifiedDate) {
         return setValue("dModified", modifiedDate);
     }
-    
-    public Date getModifiedDate(){
+
+    public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
 }

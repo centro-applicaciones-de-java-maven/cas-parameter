@@ -75,9 +75,9 @@ public class Model extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Model Code»Model Description",
-                "sModelIDx»sModelCde»sDescript",
-                "sModelIDx»sModelCde»sDescript",
+                "ID»Model Code",
+                "sModelIDx»sDescript",
+                "sModelIDx»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -107,10 +107,10 @@ public class Model extends Parameter{
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
-                value,
-                "ID»Model Code»Model Description",
-                "sModelIDx»sModelCde»sDescript",
-                "sModelIDx»sModelCde»sDescript",
+                value,                
+                "ID»Model Code",
+                "sModelIDx»sDescript",
+                "sModelIDx»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
