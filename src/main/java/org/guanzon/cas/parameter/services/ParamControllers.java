@@ -1,17 +1,37 @@
-package org.guanzon.cas.parameter;
+package org.guanzon.cas.parameter.services;
 
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.cas.parameter.Barangay;
+import org.guanzon.cas.parameter.Bin;
+import org.guanzon.cas.parameter.Branch;
+import org.guanzon.cas.parameter.Brand;
+import org.guanzon.cas.parameter.Category;
+import org.guanzon.cas.parameter.CategoryLevel2;
+import org.guanzon.cas.parameter.CategoryLevel3;
+import org.guanzon.cas.parameter.CategoryLevel4;
+import org.guanzon.cas.parameter.Color;
+import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.InvLocation;
+import org.guanzon.cas.parameter.InvType;
+import org.guanzon.cas.parameter.Measure;
+import org.guanzon.cas.parameter.Model;
+import org.guanzon.cas.parameter.ModelSeries;
+import org.guanzon.cas.parameter.Province;
+import org.guanzon.cas.parameter.Region;
+import org.guanzon.cas.parameter.Section;
+import org.guanzon.cas.parameter.TownCity;
+import org.guanzon.cas.parameter.Warehouse;
 
-public class Parameters {
-    public Parameters(GRider applicationDriver, LogWrapper logWrapper){
+public class ParamControllers {
+    public ParamControllers(GRider applicationDriver, LogWrapper logWrapper){
         poGRider = applicationDriver;
         poLogWrapper = logWrapper;
     }
     
     public Barangay Barangay(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Barangay: Application driver is not set.");
             return null;
         }
         
@@ -28,7 +48,7 @@ public class Parameters {
     
     public Bin Bin(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Bin: Application driver is not set.");
             return null;
         }
         
@@ -45,7 +65,7 @@ public class Parameters {
     
     public Branch Branch(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Branch: Application driver is not set.");
             return null;
         }
         
@@ -62,7 +82,7 @@ public class Parameters {
     
     public Brand Brand(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Brand: Application driver is not set.");
             return null;
         }
         
@@ -79,7 +99,7 @@ public class Parameters {
     
     public Category Category(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Category: Application driver is not set.");
             return null;
         }
         
@@ -96,7 +116,7 @@ public class Parameters {
     
     public CategoryLevel2 CategoryLevel2(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.CategoryLevel2: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.CategoryLevel2: Application driver is not set.");
             return null;
         }
         
@@ -113,7 +133,7 @@ public class Parameters {
     
     public CategoryLevel3 CategoryLevel3(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.CategoryLevel3: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.CategoryLevel3: Application driver is not set.");
             return null;
         }
         
@@ -130,7 +150,7 @@ public class Parameters {
     
     public CategoryLevel4 CategoryLevel4(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.CategoryLevel4: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.CategoryLevel4: Application driver is not set.");
             return null;
         }
         
@@ -147,7 +167,7 @@ public class Parameters {
     
     public Color Color(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Color: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Color: Application driver is not set.");
             return null;
         }
         
@@ -164,7 +184,7 @@ public class Parameters {
     
     public Country Country(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Country: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Country: Application driver is not set.");
             return null;
         }
         
@@ -181,7 +201,7 @@ public class Parameters {
     
     public InvLocation InventoryLocation(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.InventoryLocation: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.InventoryLocation: Application driver is not set.");
             return null;
         }
         
@@ -198,7 +218,7 @@ public class Parameters {
     
     public InvType InventoryType(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.InventoryType: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.InventoryType: Application driver is not set.");
             return null;
         }
         
@@ -215,7 +235,7 @@ public class Parameters {
     
     public Measure Measurement(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Measurement: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Measurement: Application driver is not set.");
             return null;
         }
         
@@ -232,7 +252,7 @@ public class Parameters {
     
     public Model Model(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Model: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Model: Application driver is not set.");
             return null;
         }
         
@@ -249,7 +269,7 @@ public class Parameters {
     
     public ModelSeries ModelSeries(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.ModelSeries: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.ModelSeries: Application driver is not set.");
             return null;
         }
         
@@ -266,7 +286,7 @@ public class Parameters {
     
     public Province Province(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Province: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Province: Application driver is not set.");
             return null;
         }
         
@@ -283,7 +303,7 @@ public class Parameters {
     
     public Region Region(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Region: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Region: Application driver is not set.");
             return null;
         }
         
@@ -300,7 +320,7 @@ public class Parameters {
     
     public Section Section(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Section: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Section: Application driver is not set.");
             return null;
         }
         
@@ -317,7 +337,7 @@ public class Parameters {
     
     public TownCity TownCity(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.TownCity: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.TownCity: Application driver is not set.");
             return null;
         }
         
@@ -334,7 +354,7 @@ public class Parameters {
     
     public Warehouse Warehouse(){
         if (poGRider == null){
-            poLogWrapper.severe("Paratemters.Warehouse: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Warehouse: Application driver is not set.");
             return null;
         }
         

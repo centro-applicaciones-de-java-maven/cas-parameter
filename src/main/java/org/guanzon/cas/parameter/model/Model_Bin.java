@@ -9,7 +9,6 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_Bin extends Model {
-
     @Override
     public void initialize() {
         try {

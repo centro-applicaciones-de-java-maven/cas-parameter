@@ -7,6 +7,7 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Barangay extends Model{
@@ -37,11 +38,7 @@ public class Model_Barangay extends Model{
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poTownCity = new Model_TownCity();
-            poTownCity.setApplicationDriver(poGRider);
-            poTownCity.setXML("Model_TownCity");
-            poTownCity.setTableName("TownCity");
-            poTownCity.initialize();
+            poTownCity = new ParamModels(poGRider).TownCity();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;

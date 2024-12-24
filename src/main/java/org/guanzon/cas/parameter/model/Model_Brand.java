@@ -6,6 +6,7 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Brand extends Model {
@@ -32,11 +33,7 @@ private Model_Category poCategory;
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poCategory = new Model_Category();
-            poCategory.setApplicationDriver(poGRider);
-            poCategory.setXML("Model_Category");
-            poCategory.setTableName("Category");
-            poCategory.initialize();
+            poCategory = new ParamModels(poGRider).Category();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;

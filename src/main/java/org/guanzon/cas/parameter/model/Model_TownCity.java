@@ -7,6 +7,7 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_TownCity extends Model{
@@ -37,11 +38,7 @@ public class Model_TownCity extends Model{
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poProvince = new Model_Province();
-            poProvince.setApplicationDriver(poGRider);
-            poProvince.setXML("Model_Province");
-            poProvince.setTableName("Province");
-            poProvince.initialize();
+            poProvince = new ParamModels(poGRider).Province();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
