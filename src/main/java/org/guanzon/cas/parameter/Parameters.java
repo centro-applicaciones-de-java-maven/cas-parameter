@@ -43,6 +43,23 @@ public class Parameters {
         return poBin;        
     }
     
+    public Branch Branch(){
+        if (poGRider == null){
+            poLogWrapper.severe("Paratemters: Application driver is not set.");
+            return null;
+        }
+        
+        if (poBranch != null) return poBranch;
+        
+        poBranch = new Branch();
+        poBranch.setApplicationDriver(poGRider);
+        poBranch.setWithParentClass(true);
+        poBranch.setLogWrapper(poLogWrapper);
+        poBranch.initialize();
+        poBranch.newRecord();
+        return poBranch;        
+    }
+    
     public Brand Brand(){
         if (poGRider == null){
             poLogWrapper.severe("Paratemters: Application driver is not set.");
@@ -366,6 +383,7 @@ public class Parameters {
     
     private Barangay poBarangay;
     private Bin poBin;
+    private Branch poBranch;
     private Brand poBrand;
     private Category poCategory;
     private CategoryLevel2 poCategory2;
