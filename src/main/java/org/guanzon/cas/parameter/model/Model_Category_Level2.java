@@ -47,12 +47,12 @@ public class Model_Category_Level2 extends Model {
     }
     
     public Model_Category Category(){
-        if (!"".equals((String) getValue("sCategrCd"))){
+        if (!"".equals((String) getValue("sMainCatx"))){
             if (poCategory.getEditMode() == EditMode.READY && 
-                poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
+                poCategory.getCategoryId().equals((String) getValue("sMainCatx")))
                 return poCategory;
             else{
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
+                poJSON = poCategory.openRecord((String) getValue("sMainCatx"));
 
                 if ("success".equals((String) poJSON.get("result")))
                     return poCategory;

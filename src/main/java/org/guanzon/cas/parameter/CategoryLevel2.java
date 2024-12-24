@@ -59,19 +59,25 @@ public class CategoryLevel2 extends Parameter{
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
         String lsCondition = "";
-
+        
+        System.out.println("get select == " + getSQ_Browse());
         if (psRecdStat.length() > 1) {
             for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
                 lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
             }
 
             lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+            
+            System.out.println("get select1 == " + getSQ_Browse());
         } else {
             lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+            
+            System.out.println("get select2 == " + getSQ_Browse());
         }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
         
+        System.out.println("get select3 == " + lsCondition);
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        System.out.println("get select4 == " + lsSQL);
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
@@ -81,7 +87,7 @@ public class CategoryLevel2 extends Parameter{
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sCategrCd"));
+            return poModel.openRecord((String) poJSON.get("sMainCatx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
