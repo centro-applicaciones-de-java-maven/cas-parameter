@@ -173,4 +173,9 @@ public class Model_Branch extends Model {
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
     }
+    
+    @Override
+    public String getNextCode() {
+        return "";
+    }
 }
