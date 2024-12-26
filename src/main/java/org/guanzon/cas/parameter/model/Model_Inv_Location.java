@@ -6,6 +6,7 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Inv_Location extends Model {
@@ -32,11 +33,7 @@ public class Model_Inv_Location extends Model {
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poWarehouse = new Model_Warehouse();
-            poWarehouse.setApplicationDriver(poGRider);
-            poWarehouse.setXML("Model_Warehouse");
-            poWarehouse.setTableName("Warehouse");
-            poWarehouse.initialize();
+            poWarehouse = new ParamModels(poGRider).Warehouse();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;

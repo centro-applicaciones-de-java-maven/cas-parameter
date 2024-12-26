@@ -6,11 +6,13 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Model extends Model {
-private Model_Model_Series poModelSeries;
-private Model_Brand poBrand;
+    private Model_Model_Series poModelSeries;
+    private Model_Brand poBrand;
+    
     @Override
     public void initialize() {
         try {
@@ -34,17 +36,9 @@ private Model_Brand poBrand;
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poModelSeries = new Model_Model_Series();
-            poModelSeries.setApplicationDriver(poGRider);
-            poModelSeries.setXML("Model_Model_Series");
-            poModelSeries.setTableName("ModelSeries");
-            poModelSeries.initialize();
-//            
-            poBrand = new Model_Brand();
-            poBrand.setApplicationDriver(poGRider);
-            poBrand.setXML("Model_Brand");
-            poBrand.setTableName("Brand");
-            poBrand.initialize();
+            ParamModels model = new ParamModels(poGRider);            
+            poModelSeries = model.ModelSeries();           
+            poBrand = model.Brand();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
