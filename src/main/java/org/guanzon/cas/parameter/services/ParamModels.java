@@ -10,6 +10,7 @@ import org.guanzon.cas.parameter.model.Model_Category_Level2;
 import org.guanzon.cas.parameter.model.Model_Category_Level3;
 import org.guanzon.cas.parameter.model.Model_Category_Level4;
 import org.guanzon.cas.parameter.model.Model_Color;
+import org.guanzon.cas.parameter.model.Model_Company;
 import org.guanzon.cas.parameter.model.Model_Country;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
@@ -178,6 +179,23 @@ public class ParamModels {
         }
 
         return poColor;
+    }
+    
+    public Model_Company Company(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poCompany == null){
+            poCompany = new Model_Company();
+            poCompany.setApplicationDriver(poGRider);
+            poCompany.setXML("Model_Company");
+            poCompany.setTableName("Company");
+            poCompany.initialize();
+        }
+
+        return poCompany;
     }
     
     public Model_Country Country(){
@@ -378,6 +396,7 @@ public class ParamModels {
     private Model_Category_Level3 poCategory3;
     private Model_Category_Level4 poCategory4;
     private Model_Color poColor;
+    private Model_Company poCompany;
     private Model_Country poCountry;
     private Model_Inv_Location poInvLocation;
     private Model_Inv_Type poInvType;
