@@ -65,19 +65,11 @@ private Model_Category poCategory;
     }
     
     public JSONObject setBrandId(String brandId) {
-        return setValue("sModelIDx", brandId);
+        return setValue("sBrandIDx", brandId);
     }
 
     public String getBrandId() {
-        return (String) getValue("sModelIDx");
-    }
-
-    public JSONObject setModelCode(String modelCode) {
-        return setValue("sModelIDx", modelCode);
-    }
-
-    public String getModelCode() {
-        return (String) getValue("sModelIDx");
+        return (String) getValue("sBrandIDx");
     }
 
     public JSONObject setDescription(String description) {

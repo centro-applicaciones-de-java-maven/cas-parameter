@@ -89,4 +89,30 @@ public class Branch extends Parameter{
             return poJSON;
         }
     }
+    
+    public JSONObject searchRecordAttributes(String BranchID,
+                                    boolean byCode) {
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), 
+                                                "sBranchCd = " + SQLUtil.toSQL(BranchID));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                BranchID,
+                "Code»Branch Name",
+                "sBranchCd»sBranchNm",
+                "sBranchCd»sBranchNm",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sBranchCd"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
+    
+    
 }
