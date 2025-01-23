@@ -19,6 +19,7 @@ import org.guanzon.cas.parameter.model.Model_Model_Series;
 import org.guanzon.cas.parameter.model.Model_Province;
 import org.guanzon.cas.parameter.model.Model_Region;
 import org.guanzon.cas.parameter.model.Model_Section;
+import org.guanzon.cas.parameter.model.Model_Term;
 import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
 
@@ -349,6 +350,22 @@ public class ParamModels {
 
         return poTownCity;
     }
+    public Model_Term Term(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Term: Application driver is not set.");
+            return null;
+        }
+        
+        if (poTerm == null){
+            poTerm = new Model_Term();
+            poTerm.setApplicationDriver(poGRider);
+            poTerm.setXML("Model_Term");
+            poTerm.setTableName("Term");
+            poTerm.initialize();
+        }
+
+        return poTerm;
+    }
     
     public Model_Warehouse Warehouse(){
         if (poGRider == null){
@@ -388,5 +405,6 @@ public class ParamModels {
     private Model_Region poRegion;
     private Model_Section poSection;
     private Model_TownCity poTownCity;
+    private Model_Term poTerm;
     private Model_Warehouse poWarehouse;     
 }

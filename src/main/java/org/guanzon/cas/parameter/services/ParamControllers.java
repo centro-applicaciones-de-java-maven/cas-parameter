@@ -20,6 +20,7 @@ import org.guanzon.cas.parameter.ModelSeries;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;
 import org.guanzon.cas.parameter.Section;
+import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Warehouse;
 
@@ -352,6 +353,23 @@ public class ParamControllers {
         return poTownCity;        
     }
     
+    public Term Term(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.TownCity: Application driver is not set.");
+            return null;
+        }
+        
+        if (poTerm != null) return poTerm;
+        
+        poTerm = new Term();
+        poTerm.setApplicationDriver(poGRider);
+        poTerm.setWithParentClass(true);
+        poTerm.setLogWrapper(poLogWrapper);
+        poTerm.initialize();
+        poTerm.newRecord();
+        return poTerm;        
+    }
+    
     public Warehouse Warehouse(){
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Warehouse: Application driver is not set.");
@@ -420,5 +438,6 @@ public class ParamControllers {
     private Region poRegion;
     private Section poSection;
     private TownCity poTownCity;
+    private Term poTerm;
     private Warehouse poWarehouse;        
 }
