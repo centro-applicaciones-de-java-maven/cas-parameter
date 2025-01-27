@@ -11,6 +11,7 @@ import org.guanzon.cas.parameter.CategoryLevel2;
 import org.guanzon.cas.parameter.CategoryLevel3;
 import org.guanzon.cas.parameter.CategoryLevel4;
 import org.guanzon.cas.parameter.Color;
+import org.guanzon.cas.parameter.Company;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
@@ -180,6 +181,23 @@ public class ParamControllers {
         poColor.initialize();
         poColor.newRecord();
         return poColor;        
+    }
+    
+    public Company Company(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poCompany != null) return poCompany;
+        
+        poCompany = new Company();
+        poCompany.setApplicationDriver(poGRider);
+        poCompany.setWithParentClass(true);
+        poCompany.setLogWrapper(poLogWrapper);
+        poCompany.initialize();
+        poCompany.newRecord();
+        return poCompany;        
     }
     
     public Country Country(){
@@ -380,6 +398,7 @@ public class ParamControllers {
             poCategory3 = null;
             poCategory4 = null;
             poColor = null;
+            poCompany = null;
             poCountry = null;
             poInvLocation = null;
             poInvType = null;
@@ -410,6 +429,7 @@ public class ParamControllers {
     private CategoryLevel3 poCategory3;
     private CategoryLevel4 poCategory4;
     private Color poColor;
+    private Company poCompany;
     private Country poCountry;
     private InvLocation poInvLocation;
     private InvType poInvType;
