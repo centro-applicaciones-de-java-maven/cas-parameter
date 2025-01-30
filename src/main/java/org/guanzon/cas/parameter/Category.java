@@ -90,6 +90,8 @@ public class Category extends Parameter{
         }
     }
     
+    
+    
     public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         String lsCondition = "";
 
