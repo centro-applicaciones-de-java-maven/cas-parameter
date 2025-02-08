@@ -29,7 +29,7 @@ public class Model_Color extends Model {
 
             poEntity.absolute(1);
 
-            ID = poEntity.getMetaData().getColumnLabel(1);
+            ID = ("sColorIDx");
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {

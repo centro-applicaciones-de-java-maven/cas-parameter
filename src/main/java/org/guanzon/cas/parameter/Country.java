@@ -34,7 +34,7 @@ public class Country extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getCountryName().isEmpty()){
+            if (poModel.getCountryName() == null || poModel.getCountryName().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Country must not be empty.");
                 return poJSON;

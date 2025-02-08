@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 
 public class Model_Category_Level2 extends Model {
     private Model_Category poCategory;
+    private Model_Inv_Type poInvType;
     @Override
     public void initialize() {
         try {
@@ -34,6 +35,7 @@ public class Model_Category_Level2 extends Model {
             
             //initialize other connections
             poCategory = new ParamModels(poGRider).Category();
+            poInvType = new ParamModels(poGRider).InventoryType();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -61,6 +63,26 @@ public class Model_Category_Level2 extends Model {
         } else {
             poCategory.initialize();
             return poCategory;
+        }
+    }
+    public Model_Inv_Type InvType(){
+        if (!"".equals((String) getValue("sInvTypCd"))){
+            if (poInvType.getEditMode() == EditMode.READY && 
+                poInvType.getInventoryTypeId().equals((String) getValue("sInvTypCd")))
+                return poInvType;
+            else{
+                poJSON = poInvType.openRecord((String) getValue("sInvTypCd"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poInvType;
+                else {
+                    poInvType.initialize();
+                    return poInvType;
+                }
+            }
+        } else {
+            poInvType.initialize();
+            return poInvType;
         }
     }
 

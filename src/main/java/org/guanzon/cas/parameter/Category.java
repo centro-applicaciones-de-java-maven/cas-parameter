@@ -40,7 +40,7 @@ public class Category extends Parameter{
                 return poJSON;
             }
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getDescription() == null ||  poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Nationality must not be empty.");
                 return poJSON;
@@ -123,5 +123,75 @@ public class Category extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+    }
+    
+    
+    public JSONObject voidTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getCategoryId() == null || poModel.getCategoryId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("0");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "The category has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
+    }
+
+    
+    public JSONObject postTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getCategoryId()== null || poModel.getCategoryId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("1");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "The category has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
     }
 }
