@@ -6,20 +6,21 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Model;
+import org.guanzon.cas.parameter.model.Model_Category;
+import org.guanzon.cas.parameter.model.Model_Relationship;
 import org.json.simple.JSONObject;
 
-public class Model extends Parameter{
-    Model_Model poModel;
+public class Relationship extends Parameter{
+    Model_Relationship poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Model();
+        poModel = new Model_Relationship();
         poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Model");
-        poModel.setTableName("Model");
+        poModel.setXML("Model_Relationship");
+        poModel.setTableName("Relationship");
         poModel.initialize();
     }
     
@@ -34,23 +35,17 @@ public class Model extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getRelationId().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Model must not be empty.");
+                poJSON.put("message", "Relationship must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getSeriesId().isEmpty()){
+            if (poModel.getRelationshipDesc()== null ||  poModel.getRelationshipDesc().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Series must not be empty.");
+                poJSON.put("message", "Relationship must not be empty.");
                 return poJSON;
             }
-            
-//            if (poModel.getNationality().isEmpty()){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Nationality must not be empty.");
-//                return poJSON;
-//            }
         }
         
         poJSON.put("result", "success");
@@ -58,7 +53,7 @@ public class Model extends Parameter{
     }
     
     @Override
-    public Model_Model getModel() {
+    public Model_Relationship getModel() {
         return poModel;
     }
     
@@ -81,13 +76,13 @@ public class Model extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
+                "ID»Description",
+                "sRelatnID»sRelatnDs",
+                "sRelatnID»sRelatnDs",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+            return poModel.openRecord((String) poJSON.get("sRelatnID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -95,6 +90,8 @@ public class Model extends Parameter{
             return poJSON;
         }
     }
+    
+    
     
     public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         String lsCondition = "";
@@ -113,14 +110,14 @@ public class Model extends Parameter{
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
-                value,                
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
+                value,
+                "ID»Description",
+                "sCategrCd»sDescript",
+                "sCategrCd»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+            return poModel.openRecord((String) poJSON.get("sCategrCd"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -129,10 +126,11 @@ public class Model extends Parameter{
         }
     }
     
+    
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getModelId() == null || poModel.getModelId().isEmpty()) {
+        if (poModel.getRelationId()== null || poModel.getRelationId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -154,7 +152,7 @@ public class Model extends Parameter{
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
-            poJSON.put("message", "The color has been activated successfully.");
+            poJSON.put("message", "The category has been activated successfully.");
         } else {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to save record. Transaction rolled back.");
@@ -167,7 +165,7 @@ public class Model extends Parameter{
     public JSONObject postTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getModelId()== null || poModel.getModelId().isEmpty()) {
+        if (poModel.getRelationId()== null || poModel.getRelationId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -189,7 +187,7 @@ public class Model extends Parameter{
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
-            poJSON.put("message", "The color has been activated successfully.");
+            poJSON.put("message", "The category has been activated successfully.");
         } else {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to save record. Transaction rolled back.");

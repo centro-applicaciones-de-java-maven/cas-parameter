@@ -9,9 +9,9 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_Branch extends Model {
-    
-    private Model_TownCity poTown;
+public class Model_Banks_Branch extends Model {
+private Model_Banks poBanks;
+private Model_TownCity poTown;
     @Override
     public void initialize() {
         try {
@@ -32,12 +32,37 @@ public class Model_Branch extends Model {
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
+            
+            //initialize other connections
+            poBanks = new ParamModels(poGRider).Banks();
             poTown = new ParamModels(poGRider).TownCity();
+            //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
+        }
+    }
+    
+    public Model_Banks Banks(){
+        if (!"".equals((String) getValue("sBankIDxx"))){
+            if (poBanks.getEditMode() == EditMode.READY && 
+                poBanks.getBankID().equals((String) getValue("sBankIDxx")))
+                return poBanks;
+            else{
+                poJSON = poBanks.openRecord((String) getValue("sBankIDxx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poBanks;
+                else {
+                    poBanks.initialize();
+                    return poBanks;
+                }
+            }
+        } else {
+            poBanks.initialize();
+            return poBanks;
         }
     }
     
@@ -62,120 +87,78 @@ public class Model_Branch extends Model {
         }
     }
     
-    
-    public JSONObject setBranchCode(String branchCode) {
-        return setValue("sBranchCd", branchCode);
+    public JSONObject setBranchBankID(String branchbankId) {
+        return setValue("sBrBankID", branchbankId);
     }
 
-    public String getBranchCode() {
-        return (String) getValue("sBranchCd");
+    public String getBranchBankID() {
+        return (String) getValue("sBrBankID");
     }
 
-    public JSONObject setBranchName(String modelCode) {
-        return setValue("sBranchNm", modelCode);
+    public JSONObject setBranchBankName(String branchBankName) {
+        return setValue("sBrBankNm", branchBankName);
     }
 
-    public String getBranchName() {
-        return (String) getValue("sBranchNm");
-    }
-
-    public JSONObject setDescription(String description) {
-        return setValue("sDescript", description);
-    }
-
-    public String getDescription() {
-        return (String) getValue("sDescript");
-    }
-
-    
-    public JSONObject setCompanyId(String companyId) {
-        return setValue("sCompnyID", companyId);
-    }
-
-    public String getCompanyId() {
-        return (String) getValue("sCompnyID");
+    public String getBranchBankName() {
+        return (String) getValue("sBrBankNm");
     }
     
-    public JSONObject setAddress(String address) {
-        return setValue("sAddressx", address);
+    public JSONObject setBranchBankCode(String branchbankCode) {
+        return setValue("sBrBankCD", branchbankCode);
+    }
+
+    public String getBranchBankCode() {
+        return (String) getValue("sBrBankCD");
+    }
+
+    public JSONObject setBankID(String bankId) {
+        return setValue("sBankIDxx", bankId);
+    }
+
+    public String getBankID() {
+        return (String) getValue("sBankIDxx");
+    }
+    
+    public JSONObject setContactPerson(String contactPerson) {
+        return setValue("sContactP", contactPerson);
+    }
+
+    public String getContactPerson() {
+        return (String) getValue("sContactP");
+    }
+    
+    public JSONObject setAddress(String adress) {
+        return setValue("sAddressx", adress);
     }
 
     public String getAddress() {
         return (String) getValue("sAddressx");
     }
     
-    public JSONObject setTownId(String townId) {
-        return setValue("sTownIDxx", townId);
+    public JSONObject setTownID(String townID) {
+        return setValue("sTownIDxx", townID);
     }
 
-    public String getTownId() {
+    public String getTownID() {
         return (String) getValue("sTownIDxx");
     }
     
-    public JSONObject setManagerId(String managerId) {
-        return setValue("sManagerx", managerId);
+    public JSONObject setTelephoneNo(String telephoneNo) {
+        return setValue("sTelNoxxx", telephoneNo);
     }
 
-    public String getManagerId() {
-        return (String) getValue("sManagerx");
+    public String getTelephoneNo() {
+        return (String) getValue("sTelNoxxx");
     }
     
-    public JSONObject setSellerCode(String sellerCode) {
-        return setValue("sSellCode", sellerCode);
+    public JSONObject setFaxNo(String faxNo) {
+        return setValue("sFaxNoxxx", faxNo);
     }
 
-    public String getSellerCode() {
-        return (String) getValue("sSellCode");
-    }
+    public String getFaxNo() {
+        return (String) getValue("sFaxNoxxx");
+    }  
     
-    public JSONObject isWarehouse(boolean isWarehouse){
-        return setValue("cWareHous", isWarehouse == true ? "1" : "0");
-    }
-    
-    public boolean isWarehouse(){
-        return "1".equals((String) getValue("cWareHous"));
-    }
-    
-    public JSONObject isServiceCentre(boolean isServiceCentre){
-        return setValue("cSrvcCntr", isServiceCentre == true ? "1" : "0");
-    }
-    
-    public boolean isServiceCentre(){
-        return "1".equals((String) getValue("cSrvcCntr"));
-    }
-    
-    public JSONObject isAutomate(boolean isAutomate){
-        return setValue("cAutomate", isAutomate == true ? "1" : "0");
-    }
-    
-    public boolean isAutomate(){
-        return "1".equals((String) getValue("cAutomate"));
-    }
-    
-    public JSONObject isMainOffice(boolean isAutomate){
-        return setValue("cMainOffc", isAutomate == true ? "1" : "0");
-    }
-    
-    public boolean isMainOffice(){
-        return "1".equals((String) getValue("cMainOffc"));
-    }
-    
-    public JSONObject setLandLine(String landlineNo) {
-        return setValue("sTelNumbr", landlineNo);
-    }
-
-    public String getLandLine() {
-        return (String) getValue("sTelNumbr");
-    }
-    
-    public JSONObject setMobile(String mobileNo) {
-        return setValue("sContactx", mobileNo);
-    }
-
-    public String getMobile() {
-        return (String) getValue("sContactx");
-    }
-
     public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }
@@ -199,9 +182,8 @@ public class Model_Branch extends Model {
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
     }
-    
     @Override
     public String getNextCode() {
-        return "";
+        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
 }

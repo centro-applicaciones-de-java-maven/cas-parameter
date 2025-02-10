@@ -6,20 +6,22 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Model;
+import org.guanzon.cas.parameter.model.Model_Banks;
+import org.guanzon.cas.parameter.model.Model_Banks_Branch;
+import org.guanzon.cas.parameter.model.Model_Brand;
 import org.json.simple.JSONObject;
 
-public class Model extends Parameter{
-    Model_Model poModel;
+public class BanksBranch extends Parameter{
+    Model_Banks_Branch poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Model();
+        poModel = new Model_Banks_Branch();
         poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Model");
-        poModel.setTableName("Model");
+        poModel.setXML("Model_Banks_Branches");
+        poModel.setTableName("Banks_Branches");
         poModel.initialize();
     }
     
@@ -34,23 +36,54 @@ public class Model extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getBranchBankName()== null ||poModel.getBranchBankName().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Model must not be empty.");
+                poJSON.put("message", "Branch Bank Name must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getSeriesId().isEmpty()){
+            if (poModel.getBranchBankCode()== null || poModel.getBranchBankCode().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Series must not be empty.");
+                poJSON.put("message", "Branch Bank Code must not be empty.");
                 return poJSON;
             }
             
-//            if (poModel.getNationality().isEmpty()){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Nationality must not be empty.");
-//                return poJSON;
-//            }
+            if (poModel.getBankID()== null || poModel.getBankID().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Bank must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getContactPerson()== null || poModel.getContactPerson().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Contact person must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getAddress()== null || poModel.getAddress().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Address must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getTownID()== null || poModel.getTownID().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Town must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getTelephoneNo()== null || poModel.getTelephoneNo().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Telephone must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getFaxNo()== null || poModel.getFaxNo().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Fax No must not be empty.");
+                return poJSON;
+            }
+            
         }
         
         poJSON.put("result", "success");
@@ -58,7 +91,7 @@ public class Model extends Parameter{
     }
     
     @Override
-    public Model_Model getModel() {
+    public Model_Banks_Branch getModel() {
         return poModel;
     }
     
@@ -81,13 +114,13 @@ public class Model extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
+                "ID»Description»Branch Code",
+                "sBrBankID»sBrBankNm»sBrBankCD",
+                "sBrBankID»sBrBankNm»sBrBankCD",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+            return poModel.openRecord((String) poJSON.get("sBrBankID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -113,14 +146,14 @@ public class Model extends Parameter{
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
-                value,                
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
+                value,
+                "ID»Description»Category",
+                "sBrandIDx»sDescript»sCategrCd",
+                "sBrandIDx»sDescript»sCategrCd",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+            return poModel.openRecord((String) poJSON.get("sBrandIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -132,11 +165,12 @@ public class Model extends Parameter{
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getModelId() == null || poModel.getModelId().isEmpty()) {
+        if (poModel.getBankID()== null || poModel.getBankID().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+        
 
         poGRider.beginTrans(); // Start transaction
 
@@ -154,7 +188,7 @@ public class Model extends Parameter{
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
-            poJSON.put("message", "The color has been activated successfully.");
+            poJSON.put("message", "Bank has been deactivated successfully.");
         } else {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to save record. Transaction rolled back.");
@@ -167,7 +201,7 @@ public class Model extends Parameter{
     public JSONObject postTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getModelId()== null || poModel.getModelId().isEmpty()) {
+        if (poModel.getBankID()== null || poModel.getBankID().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -189,7 +223,7 @@ public class Model extends Parameter{
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
-            poJSON.put("message", "The color has been activated successfully.");
+            poJSON.put("message", "Bank has been activated successfully.");
         } else {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to save record. Transaction rolled back.");

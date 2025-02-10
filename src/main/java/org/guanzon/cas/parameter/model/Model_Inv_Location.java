@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 
 public class Model_Inv_Location extends Model {
     private Model_Warehouse poWarehouse;
+    private Model_Section poSection;
     @Override
     public void initialize() {
         try {
@@ -34,6 +35,8 @@ public class Model_Inv_Location extends Model {
             
             //initialize other connections
             poWarehouse = new ParamModels(poGRider).Warehouse();
+            poSection = new ParamModels(poGRider).Section();
+            
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -63,7 +66,28 @@ public class Model_Inv_Location extends Model {
             return poWarehouse;
         }
     }
+    
+    public Model_Section Section(){
+        if (!"".equals((String) getValue("sSectnIDx"))){
+            if (poSection.getEditMode() == EditMode.READY && 
+                poSection.getSectionId().equals((String) getValue("sSectnIDx")))
+                return poSection;
+            else{
+                poJSON = poSection.openRecord((String) getValue("sSectnIDx"));
 
+                if ("success".equals((String) poJSON.get("result")))
+                    return poSection;
+                else {
+                    poSection.initialize();
+                    return poSection;
+                }
+            }
+        } else {
+            poSection.initialize();
+            return poSection;
+        }
+    }
+    
     public JSONObject setLocationId(String locationId) {
         return setValue("sLocatnID", locationId);
     }

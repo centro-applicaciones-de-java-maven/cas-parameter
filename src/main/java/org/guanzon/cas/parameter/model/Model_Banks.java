@@ -6,23 +6,21 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_Term extends Model {
-
+public class Model_Banks extends Model {
     @Override
     public void initialize() {
         try {
             poEntity = MiscUtil.xml2ResultSet(System.getProperty("sys.default.path.metadata") + XML, getTable());
-
+            
             poEntity.last();
             poEntity.moveToInsertRow();
 
             MiscUtil.initRowSet(poEntity);
-
-            //assign default values
             
-            poEntity.updateObject("nTermValx", 0.00);
+            //assign default values
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
@@ -32,69 +30,69 @@ public class Model_Term extends Model {
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-
+            
+            //initialize other connections
+            //end - initialize other connections
+            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
         }
     }
+    
+   
+    
+    public JSONObject setBankID(String bankId) {
+        return setValue("sBankIDxx", bankId);
+    }
 
+    public String getBankID() {
+        return (String) getValue("sBankIDxx");
+    }
+
+    public JSONObject setBankName(String bankName) {
+        return setValue("sBankName", bankName);
+    }
+
+    public String getBankName() {
+        return (String) getValue("sBankName");
+    }
 
     
-    public JSONObject setTermCode(String termCode) {
-        return setValue("sTermCode", termCode);
+    public JSONObject setBankCode(String bankCode) {
+        return setValue("sBankCode", bankCode);
     }
 
-    public String getTermCode() {
-        return (String) getValue("sTermCode");
+    public String getBankCode() {
+        return (String) getValue("sBankCode");
     }
 
-    public JSONObject setDescription(String description) {
-        return setValue("sDescript", description);
-    }
-
-    public String getDescription() {
-        return (String) getValue("sDescript");
-    }
-    
-    public JSONObject setCoverage(String coverage) {
-        return setValue("cCoverage", coverage);
-    }
-
-    public String getCoverage() {
-        return (String) getValue("cCoverage");
-    }
-    
-    public JSONObject setTermValue(Number termValue) {
-        return setValue("nTermValx", termValue);
-    }
-
-    public Number getTermValue() {
-        return (Number) getValue("nTermValx");
-    }
-    
-    public JSONObject setRecordStatus(String recordStatus){
+    public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }
 
     public String getRecordStatus() {
         return (String) getValue("cRecdStat");
-    }
-
-    public JSONObject setModifyingId(String modifyingId) {
+    } 
+    
+    public JSONObject setModifyingId(String modifyingId){
         return setValue("sModified", modifyingId);
     }
-
-    public String getModifyingId() {
+    
+    public String getModifyingId(){
         return (String) getValue("sModified");
     }
-
-    public JSONObject setModifiedDate(Date modifiedDate) {
+    
+    public JSONObject setModifiedDate(Date modifiedDate){
         return setValue("dModified", modifiedDate);
     }
-
-    public Date getModifiedDate() {
+    
+    public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    @Override
+    public String getNextCode() {
+        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
 }

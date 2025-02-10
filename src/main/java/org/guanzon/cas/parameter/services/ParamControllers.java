@@ -2,6 +2,8 @@ package org.guanzon.cas.parameter.services;
 
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.cas.parameter.Banks;
+import org.guanzon.cas.parameter.BanksBranch;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Bin;
 import org.guanzon.cas.parameter.Branch;
@@ -11,14 +13,17 @@ import org.guanzon.cas.parameter.CategoryLevel2;
 import org.guanzon.cas.parameter.CategoryLevel3;
 import org.guanzon.cas.parameter.CategoryLevel4;
 import org.guanzon.cas.parameter.Color;
+import org.guanzon.cas.parameter.ColorDetail;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
+import org.guanzon.cas.parameter.Made;
 import org.guanzon.cas.parameter.Measure;
 import org.guanzon.cas.parameter.Model;
 import org.guanzon.cas.parameter.ModelSeries;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;
+import org.guanzon.cas.parameter.Relationship;
 import org.guanzon.cas.parameter.Section;
 import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
@@ -181,6 +186,22 @@ public class ParamControllers {
         poColor.initialize();
         poColor.newRecord();
         return poColor;        
+    }
+    public ColorDetail ColorDetail(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Color: Application driver is not set.");
+            return null;
+        }
+        
+        if (poColorDetail != null) return poColorDetail;
+        
+        poColorDetail = new ColorDetail();
+        poColorDetail.setApplicationDriver(poGRider);
+        poColorDetail.setWithParentClass(true);
+        poColorDetail.setLogWrapper(poLogWrapper);
+        poColorDetail.initialize();
+        poColorDetail.newRecord();
+        return poColorDetail;        
     }
     
     public Country Country(){
@@ -387,6 +408,74 @@ public class ParamControllers {
         return poWarehouse;        
     }
     
+    public Banks Banks(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Banks: Application driver is not set.");
+            return null;
+        }
+        
+        if (poBanks != null) return poBanks;
+        
+        poBanks = new Banks();
+        poBanks.setApplicationDriver(poGRider);
+        poBanks.setWithParentClass(true);
+        poBanks.setLogWrapper(poLogWrapper);
+        poBanks.initialize();
+        poBanks.newRecord();
+        return poBanks;        
+    }
+    
+    public BanksBranch BanksBranch(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Banks: Application driver is not set.");
+            return null;
+        }
+        
+        if (poBanksBranches != null) return poBanksBranches;
+        
+        poBanksBranches = new BanksBranch();
+        poBanksBranches.setApplicationDriver(poGRider);
+        poBanksBranches.setWithParentClass(true);
+        poBanksBranches.setLogWrapper(poLogWrapper);
+        poBanksBranches.initialize();
+        poBanksBranches.newRecord();
+        return poBanksBranches;        
+    }
+    
+    public Made Made(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Made: Application driver is not set.");
+            return null;
+        }
+        
+        if (poMade != null) return poMade;
+        
+        poMade = new Made();
+        poMade.setApplicationDriver(poGRider);
+        poMade.setWithParentClass(true);
+        poMade.setLogWrapper(poLogWrapper);
+        poMade.initialize();
+        poMade.newRecord();
+        return poMade;        
+    }
+    
+    public Relationship Relationship(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Made: Application driver is not set.");
+            return null;
+        }
+        
+        if (poRelationship != null) return poRelationship;
+        
+        poRelationship = new Relationship();
+        poRelationship.setApplicationDriver(poGRider);
+        poRelationship.setWithParentClass(true);
+        poRelationship.setLogWrapper(poLogWrapper);
+        poRelationship.initialize();
+        poRelationship.newRecord();
+        return poRelationship;        
+    }
+    
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -398,6 +487,7 @@ public class ParamControllers {
             poCategory3 = null;
             poCategory4 = null;
             poColor = null;
+            poColorDetail = null;
             poCountry = null;
             poInvLocation = null;
             poInvType = null;
@@ -408,6 +498,10 @@ public class ParamControllers {
             poSection = null;
             poTownCity = null;
             poWarehouse = null;
+            poBanks = null;
+            poBanksBranches = null;
+            poMade = null;
+            poRelationship = null;
             
             poLogWrapper = null;
             poGRider = null;
@@ -428,6 +522,7 @@ public class ParamControllers {
     private CategoryLevel3 poCategory3;
     private CategoryLevel4 poCategory4;
     private Color poColor;
+    private ColorDetail poColorDetail;
     private Country poCountry;
     private InvLocation poInvLocation;
     private InvType poInvType;
@@ -439,5 +534,9 @@ public class ParamControllers {
     private Section poSection;
     private TownCity poTownCity;
     private Term poTerm;
-    private Warehouse poWarehouse;        
+    private Warehouse poWarehouse;    
+    private Banks poBanks;        
+    private BanksBranch poBanksBranches;  
+    private Made poMade;        
+    private Relationship poRelationship;  
 }

@@ -122,4 +122,73 @@ public class Term extends Parameter{
             return poJSON;
         }
     }
+    
+    public JSONObject voidTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getTermCode()== null || poModel.getTermCode().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("0");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "The color has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
+    }
+
+    
+    public JSONObject postTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getTermCode()== null || poModel.getTermCode().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("1");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "The color has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
+    }
 }

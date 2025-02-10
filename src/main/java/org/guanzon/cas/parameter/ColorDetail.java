@@ -1,26 +1,34 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Model;
+import org.guanzon.cas.parameter.model.Model_Color;
+import org.guanzon.cas.parameter.model.Model_Color_Detail;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model extends Parameter{
-    Model_Model poModel;
+public class ColorDetail extends Parameter{
+    Model_Color_Detail poModel;
+    List<Model_Color_Detail> poModelList;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Model();
+        poModel = new Model_Color_Detail();
         poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Model");
-        poModel.setTableName("Model");
+        poModel.setXML("Model_Color_Detail");
+        poModel.setTableName("Color_Detail");
         poModel.initialize();
+        poModelList = new ArrayList<>();
     }
     
     @Override
@@ -34,23 +42,17 @@ public class Model extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getDescription()== null || poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Model must not be empty.");
+                poJSON.put("message", "Color must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getSeriesId().isEmpty()){
+            if (poModel.getColorCode()== null || poModel.getColorCode().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Series must not be empty.");
+                poJSON.put("message", "Main Color must not be empty.");
                 return poJSON;
             }
-            
-//            if (poModel.getNationality().isEmpty()){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Nationality must not be empty.");
-//                return poJSON;
-//            }
         }
         
         poJSON.put("result", "success");
@@ -58,7 +60,7 @@ public class Model extends Parameter{
     }
     
     @Override
-    public Model_Model getModel() {
+    public Model_Color_Detail getModel() {
         return poModel;
     }
     
@@ -76,18 +78,18 @@ public class Model extends Parameter{
             lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        
+//        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        System.out.println("get query = " + getSQ_Browse());
         poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
+                getSQ_Browse(),
                 value,
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
+                "ID»Description",
+                "sColorIDx»sDescript",
+                "sColorIDx»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+            return poModel.openRecord((String) poJSON.get("sColorIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -113,14 +115,14 @@ public class Model extends Parameter{
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
-                value,                
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
+                value,
+               "ID»Description",
+                "sColorIDx»sDescript",
+                "sColorIDx»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+            return poModel.openRecord((String) poJSON.get("sColorIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -128,11 +130,11 @@ public class Model extends Parameter{
             return poJSON;
         }
     }
-    
+   
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getModelId() == null || poModel.getModelId().isEmpty()) {
+        if (poModel.getColorId() == null || poModel.getColorId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -167,7 +169,7 @@ public class Model extends Parameter{
     public JSONObject postTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getModelId()== null || poModel.getModelId().isEmpty()) {
+        if (poModel.getColorId()== null || poModel.getColorId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -197,4 +199,81 @@ public class Model extends Parameter{
 
         return poJSON;
     }
+    
+   // ENABLE this Block of codes if list is needed else do not
+//    
+//    public JSONObject ColorList() {
+//          StringBuilder lsSQL = new StringBuilder("SELECT" +
+//           "   sColorIDx" +
+//           " , sDescript" +
+//           " , sMnColorx" +
+//           " , cRecdStat" +
+//           " FROM Color");
+//
+//        // Use SQLUtil.toSQL for handling the dates
+////        String condition = "sColorIDx = " + SQLUtil.toSQL(fsColorID);
+////        lsSQL.append(MiscUtil.addCondition("", condition));
+////        lsSQL.append(" ORDER BY a.nLedgerNo ASC");
+//
+//        System.out.println("Executing SQL: " + lsSQL.toString());
+//
+//        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+//        JSONObject poJSON = new JSONObject();
+//
+//        try {
+//            int lnctr = 0;
+//
+//            if (MiscUtil.RecordCount(loRS) >= 0) {
+//                poModelList = new ArrayList<>();
+//                while (loRS.next()) {
+//                    // Print the result set
+//
+//                    System.out.println("sColorIDx: " + loRS.getString("sColorIDx"));
+//                    System.out.println("sDescript: " + loRS.getString("sDescript"));
+//                    System.out.println("cRecdStat: " + loRS.getString("cRecdStat"));
+//                    System.out.println("------------------------------------------------------------------------------");
+//
+//                    poModelList.add(Color(loRS.getString("sColorIDx")));
+//                    poModelList.get(poModelList.size() - 1)
+//                            .openRecord(loRS.getString("sColorIDx"));
+//                    lnctr++;
+//                }
+//
+//                System.out.println("Records found: " + lnctr);
+//                poJSON.put("result", "success");
+//                poJSON.put("message", "Record loaded successfully.");
+//
+//            } else {
+//                poModelList = new ArrayList<>();
+////                addInvLedger();
+//                poJSON.put("result", "error");
+//                poJSON.put("continue", true);
+//                poJSON.put("message", "No record found .");
+//            }
+//            MiscUtil.close(loRS);
+//        } catch (SQLException e) {
+//            poJSON.put("result", "error");
+//            poJSON.put("message", e.getMessage());
+//        }
+//        System.out.println("RESULT == " + poJSON);
+//        return poJSON;
+//    }
+//    
+//    private Model_Color Color (String colorID) {
+//        Model_Color object = new ParamModels(poGRider).Color();
+//
+//        JSONObject loJSON = object.openRecord(colorID);
+//
+//        if ("success".equals((String) loJSON.get("result"))) {
+//            return object;
+//        } else {
+//            return new ParamModels(poGRider).Color();
+//        }
+//    }
+//    public int getListCount() {
+//        return poModelList.size();
+//    }
+//    public Model_Color Color(int row) {
+//        return poModelList.get(row);
+//    }
 }

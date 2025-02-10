@@ -1,6 +1,8 @@
 package org.guanzon.cas.parameter.services;
 
 import org.guanzon.appdriver.base.GRider;
+import org.guanzon.cas.parameter.model.Model_Banks;
+import org.guanzon.cas.parameter.model.Model_Banks_Branch;
 import org.guanzon.cas.parameter.model.Model_Barangay;
 import org.guanzon.cas.parameter.model.Model_Bin;
 import org.guanzon.cas.parameter.model.Model_Branch;
@@ -10,14 +12,17 @@ import org.guanzon.cas.parameter.model.Model_Category_Level2;
 import org.guanzon.cas.parameter.model.Model_Category_Level3;
 import org.guanzon.cas.parameter.model.Model_Category_Level4;
 import org.guanzon.cas.parameter.model.Model_Color;
+import org.guanzon.cas.parameter.model.Model_Color_Detail;
 import org.guanzon.cas.parameter.model.Model_Country;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
+import org.guanzon.cas.parameter.model.Model_Made;
 import org.guanzon.cas.parameter.model.Model_Measure;
 import org.guanzon.cas.parameter.model.Model_Model;
 import org.guanzon.cas.parameter.model.Model_Model_Series;
 import org.guanzon.cas.parameter.model.Model_Province;
 import org.guanzon.cas.parameter.model.Model_Region;
+import org.guanzon.cas.parameter.model.Model_Relationship;
 import org.guanzon.cas.parameter.model.Model_Section;
 import org.guanzon.cas.parameter.model.Model_Term;
 import org.guanzon.cas.parameter.model.Model_TownCity;
@@ -179,6 +184,23 @@ public class ParamModels {
         }
 
         return poColor;
+    }
+    
+    public Model_Color_Detail ColorDetail(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Color: Application driver is not set.");
+            return null;
+        }
+        
+        if (poColorDetail == null){
+            poColorDetail = new Model_Color_Detail();
+            poColorDetail.setApplicationDriver(poGRider);
+            poColorDetail.setXML("Model_Color_Detail");
+            poColorDetail.setTableName("Color_Detail");
+            poColorDetail.initialize();
+        }
+
+        return poColorDetail;
     }
     
     public Model_Country Country(){
@@ -384,6 +406,72 @@ public class ParamModels {
         return poWarehouse;
     }
     
+    public Model_Banks Banks(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Banks: Application driver is not set.");
+            return null;
+        }
+        
+        if (poBanks == null){
+            poBanks = new Model_Banks();
+            poBanks.setApplicationDriver(poGRider);
+            poBanks.setXML("Model_Banks");
+            poBanks.setTableName("Banks");
+            poBanks.initialize();
+        }
+
+        return poBanks;
+    }
+    public Model_Banks_Branch BanksBranch(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Banks: Application driver is not set.");
+            return null;
+        }
+        
+        if (poBanksBranch == null){
+            poBanksBranch = new Model_Banks_Branch();
+            poBanksBranch.setApplicationDriver(poGRider);
+            poBanksBranch.setXML("Model_Banks_Branch");
+            poBanksBranch.setTableName("Banks_Branches");
+            poBanksBranch.initialize();
+        }
+
+        return poBanksBranch;
+    }
+    
+    public Model_Made Made(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Banks: Application driver is not set.");
+            return null;
+        }
+        
+        if (poMade == null){
+            poMade = new Model_Made();
+            poMade.setApplicationDriver(poGRider);
+            poMade.setXML("Model_Made");
+            poMade.setTableName("made");
+            poMade.initialize();
+        }
+
+        return poMade;
+    }
+    public Model_Relationship Relationship(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Relationship: Application driver is not set.");
+            return null;
+        }
+        
+        if (poRelationship == null){
+            poRelationship = new Model_Relationship();
+            poRelationship.setApplicationDriver(poGRider);
+            poRelationship.setXML("Model_Relationship");
+            poRelationship.setTableName("Relationship");
+            poRelationship.initialize();
+        }
+
+        return poRelationship;
+    }
+    
     private final GRider poGRider;
     
     private Model_Barangay poBarangay;
@@ -394,7 +482,8 @@ public class ParamModels {
     private Model_Category_Level2 poCategory2;
     private Model_Category_Level3 poCategory3;
     private Model_Category_Level4 poCategory4;
-    private Model_Color poColor;
+    private Model_Color poColor;    
+    private Model_Color_Detail poColorDetail;
     private Model_Country poCountry;
     private Model_Inv_Location poInvLocation;
     private Model_Inv_Type poInvType;
@@ -406,5 +495,9 @@ public class ParamModels {
     private Model_Section poSection;
     private Model_TownCity poTownCity;
     private Model_Term poTerm;
-    private Model_Warehouse poWarehouse;     
+    private Model_Warehouse poWarehouse;    
+    private Model_Banks poBanks;
+    private Model_Banks_Branch poBanksBranch;       
+    private Model_Made poMade;    
+    private Model_Relationship poRelationship;    
 }
