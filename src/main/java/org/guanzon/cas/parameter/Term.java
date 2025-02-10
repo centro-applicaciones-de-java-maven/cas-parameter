@@ -6,20 +6,20 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Country;
+import org.guanzon.cas.parameter.model.Model_Term;
 import org.json.simple.JSONObject;
 
-public class Country extends Parameter{
-    Model_Country poModel;
+public class Term extends Parameter{
+    Model_Term poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Country();
+        poModel = new Model_Term();
         poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Country");
-        poModel.setTableName("Country");
+        poModel.setXML("Model_Term");
+        poModel.setTableName("Term");
         poModel.initialize();
     }
     
@@ -34,15 +34,15 @@ public class Country extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getCountryName() == null || poModel.getCountryName().isEmpty()){
+            if (poModel.getTermCode().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Country must not be empty.");
+                poJSON.put("message", "Term must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getNationality().isEmpty()){
+            if (poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Nationality must not be empty.");
+                poJSON.put("message", "Term must not be empty.");
                 return poJSON;
             }
         }
@@ -52,7 +52,7 @@ public class Country extends Parameter{
     }
     
     @Override
-    public Model_Country getModel() {
+    public Model_Term getModel() {
         return poModel;
     }
     
@@ -75,13 +75,13 @@ public class Country extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Country",
-                "sCntryCde»sCntryNme",
-                "sCntryCde»sCntryNme",
+                "ID»Description",
+                "sTermCode»sDescript",
+                "sTermCode»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sCntryCde"));
+            return poModel.openRecord((String) poJSON.get("sTermCode"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -108,13 +108,13 @@ public class Country extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Country»Record Status",
-                "sCntryCde»sCntryNme»cRecdStat",
-                "sCntryCde»sCntryNme»cRecdStats",
+               "ID»Description",
+                "sTermCode»sDescript",
+                "sTermCode»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sCntryCde"));
+            return poModel.openRecord((String) poJSON.get("sTermCode"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");

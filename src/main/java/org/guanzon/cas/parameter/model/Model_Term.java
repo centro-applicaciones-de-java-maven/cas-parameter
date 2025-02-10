@@ -8,7 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Color extends Model {
+public class Model_Term extends Model {
 
     @Override
     public void initialize() {
@@ -29,7 +29,7 @@ public class Model_Color extends Model {
 
             poEntity.absolute(1);
 
-            ID = ("sColorIDx");
+            ID = poEntity.getMetaData().getColumnLabel(1);
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -38,12 +38,14 @@ public class Model_Color extends Model {
         }
     }
 
-    public JSONObject setColorId(String colorId) {
-        return setValue("sColorIDx", colorId);
+
+    
+    public JSONObject setTermCode(String termCode) {
+        return setValue("sTermCode", termCode);
     }
 
-    public String getColorId() {
-        return (String) getValue("sColorIDx");
+    public String getTermCode() {
+        return (String) getValue("sTermCode");
     }
 
     public JSONObject setDescription(String description) {
@@ -54,12 +56,20 @@ public class Model_Color extends Model {
         return (String) getValue("sDescript");
     }
     
-    public JSONObject setMainColor(String mainColor) {
-        return setValue("sMnColorx", mainColor);
+    public JSONObject setCoverage(String coverage) {
+        return setValue("cCoverage", coverage);
     }
 
-    public String getMainColor() {
-        return (String) getValue("sMnColorx");
+    public String getCoverage() {
+        return (String) getValue("cCoverage");
+    }
+    
+    public JSONObject setTermValue(int termValue) {
+        return setValue("nTermValx", termValue);
+    }
+
+    public String getTermValue() {
+        return (String) getValue("nTermValx");
     }
     
     public JSONObject setRecordStatus(String recordStatus){
