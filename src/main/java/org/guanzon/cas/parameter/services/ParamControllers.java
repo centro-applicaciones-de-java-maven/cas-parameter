@@ -2,6 +2,7 @@ package org.guanzon.cas.parameter.services;
 
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.cas.parameter.AffiliatedCompany;
 import org.guanzon.cas.parameter.Banks;
 import org.guanzon.cas.parameter.BanksBranch;
 import org.guanzon.cas.parameter.Barangay;
@@ -14,6 +15,7 @@ import org.guanzon.cas.parameter.CategoryLevel3;
 import org.guanzon.cas.parameter.CategoryLevel4;
 import org.guanzon.cas.parameter.Color;
 import org.guanzon.cas.parameter.ColorDetail;
+import org.guanzon.cas.parameter.Company;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
@@ -25,8 +27,11 @@ import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;
 import org.guanzon.cas.parameter.Relationship;
 import org.guanzon.cas.parameter.Section;
+import org.guanzon.cas.parameter.Size;
 import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
+import org.guanzon.cas.parameter.Labor;
+import org.guanzon.cas.parameter.LaborModel;
 import org.guanzon.cas.parameter.Warehouse;
 
 public class ParamControllers {
@@ -476,6 +481,90 @@ public class ParamControllers {
         return poRelationship;        
     }
     
+    public Size Size(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Size: Application driver is not set.");
+            return null;
+        }
+        
+        if (poSize != null) return poSize;
+        
+        poSize = new Size();
+        poSize.setApplicationDriver(poGRider);
+        poSize.setWithParentClass(true);
+        poSize.setLogWrapper(poLogWrapper);
+        poSize.initialize();
+        poSize.newRecord();
+        return poSize;        
+    }
+    
+    public Company Company(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poCompany != null) return poCompany;
+        
+        poCompany = new Company();
+        poCompany.setApplicationDriver(poGRider);
+        poCompany.setWithParentClass(true);
+        poCompany.setLogWrapper(poLogWrapper);
+        poCompany.initialize();
+        poCompany.newRecord();
+        return poCompany;        
+    }
+    
+    public AffiliatedCompany AffiliatedCompany(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.AffiliatedCompany: Application driver is not set.");
+            return null;
+        }
+        
+        if (poAffiliatedCompany != null) return poAffiliatedCompany;
+        
+        poAffiliatedCompany = new AffiliatedCompany();
+        poAffiliatedCompany.setApplicationDriver(poGRider);
+        poAffiliatedCompany.setWithParentClass(true);
+        poAffiliatedCompany.setLogWrapper(poLogWrapper);
+        poAffiliatedCompany.initialize();
+        poAffiliatedCompany.newRecord();
+        return poAffiliatedCompany;        
+    }
+    
+    public Labor Labor(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.AffiliatedCompany: Application driver is not set.");
+            return null;
+        }
+        
+        if (poLabor != null) return poLabor;
+        
+        poLabor = new Labor();
+        poLabor.setApplicationDriver(poGRider);
+        poLabor.setWithParentClass(true);
+        poLabor.setLogWrapper(poLogWrapper);
+        poLabor.initialize();
+        poLabor.newRecord();
+        return poLabor;        
+    }
+    
+    public LaborModel LaborModel(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.AffiliatedCompany: Application driver is not set.");
+            return null;
+        }
+        
+        if (poLaborModel != null) return poLaborModel;
+        
+        poLaborModel = new LaborModel();
+        poLaborModel.setApplicationDriver(poGRider);
+        poLaborModel.setWithParentClass(true);
+        poLaborModel.setLogWrapper(poLogWrapper);
+        poLaborModel.initialize();
+        poLaborModel.newRecord();
+        return poLaborModel;        
+    }    
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -502,7 +591,12 @@ public class ParamControllers {
             poBanksBranches = null;
             poMade = null;
             poRelationship = null;
-            
+            poSize = null;
+            poCompany = null;
+            poAffiliatedCompany= null;
+            poLabor = null;
+            poLaborModel = null;
+                    
             poLogWrapper = null;
             poGRider = null;
         } finally {
@@ -539,4 +633,9 @@ public class ParamControllers {
     private BanksBranch poBanksBranches;  
     private Made poMade;        
     private Relationship poRelationship;  
+    private Size poSize;  
+    private Company poCompany;      
+    private AffiliatedCompany poAffiliatedCompany; 
+    private Labor poLabor; 
+    private LaborModel poLaborModel; 
 }

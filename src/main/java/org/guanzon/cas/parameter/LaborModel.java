@@ -11,23 +11,26 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Color;
+import org.guanzon.cas.parameter.model.Model_Labor;
+import org.guanzon.cas.parameter.model.Model_Labor_Model;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Color extends Parameter{
-    Model_Color poModel;
-    List<Model_Color> poModelList;
+public class LaborModel extends Parameter{
+    Model_Labor_Model poModelLabor;
+    Labor poLabor;
+    Model poModel;
+    List<Model_Labor_Model> poModelList;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Color();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Color");
-        poModel.setTableName("Color");
-        poModel.initialize();
-        poModelList = new ArrayList<>();
+        poModelLabor = new Model_Labor_Model();
+        poModelLabor.setApplicationDriver(poGRider);
+        poModelLabor.setXML("Model_Labor_Model");
+        poModelLabor.setTableName("Labor_Model");
+        poModelLabor.initialize();
     }
     
     @Override
@@ -41,15 +44,15 @@ public class Color extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getColorId().isEmpty()){
+            if (poModelLabor.getLaborId().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Color must not be empty.");
+                poJSON.put("message", "Labor must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getDescription() == null || poModel.getDescription().isEmpty()){
+            if (poModelLabor.getModelId()== null ||  poModelLabor.getModelId().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Color must not be empty.");
+                poJSON.put("message", "Model must not be empty.");
                 return poJSON;
             }
         }
@@ -59,8 +62,8 @@ public class Color extends Parameter{
     }
     
     @Override
-    public Model_Color getModel() {
-        return poModel;
+    public Model_Labor_Model getModel() {
+        return poModelLabor;
     }
     
     @Override
@@ -77,18 +80,18 @@ public class Color extends Parameter{
             lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
-//        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        System.out.println("get query = " + getSQ_Browse());
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
                 "ID»Description",
-                "sColorIDx»sDescript",
-                "sColorIDx»sDescript",
+                "sLaborIDx»sLaborNme",
+                "sLaborIDx»sLaborNme",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sColorIDx"));
+            return poModelLabor.openRecord((String) poJSON.get("sLaborIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -96,6 +99,8 @@ public class Color extends Parameter{
             return poJSON;
         }
     }
+    
+    
     
     public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         String lsCondition = "";
@@ -115,13 +120,13 @@ public class Color extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-               "ID»Description",
-                "sColorIDx»sDescript",
-                "sColorIDx»sDescript",
+                "ID»Description",
+                "sLaborIDx»sLaborNme",
+                "sLaborIDx»sLaborNme",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sColorIDx"));
+            return poModelLabor.openRecord((String) poJSON.get("sLaborIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -129,11 +134,12 @@ public class Color extends Parameter{
             return poJSON;
         }
     }
-   
+    
+    
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getColorId() == null || poModel.getColorId().isEmpty()) {
+        if (poModelLabor.getLaborId()== null || poModelLabor.getLaborId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -141,21 +147,21 @@ public class Color extends Parameter{
 
         poGRider.beginTrans(); // Start transaction
 
-        poJSON = poModel.updateRecord();
+        poJSON = poModelLabor.updateRecord();
         if (!"success".equals(poJSON.get("result"))) {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to update record.");
             return poJSON;
         }
 
-        poModel.setRecordStatus("0");
-        poModel.setModifyingId(poGRider.getUserID());
-        poModel.setModifiedDate(poGRider.getServerDate());
-        poJSON = poModel.saveRecord();
+        poModelLabor.setRecordStatus("0");
+        poModelLabor.setModifyingId(poGRider.getUserID());
+        poModelLabor.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModelLabor.saveRecord();
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
-            poJSON.put("message", "The color has been activated successfully.");
+            poJSON.put("message", "The category has been activated successfully.");
         } else {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to save record. Transaction rolled back.");
@@ -168,7 +174,7 @@ public class Color extends Parameter{
     public JSONObject postTransaction() {
         poJSON = new JSONObject();
 
-        if (poModel.getColorId()== null || poModel.getColorId().isEmpty()) {
+        if (poModelLabor.getLaborId()== null || poModelLabor.getLaborId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -176,21 +182,21 @@ public class Color extends Parameter{
 
         poGRider.beginTrans(); // Start transaction
 
-        poJSON = poModel.updateRecord();
+        poJSON = poModelLabor.updateRecord();
         if (!"success".equals(poJSON.get("result"))) {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to update record.");
             return poJSON;
         }
 
-        poModel.setRecordStatus("1");
-        poModel.setModifyingId(poGRider.getUserID());
-        poModel.setModifiedDate(poGRider.getServerDate());
-        poJSON = poModel.saveRecord();
+        poModelLabor.setRecordStatus("1");
+        poModelLabor.setModifyingId(poGRider.getUserID());
+        poModelLabor.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModelLabor.saveRecord();
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
-            poJSON.put("message", "The color has been activated successfully.");
+            poJSON.put("message", "The category has been activated successfully.");
         } else {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to save record. Transaction rolled back.");
@@ -199,21 +205,92 @@ public class Color extends Parameter{
         return poJSON;
     }
     
-   // ENABLE this Block of codes if list is needed else do not
-//    
-    public JSONObject ColorList() {
-          StringBuilder lsSQL = new StringBuilder("SELECT" +
-           "   sColorIDx" +
-           " , sDescript" +
-           " , sMnColorx" +
-           " , cRecdStat" +
-           " FROM Color");
+    @Override
+    public String getSQ_Browse(){
+        String lsSQL;
+        String lsRecdStat = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsRecdStat += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsRecdStat = "a.cRecdStat IN (" + lsRecdStat.substring(2) + ")";
+        } else {
+            lsRecdStat = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+        
+        lsSQL = "SELECT "
+                + "  a.sLaborIDx "
+                + ", b.sModelIDx "
+                + ", b.sDescript "
+                + ", a.nAmountxx "
+                + ", b.sModelCde "
+                + ", b.sBrandIDx "
+                + ", b.sSeriesID "
+                + ", b.nYearModl "
+                + ", b.cEndOfLfe "
+                + ", a.cRecdStat "
+                + ", b.cRecdStat "
+                + ", a.sModified "
+                + ", a.dModified "
+                + " FROM labor_model a "
+                + " LEFT JOIN Model b ON a.sModelIDx = b.sModelIDx ";
+        
+        if (!psRecdStat.isEmpty()) lsSQL = MiscUtil.addCondition(lsSQL, lsRecdStat);
+
+        System.out.println("select == " + lsSQL);
+        return lsSQL;
+    }
+    
+    public JSONObject searchRecordwithBarrcode(String value, boolean byCode) {
+            
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "BarCode»Description»Selling Price»ID",
+                "sBarCodex»sDescript»nSelPrice»sStockIDx",
+                "a.sBarCodex»a.sDescript»a.nSelPrice»a.sStockIDx",
+                byCode ? 0 : 1);
+
+        return openRecord(poJSON);
+    }
+    
+    private JSONObject openRecord(JSONObject json){
+        if (json != null) {
+            poJSON = poModelLabor.openRecord((String) poJSON.get("sLaborIDx"), (String) poJSON.get("sModelIDx"));
+            
+            if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+            
+            //load reference records
+            poLabor.openRecord("sLaborIDx");
+            poModel.openRecord("sModelIDx");
+            //end -load reference records
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+        
+        return poJSON;
+    }
+    
+    public JSONObject LaborList(String fsValue) {
+          StringBuilder lsSQL = new StringBuilder( "SELECT "
+                  + "a.sLaborIDx,"
+                  + " a.sLaborNme,"
+                  + " b.sModelIDx,"
+                  + " b.nAmountxx " 
+                  + "FROM Labor a " 
+                  + "LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx");
 
         // Use SQLUtil.toSQL for handling the dates
 //        String condition = "sColorIDx = " + SQLUtil.toSQL(fsColorID);
 //        lsSQL.append(MiscUtil.addCondition("", condition));
 //        lsSQL.append(" ORDER BY a.nLedgerNo ASC");
-
+        lsSQL.append(MiscUtil.addCondition("", "b.sModelIDx = " + SQLUtil.toSQL(fsValue) + " OR b.sModelIDx IS NULL "));
+        lsSQL.append(" ORDER BY a.sLaborIDx");
         System.out.println("Executing SQL: " + lsSQL.toString());
 
         ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
@@ -227,14 +304,15 @@ public class Color extends Parameter{
                 while (loRS.next()) {
                     // Print the result set
 
-                    System.out.println("sColorIDx: " + loRS.getString("sColorIDx"));
-                    System.out.println("sDescript: " + loRS.getString("sDescript"));
-                    System.out.println("cRecdStat: " + loRS.getString("cRecdStat"));
+                    System.out.println("sLaborIDx: " + loRS.getString("sLaborIDx"));
+                    System.out.println("sLaborNme: " + loRS.getString("sLaborNme"));
+                    System.out.println("sModelIDx: " + loRS.getString("sModelIDx"));
+                    System.out.println("nAmountxx: " + loRS.getString("nAmountxx"));
                     System.out.println("------------------------------------------------------------------------------");
 
-                    poModelList.add(Color(loRS.getString("sColorIDx")));
+                    poModelList.add(ModelLabor(loRS.getString("sLaborIDx"),loRS.getString("sModelIDx")));
                     poModelList.get(poModelList.size() - 1)
-                            .openRecord(loRS.getString("sColorIDx"));
+                            .openRecord(loRS.getString("sLaborIDx"),loRS.getString("sModelIDx"));
                     lnctr++;
                 }
 
@@ -258,21 +336,22 @@ public class Color extends Parameter{
         return poJSON;
     }
     
-    private Model_Color Color (String colorID) {
-        Model_Color object = new ParamModels(poGRider).Color();
+    private Model_Labor_Model ModelLabor (String laborID,String modelID) {
+        Model_Labor_Model object = new ParamModels(poGRider).LaborModel();
 
-        JSONObject loJSON = object.openRecord(colorID);
+        JSONObject loJSON = object.openRecord(laborID,modelID);
 
         if ("success".equals((String) loJSON.get("result"))) {
             return object;
         } else {
-            return new ParamModels(poGRider).Color();
+            return new ParamModels(poGRider).LaborModel();
         }
     }
     public int getListCount() {
         return poModelList.size();
     }
-    public Model_Color Color(int row) {
+    public Model_Labor_Model LaborModel(int row) {
         return poModelList.get(row);
     }
+    
 }

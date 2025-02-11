@@ -1,6 +1,7 @@
 package org.guanzon.cas.parameter.services;
 
 import org.guanzon.appdriver.base.GRider;
+import org.guanzon.cas.parameter.model.Model_Affiliated_Company;
 import org.guanzon.cas.parameter.model.Model_Banks;
 import org.guanzon.cas.parameter.model.Model_Banks_Branch;
 import org.guanzon.cas.parameter.model.Model_Barangay;
@@ -13,9 +14,12 @@ import org.guanzon.cas.parameter.model.Model_Category_Level3;
 import org.guanzon.cas.parameter.model.Model_Category_Level4;
 import org.guanzon.cas.parameter.model.Model_Color;
 import org.guanzon.cas.parameter.model.Model_Color_Detail;
+import org.guanzon.cas.parameter.model.Model_Company;
 import org.guanzon.cas.parameter.model.Model_Country;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
+import org.guanzon.cas.parameter.model.Model_Labor;
+import org.guanzon.cas.parameter.model.Model_Labor_Model;
 import org.guanzon.cas.parameter.model.Model_Made;
 import org.guanzon.cas.parameter.model.Model_Measure;
 import org.guanzon.cas.parameter.model.Model_Model;
@@ -24,6 +28,7 @@ import org.guanzon.cas.parameter.model.Model_Province;
 import org.guanzon.cas.parameter.model.Model_Region;
 import org.guanzon.cas.parameter.model.Model_Relationship;
 import org.guanzon.cas.parameter.model.Model_Section;
+import org.guanzon.cas.parameter.model.Model_Size;
 import org.guanzon.cas.parameter.model.Model_Term;
 import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
@@ -471,6 +476,91 @@ public class ParamModels {
 
         return poRelationship;
     }
+
+    public Model_Size Size(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Size: Application driver is not set.");
+            return null;
+        }
+        
+        if (poSize == null){
+            poSize = new Model_Size();
+            poSize.setApplicationDriver(poGRider);
+            poSize.setXML("Model_Size");
+            poSize.setTableName("Size");
+            poSize.initialize();
+        }
+
+        return poSize;
+    }
+    
+    public Model_Company Company(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poCompany == null){
+            poCompany = new Model_Company();
+            poCompany.setApplicationDriver(poGRider);
+            poCompany.setXML("Model_Company");
+            poCompany.setTableName("Company");
+            poCompany.initialize();
+        }
+
+        return poCompany;
+    }
+            
+    public Model_Affiliated_Company AffilatedCompany(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poAffiliatCompany == null){
+            poAffiliatCompany = new Model_Affiliated_Company();
+            poAffiliatCompany.setApplicationDriver(poGRider);
+            poAffiliatCompany.setXML("Model_Affiliated_Company");
+            poAffiliatCompany.setTableName("Affiliated_Company");
+            poAffiliatCompany.initialize();
+        }
+
+        return poAffiliatCompany;
+    } 
+    
+    public Model_Labor Labor(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poLabor  == null){
+            poLabor = new Model_Labor();
+            poLabor.setApplicationDriver(poGRider);
+            poLabor.setXML("Model_Labor");
+            poLabor.setTableName("Labor");
+            poLabor.initialize();
+        }
+
+        return poLabor;
+    } 
+    
+    public Model_Labor_Model LaborModel(){
+        if (poGRider == null){
+            System.err.println("ParamModels.Company: Application driver is not set.");
+            return null;
+        }
+        
+        if (poLaborModel  == null){
+            poLaborModel = new Model_Labor_Model();
+            poLaborModel.setApplicationDriver(poGRider);
+            poLaborModel.setXML("Model_Labor_Model");
+            poLaborModel.setTableName("Labor_Model");
+            poLaborModel.initialize();
+        }
+
+        return poLaborModel;
+    } 
     
     private final GRider poGRider;
     
@@ -499,5 +589,10 @@ public class ParamModels {
     private Model_Banks poBanks;
     private Model_Banks_Branch poBanksBranch;       
     private Model_Made poMade;    
-    private Model_Relationship poRelationship;    
+    private Model_Relationship poRelationship;  
+    private Model_Size poSize;  
+    private Model_Company poCompany;  
+    private Model_Affiliated_Company poAffiliatCompany;  
+    private Model_Labor poLabor;    
+    private Model_Labor_Model poLaborModel;  
 }
