@@ -1,9 +1,12 @@
 package org.guanzon.cas.parameter;
 
+import com.sun.rowset.CachedRowSetImpl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sql.rowset.CachedRowSet;
+import javax.sql.rowset.RowSetProvider;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
@@ -14,6 +17,7 @@ import org.guanzon.cas.parameter.model.Model_Color;
 import org.guanzon.cas.parameter.model.Model_Labor;
 import org.guanzon.cas.parameter.model.Model_Labor_Model;
 import org.guanzon.cas.parameter.services.ParamModels;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class LaborModel extends Parameter{
@@ -21,7 +25,9 @@ public class LaborModel extends Parameter{
     Labor poLabor;
     Model poModel;
     List<Model_Labor_Model> poModelList;
-    
+    String modelID = "";
+    private CachedRowSet cacheLaborList;  // Stores the cached labor list
+
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
@@ -275,72 +281,56 @@ public class LaborModel extends Parameter{
         
         return poJSON;
     }
-    
-    public JSONObject LaborList(String fsValue) {
-          StringBuilder lsSQL = new StringBuilder( "SELECT "
-                  + "a.sLaborIDx,"
-                  + " a.sLaborNme,"
-                  + " b.sModelIDx,"
-                  + " b.nAmountxx " 
-                  + "FROM Labor a " 
-                  + "LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx");
 
-        // Use SQLUtil.toSQL for handling the dates
-//        String condition = "sColorIDx = " + SQLUtil.toSQL(fsColorID);
-//        lsSQL.append(MiscUtil.addCondition("", condition));
-//        lsSQL.append(" ORDER BY a.nLedgerNo ASC");
+
+
+    public JSONObject LaborList(String fsValue) {
+        StringBuilder lsSQL = new StringBuilder(
+            "SELECT a.sLaborIDx, a.sLaborNme, " +
+            "COALESCE(b.sModelIDx, '') AS sModelIDx, " +  
+            "COALESCE(b.nAmountxx, 0) AS nAmountxx " +  
+            "FROM Labor a " +
+            "LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx ");
+
         lsSQL.append(MiscUtil.addCondition("", "b.sModelIDx = " + SQLUtil.toSQL(fsValue) + " OR b.sModelIDx IS NULL "));
         lsSQL.append(" ORDER BY a.sLaborIDx");
+
         System.out.println("Executing SQL: " + lsSQL.toString());
 
         ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
         JSONObject poJSON = new JSONObject();
-
+        modelID = fsValue;
         try {
-            int lnctr = 0;
+            cacheLaborList = new CachedRowSetImpl();  // ✅ Initialize CachedRowSet
+            cacheLaborList.populate(loRS); // ✅ Store result in cache
 
-            if (MiscUtil.RecordCount(loRS) >= 0) {
-                poModelList = new ArrayList<>();
-                while (loRS.next()) {
-                    // Print the result set
+            poJSON.put("result", "success");
+            poJSON.put("message", "Record loaded successfully.");
 
-                    System.out.println("sLaborIDx: " + loRS.getString("sLaborIDx"));
-                    System.out.println("sLaborNme: " + loRS.getString("sLaborNme"));
-                    System.out.println("sModelIDx: " + loRS.getString("sModelIDx"));
-                    System.out.println("nAmountxx: " + loRS.getString("nAmountxx"));
-                    System.out.println("------------------------------------------------------------------------------");
-
-                    poModelList.add(ModelLabor(loRS.getString("sLaborIDx"),loRS.getString("sModelIDx")));
-                    poModelList.get(poModelList.size() - 1)
-                            .openRecord(loRS.getString("sLaborIDx"),loRS.getString("sModelIDx"));
-                    lnctr++;
-                }
-
-                System.out.println("Records found: " + lnctr);
-                poJSON.put("result", "success");
-                poJSON.put("message", "Record loaded successfully.");
-
-            } else {
-                poModelList = new ArrayList<>();
-//                addInvLedger();
-                poJSON.put("result", "error");
-                poJSON.put("continue", true);
-                poJSON.put("message", "No record found .");
-            }
-            MiscUtil.close(loRS);
         } catch (SQLException e) {
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
-        System.out.println("RESULT == " + poJSON);
         return poJSON;
     }
+
+    // ✅ Getter method to access cache from UI Controller
+    public CachedRowSet getCachedLaborList() {
+        return cacheLaborList;
+    }
+
+   
     
     private Model_Labor_Model ModelLabor (String laborID,String modelID) {
         Model_Labor_Model object = new ParamModels(poGRider).LaborModel();
 
         JSONObject loJSON = object.openRecord(laborID,modelID);
-
+        System.out.println(" ");
+        System.out.println("------------------------------------------------------");
+        System.out.println("ModelLabor = " + loJSON.toString());
+        System.out.println("laborID = " + laborID);
+        System.out.println("modelID = " + modelID);
+        System.out.println(" ");
         if ("success".equals((String) loJSON.get("result"))) {
             return object;
         } else {
@@ -353,5 +343,108 @@ public class LaborModel extends Parameter{
     public Model_Labor_Model LaborModel(int row) {
         return poModelList.get(row);
     }
+    
+    /**
+     *
+     */
+
+    public JSONObject saveRecord() {
+    JSONObject poJSON = new JSONObject();
+
+    if (cacheLaborList == null) {
+        poJSON.put("result", "error");
+        poJSON.put("message", "No records to save.");
+        return poJSON;
+    }
+
+    try {
+        poGRider.beginTrans(); // ✅ Start transaction
+        cacheLaborList.beforeFirst(); // ✅ Reset cursor
+        List<String> queries = new ArrayList<>();
+
+        while (cacheLaborList.next()) {
+            double amount = cacheLaborList.getDouble("nAmountxx");
+            String laborId = cacheLaborList.getString("sLaborIDx");
+            String modelId = cacheLaborList.getString("sModelIDx");
+
+            if (amount > 0.0) { // ✅ Only process records where amount > 0
+                // ✅ Check if record exists
+                String checkSQL = String.format(
+                    "SELECT COUNT(*) AS record_count FROM labor_model WHERE sLaborIDx = '%s' AND sModelIDx = '%s'",
+                    laborId, modelId
+                );
+
+                ResultSet rs = poGRider.executeQuery(checkSQL);
+                boolean exists = rs.next() && rs.getInt("record_count") > 0;
+                rs.close();
+
+                if (exists) {
+                    poJSON = poModelLabor.updateRecord();
+                            if (!"success".equals(poJSON.get("result"))) {
+                                poGRider.rollbackTrans();
+                                poJSON.put("message", "Failed to update record.");
+                                return poJSON;
+                            }
+                    poModelLabor.setLaborId(laborId);
+                    poModelLabor.setModelId(modelID);
+                    poModelLabor.setAmount(amount);
+                    poModelLabor.setModifyingId(poGRider.getUserID());
+                    poModelLabor.setModifiedDate(poGRider.getServerDate());
+                    poJSON = poModelLabor.saveRecord();
+                    // ✅ Update existing record
+//                    String updateSQL = String.format(
+//                        "UPDATE labor_model SET nAmountxx = %f WHERE sLaborIDx = '%s' AND sModelIDx = '%s';",
+//                        amount, laborId, modelId
+//                    );
+//                    queries.add(updateSQL);
+//                    System.out.println("✅ Updating Labor ID: " + laborId + " | Amount: " + amount);
+                } else {
+                    // ✅ Insert new record
+//                    String insertSQL = String.format(
+//                        "INSERT INTO labor_model (sLaborIDx, sModelIDx, nAmountxx) VALUES ('%s', '%s', %f);",
+//                        laborId, modelId, amount
+//                    );
+//                    queries.add(insertSQL);
+//                    System.out.println("✅ Inserting new Labor ID: " + laborId + " | Amount: " + amount);
+                    poJSON = poModelLabor.newRecord();
+                            if (!"success".equals(poJSON.get("result"))) {
+                                poGRider.rollbackTrans();
+                                poJSON.put("message", "Failed to update record.");
+                                return poJSON;
+                            }
+                    poModelLabor.setLaborId(laborId);
+                    poModelLabor.setModelId(modelID);
+                    poModelLabor.setAmount(amount);
+                    poModelLabor.setModifyingId(poGRider.getUserID());
+                    poModelLabor.setModifiedDate(poGRider.getServerDate());
+                    poJSON = poModelLabor.saveRecord();
+
+                }
+            }
+        }
+
+        // ✅ Execute batch updates/inserts
+        if (!queries.isEmpty()) {
+            for (String query : queries) {
+                poGRider.executeUpdate(query);
+            }
+            poGRider.commitTrans(); // ✅ Commit transaction
+            poJSON.put("result", "success");
+            poJSON.put("message", "Record(s) saved successfully.");
+        } else {
+            poGRider.rollbackTrans(); // ✅ Rollback if nothing was updated
+            poJSON.put("result", "error");
+            poJSON.put("message", "No valid records to save.");
+        }
+
+    } catch (SQLException e) {
+        poGRider.rollbackTrans(); // ✅ Ensure rollback on failure
+        poJSON.put("result", "error");
+        poJSON.put("message", "Error saving records: " + e.getMessage());
+    }
+
+    return poJSON;
+}
+
     
 }

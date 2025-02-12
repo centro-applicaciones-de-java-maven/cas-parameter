@@ -12,6 +12,7 @@ import org.json.simple.JSONObject;
 
 public class Model_Labor_Model extends Model {
         Model_Model poModel;
+        Model_Labor poLabor;
     @Override
     public void initialize() {
         try {
@@ -38,7 +39,7 @@ public class Model_Labor_Model extends Model {
             
              ParamModels model = new ParamModels(poGRider);
             poModel = model.Model();
-
+            poLabor = model.Labor();            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -64,6 +65,28 @@ public class Model_Labor_Model extends Model {
         } else {
             poModel.initialize();
             return poModel;
+        }
+    }
+    
+    public Model_Labor Labor() {
+        System.out.println("laborid == " + (String) getValue("sLaborIDx"));
+        if (!"".equals((String) getValue("sLaborIDx"))) {
+            if (poLabor.getEditMode() == EditMode.READY
+                    && poLabor.getLaborId().equals((String) getValue("sLaborIDx"))) {
+                return poLabor;
+            } else {
+                poJSON = poLabor.openRecord((String) getValue("sLaborIDx"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poLabor;
+                } else {
+                    poLabor.initialize();
+                    return poLabor;
+                }
+            }
+        } else {
+            poLabor.initialize();
+            return poLabor;
         }
     }
 
@@ -115,10 +138,6 @@ public class Model_Labor_Model extends Model {
         return (Date) getValue("dModified");
     }
     
-    @Override
-    public String getNextCode() {
-        return "";
-    }
     @Override
     public JSONObject openRecord(String Id1) {
         JSONObject loJSON = new JSONObject();
