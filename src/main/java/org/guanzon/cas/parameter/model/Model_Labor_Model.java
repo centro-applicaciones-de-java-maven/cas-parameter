@@ -37,7 +37,7 @@ public class Model_Labor_Model extends Model {
             ID = "sLaborIDx";
             ID2 = "sModelIDx";
             
-             ParamModels model = new ParamModels(poGRider);
+            ParamModels model = new ParamModels(poGRider);
             poModel = model.Model();
             poLabor = model.Labor();            
             pnEditMode = EditMode.UNKNOWN;
@@ -138,11 +138,5 @@ public class Model_Labor_Model extends Model {
         return (Date) getValue("dModified");
     }
     
-    @Override
-    public JSONObject openRecord(String Id1) {
-        JSONObject loJSON = new JSONObject();
-        loJSON.put("result", "error");
-        loJSON.put("message", "This feature is not supported.");
-        return loJSON;
-    }
+    
 }
