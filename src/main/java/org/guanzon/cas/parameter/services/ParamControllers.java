@@ -31,6 +31,7 @@ import org.guanzon.cas.parameter.Size;
 import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Labor;
+import org.guanzon.cas.parameter.LaborCategory;
 import org.guanzon.cas.parameter.LaborModel;
 import org.guanzon.cas.parameter.Warehouse;
 
@@ -534,7 +535,7 @@ public class ParamControllers {
     
     public Labor Labor(){
         if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.AffiliatedCompany: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.Labor: Application driver is not set.");
             return null;
         }
         
@@ -551,7 +552,7 @@ public class ParamControllers {
     
     public LaborModel LaborModel(){
         if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.AffiliatedCompany: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.LaborModel: Application driver is not set.");
             return null;
         }
         
@@ -564,7 +565,25 @@ public class ParamControllers {
         poLaborModel.initialize();
         poLaborModel.newRecord();
         return poLaborModel;        
-    }    
+    }  
+    
+    public LaborCategory LaborCategory(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.LaborCategory: Application driver is not set.");
+            return null;
+        }
+        
+        if (poLaborCategory != null) return poLaborCategory;
+        
+        poLaborCategory = new LaborCategory();
+        poLaborCategory.setApplicationDriver(poGRider);
+        poLaborCategory.setWithParentClass(true);
+        poLaborCategory.setLogWrapper(poLogWrapper);
+        poLaborCategory.initialize();
+        poLaborCategory.newRecord();
+        return poLaborCategory;        
+    }
+    
     @Override
     protected void finalize() throws Throwable {
         try {
@@ -596,6 +615,7 @@ public class ParamControllers {
             poAffiliatedCompany= null;
             poLabor = null;
             poLaborModel = null;
+            poLaborCategory = null;
                     
             poLogWrapper = null;
             poGRider = null;
@@ -638,4 +658,5 @@ public class ParamControllers {
     private AffiliatedCompany poAffiliatedCompany; 
     private Labor poLabor; 
     private LaborModel poLaborModel; 
+    private LaborCategory poLaborCategory; 
 }

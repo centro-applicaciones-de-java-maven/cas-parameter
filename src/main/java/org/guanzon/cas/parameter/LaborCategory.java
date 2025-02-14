@@ -3,41 +3,37 @@ package org.guanzon.cas.parameter;
 import com.sun.rowset.CachedRowSetImpl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.sql.rowset.CachedRowSet;
-import javax.sql.rowset.RowSetProvider;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Color;
-import org.guanzon.cas.parameter.model.Model_Labor;
+import org.guanzon.cas.parameter.model.Model_Labor_Category;
 import org.guanzon.cas.parameter.model.Model_Labor_Model;
 import org.guanzon.cas.parameter.services.ParamModels;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class LaborModel extends Parameter {
+public class LaborCategory extends Parameter {
 
-    Model_Labor_Model poModelLabor;
+    Model_Labor_Category poModelCategory;
     Labor poLabor;
     Model poModel;
-    List<Model_Labor_Model> poModelList;
-    String modelID = "";
+    List<Model_Labor_Category> poCategoryList;
+    String categoryID = "";
     private CachedRowSet cacheLaborList;  // Stores the cached labor list
 
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
 
-        poModelLabor = new Model_Labor_Model();
-        poModelLabor.setApplicationDriver(poGRider);
-        poModelLabor.setXML("Model_Labor_Model");
-        poModelLabor.setTableName("Labor_Model");
-        poModelLabor.initialize();
+        poModelCategory = new Model_Labor_Category();
+        poModelCategory.setApplicationDriver(poGRider);
+        poModelCategory.setXML("Model_Labor_Category");
+        poModelCategory.setTableName("Labor_Category");
+        poModelCategory.initialize();
     }
 
     @Override
@@ -51,13 +47,13 @@ public class LaborModel extends Parameter {
         } else {
             poJSON = new JSONObject();
 
-            if (poModelLabor.getLaborId().isEmpty()) {
+            if (poModelCategory.getLaborId().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Labor must not be empty.");
                 return poJSON;
             }
 
-            if (poModelLabor.getModelId() == null || poModelLabor.getModelId().isEmpty()) {
+            if (poModelCategory.getCategoryID() == null || poModelCategory.getCategoryID().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Model must not be empty.");
                 return poJSON;
@@ -69,8 +65,8 @@ public class LaborModel extends Parameter {
     }
 
     @Override
-    public Model_Labor_Model getModel() {
-        return poModelLabor;
+    public Model_Labor_Category getModel() {
+        return poModelCategory;
     }
 
     @Override
@@ -88,19 +84,20 @@ public class LaborModel extends Parameter {
         }
 
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        lsSQL = (lsSQL + " GROUP BY a.sModelIDx");
+        lsSQL = (lsSQL + " GROUP BY a.sCategrCd");
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
                 "ID»Description",
-                "sModelIDx»sDescript",
-                "a.sModelIDx»b.sDescript",
+                "sCategrCd»sDescript",
+                "a.sCategrCd»b.sDescript",
                 byCode ? 0 : 1);
-        poModelLabor.setModelId(poJSON.get("sModelIDx").toString());
+        poModelCategory.setCategoryID(poJSON.get("sCategrCd").toString());
+        System.out.println("ito dapat = " + poModelCategory.getCategoryID());
         return openRecord(poJSON);
 //        if (poJSON != null) {
-//            return poModelLabor.openRecord((String) poJSON.get("sLaborIDx"),(String) poJSON.get("sModelIDx"));
+//            return poModelCategory.openRecord((String) poJSON.get("sLaborIDx"),(String) poJSON.get("sCategrCd"));
 //        } else {
 //            poJSON = new JSONObject();
 //            poJSON.put("result", "error");
@@ -133,7 +130,7 @@ public class LaborModel extends Parameter {
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModelLabor.openRecord((String) poJSON.get("sLaborIDx"));
+            return poModelCategory.openRecord((String) poJSON.get("sLaborIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -145,7 +142,7 @@ public class LaborModel extends Parameter {
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();
 
-        if (poModelLabor.getLaborId() == null || poModelLabor.getLaborId().isEmpty()) {
+        if (poModelCategory.getLaborId() == null || poModelCategory.getLaborId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -153,17 +150,17 @@ public class LaborModel extends Parameter {
 
         poGRider.beginTrans(); // Start transaction
 
-        poJSON = poModelLabor.updateRecord();
+        poJSON = poModelCategory.updateRecord();
         if (!"success".equals(poJSON.get("result"))) {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to update record.");
             return poJSON;
         }
 
-        poModelLabor.setRecordStatus("0");
-        poModelLabor.setModifyingId(poGRider.getUserID());
-        poModelLabor.setModifiedDate(poGRider.getServerDate());
-        poJSON = poModelLabor.saveRecord();
+        poModelCategory.setRecordStatus("0");
+        poModelCategory.setModifyingId(poGRider.getUserID());
+        poModelCategory.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModelCategory.saveRecord();
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
@@ -179,7 +176,7 @@ public class LaborModel extends Parameter {
     public JSONObject postTransaction() {
         poJSON = new JSONObject();
 
-        if (poModelLabor.getLaborId() == null || poModelLabor.getLaborId().isEmpty()) {
+        if (poModelCategory.getLaborId() == null || poModelCategory.getLaborId().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
@@ -187,17 +184,17 @@ public class LaborModel extends Parameter {
 
         poGRider.beginTrans(); // Start transaction
 
-        poJSON = poModelLabor.updateRecord();
+        poJSON = poModelCategory.updateRecord();
         if (!"success".equals(poJSON.get("result"))) {
             poGRider.rollbackTrans();
             poJSON.put("message", "Failed to update record.");
             return poJSON;
         }
 
-        poModelLabor.setRecordStatus("1");
-        poModelLabor.setModifyingId(poGRider.getUserID());
-        poModelLabor.setModifiedDate(poGRider.getServerDate());
-        poJSON = poModelLabor.saveRecord();
+        poModelCategory.setRecordStatus("1");
+        poModelCategory.setModifyingId(poGRider.getUserID());
+        poModelCategory.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModelCategory.saveRecord();
 
         if ("success".equals(poJSON.get("result"))) {
             poGRider.commitTrans();
@@ -227,7 +224,7 @@ public class LaborModel extends Parameter {
 
         lsSQL = "SELECT "
                 + "  a.sLaborIDx "
-                + ", b.sModelIDx "
+                + ", b.sCategrCd "
                 + ", b.sDescript "
                 + ", a.nAmountxx "
                 + ", b.sModelCde "
@@ -240,7 +237,7 @@ public class LaborModel extends Parameter {
                 + ", a.sModified "
                 + ", a.dModified "
                 + " FROM labor_model a "
-                + " LEFT JOIN Model b ON a.sModelIDx = b.sModelIDx ";
+                + " LEFT JOIN Model b ON a.sCategrCd = b.sCategrCd ";
 
 //        if (!psRecdStat.isEmpty()) {
 //            lsSQL = MiscUtil.addCondition(lsSQL, lsRecdStat);
@@ -263,14 +260,14 @@ public class LaborModel extends Parameter {
 
     private JSONObject openRecord(JSONObject json) {
         if (json != null) {
-            poJSON = poModelLabor.openRecord((String) poJSON.get("sLaborIDx"),(String) poJSON.get("sModelIDx"));
+            poJSON = poModelCategory.openRecord((String) poJSON.get("sLaborIDx"),(String) poJSON.get("sCategrCd"));
 
             if (!"success".equals((String) poJSON.get("result"))) {
                 return poJSON;
             }
 
             //load reference records
-            poModel.openRecord("sModelIDx");
+            poModel.openRecord("sCategrCd");
             //end -load reference records
         } else {
             poJSON = new JSONObject();
@@ -285,20 +282,20 @@ public class LaborModel extends Parameter {
     public JSONObject LaborList(String fsValue) {
         StringBuilder lsSQL = new StringBuilder(
                 "SELECT a.sLaborIDx, a.sLaborNme, "
-                + "COALESCE(b.sModelIDx, '') AS sModelIDx, "
+                + "COALESCE(b.sCategrCd, '') AS sCategrCd, "
                 + "COALESCE(b.nAmountxx, 0) AS nAmountxx, "
                 + "b.cRecdStat "
                 + "FROM Labor a "
-                + "LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx ");
+                + "LEFT JOIN Labor_Category b ON a.sLaborIDx = b.sLaborIDx ");
 
-        lsSQL.append(MiscUtil.addCondition("", "b.sModelIDx = " + SQLUtil.toSQL(fsValue) + " OR b.sModelIDx IS NULL "));
+        lsSQL.append(MiscUtil.addCondition("", "b.sCategrCd = " + SQLUtil.toSQL(fsValue) + " OR b.sCategrCd IS NULL OR b.sCategrCd = '' "));
         lsSQL.append(" ORDER BY a.sLaborIDx");
 
         System.out.println("Executing SQL: " + lsSQL.toString());
 
         ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
         JSONObject poJSON = new JSONObject();
-        modelID = fsValue;
+        categoryID = fsValue;
         try {
             cacheLaborList = new CachedRowSetImpl();  // ✅ Initialize CachedRowSet
             cacheLaborList.populate(loRS); // ✅ Store result in cache
@@ -318,29 +315,29 @@ public class LaborModel extends Parameter {
         return cacheLaborList;
     }
 
-    private Model_Labor_Model ModelLabor(String laborID, String modelID) {
-        Model_Labor_Model object = new ParamModels(poGRider).LaborModel();
+    private Model_Labor_Category ModelCategory(String laborID, String categoryID) {
+        Model_Labor_Category object = new ParamModels(poGRider).LaborCategory();
 
-        JSONObject loJSON = object.openRecord(laborID, modelID);
+        JSONObject loJSON = object.openRecord(laborID, categoryID);
         System.out.println(" ");
         System.out.println("------------------------------------------------------");
         System.out.println("ModelLabor = " + loJSON.toString());
         System.out.println("laborID = " + laborID);
-        System.out.println("modelID = " + modelID);
+        System.out.println("modelID = " + categoryID);
         System.out.println(" ");
         if ("success".equals((String) loJSON.get("result"))) {
             return object;
         } else {
-            return new ParamModels(poGRider).LaborModel();
+            return new ParamModels(poGRider).LaborCategory();
         }
     }
 
     public int getListCount() {
-        return poModelList.size();
+        return poCategoryList.size();
     }
 
-    public Model_Labor_Model LaborModel(int row) {
-        return poModelList.get(row);
+    public Model_Labor_Category LaborCategory(int row) {
+        return poCategoryList.get(row);
     }
 
     /**
@@ -362,13 +359,13 @@ public class LaborModel extends Parameter {
         while (cacheLaborList.next()) {
             double amount = cacheLaborList.getDouble("nAmountxx");
             String laborId = cacheLaborList.getString("sLaborIDx");
-            String modelId = modelID;
+            String categId = categoryID;
             String recordStat = cacheLaborList.getString("cRecdStat");
 
             // ✅ Check if record exists
             String checkSQL = String.format(
-                "SELECT COUNT(*) AS record_count FROM labor_model WHERE sLaborIDx = '%s' AND sModelIDx = '%s'",
-                laborId, modelId
+                "SELECT COUNT(*) AS record_count FROM Labor_Category WHERE sLaborIDx = '%s' AND sCategrCd = '%s'",
+                laborId, categId
             );
 
             ResultSet rs = poGRider.executeQuery(checkSQL);
@@ -379,16 +376,16 @@ public class LaborModel extends Parameter {
                 if (amount == 0.00) {
                     // ✅ Delete record if amount is updated to zero
                     String deleteSQL = String.format(
-                        "DELETE FROM labor_model WHERE sLaborIDx = '%s' AND sModelIDx = '%s';",
-                        laborId, modelId
+                        "DELETE FROM Labor_Category WHERE sLaborIDx = '%s' AND sCategrCd = '%s';",
+                        laborId, categId
                     );
                     poGRider.executeUpdate(deleteSQL);
                     System.out.println("🗑️ Deleting Labor ID: " + laborId);
                 } else {
                     // ✅ Update existing record
                     String updateSQL = String.format(
-                            "UPDATE labor_model SET nAmountxx = %f, cRecdStat = '%s' WHERE sLaborIDx = '%s' AND sModelIDx = '%s';",
-                            amount, recordStat, laborId, modelId // ✅ Added cRecdStat
+                            "UPDATE Labor_Category SET nAmountxx = %f, cRecdStat = '%s' WHERE sLaborIDx = '%s' AND sCategrCd = '%s';",
+                            amount, recordStat, laborId, categId // ✅ Added cRecdStat
                     );
                     poGRider.executeUpdate(updateSQL);
                     System.out.println("✅ Updating Labor ID: " + laborId + " | Amount: " + amount + " | Status: " + recordStat);
@@ -396,18 +393,18 @@ public class LaborModel extends Parameter {
                 }
             } else {
                 if (amount > 0.00) { // ✅ Insert only if amount > 0
-                    poJSON = poModelLabor.newRecord();
+                    poJSON = poModelCategory.newRecord();
                     if (!"success".equals(poJSON.get("result"))) {
                         poGRider.rollbackTrans();
                         poJSON.put("message", "Failed to update record.");
                         return poJSON;
                     }
-                    poModelLabor.setLaborId(laborId);
-                    poModelLabor.setModelId(modelId);
-                    poModelLabor.setAmount(amount);
-                    poModelLabor.setModifyingId(poGRider.getUserID());
-                    poModelLabor.setModifiedDate(poGRider.getServerDate());
-                    poJSON = poModelLabor.saveRecord();
+                    poModelCategory.setLaborId(laborId);
+                    poModelCategory.setCategoryID(categId);
+                    poModelCategory.setAmount(amount);
+                    poModelCategory.setModifyingId(poGRider.getUserID());
+                    poModelCategory.setModifiedDate(poGRider.getServerDate());
+                    poJSON = poModelCategory.saveRecord();
                 }
             }
         }

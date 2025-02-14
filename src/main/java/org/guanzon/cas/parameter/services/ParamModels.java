@@ -19,6 +19,7 @@ import org.guanzon.cas.parameter.model.Model_Country;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
 import org.guanzon.cas.parameter.model.Model_Labor;
+import org.guanzon.cas.parameter.model.Model_Labor_Category;
 import org.guanzon.cas.parameter.model.Model_Labor_Model;
 import org.guanzon.cas.parameter.model.Model_Made;
 import org.guanzon.cas.parameter.model.Model_Measure;
@@ -513,7 +514,7 @@ public class ParamModels {
             
     public Model_Affiliated_Company AffilatedCompany(){
         if (poGRider == null){
-            System.err.println("ParamModels.Company: Application driver is not set.");
+            System.err.println("ParamModels.AffilatedCompany: Application driver is not set.");
             return null;
         }
         
@@ -530,7 +531,7 @@ public class ParamModels {
     
     public Model_Labor Labor(){
         if (poGRider == null){
-            System.err.println("ParamModels.Company: Application driver is not set.");
+            System.err.println("ParamModels.Labor: Application driver is not set.");
             return null;
         }
         
@@ -547,7 +548,7 @@ public class ParamModels {
     
     public Model_Labor_Model LaborModel(){
         if (poGRider == null){
-            System.err.println("ParamModels.Company: Application driver is not set.");
+            System.err.println("ParamModels.LaborModel: Application driver is not set.");
             return null;
         }
         
@@ -560,6 +561,23 @@ public class ParamModels {
         }
 
         return poLaborModel;
+    } 
+            
+    public Model_Labor_Category LaborCategory(){
+        if (poGRider == null){
+            System.err.println("ParamModels.LaborCategory: Application driver is not set.");
+            return null;
+        }
+        
+        if (poLaborCategory  == null){
+            poLaborCategory = new Model_Labor_Category();
+            poLaborCategory.setApplicationDriver(poGRider);
+            poLaborCategory.setXML("Model_Labor_Category");
+            poLaborCategory.setTableName("Labor_Category");
+            poLaborCategory.initialize();
+        }
+
+        return poLaborCategory;
     } 
     
     private final GRider poGRider;
@@ -595,4 +613,5 @@ public class ParamModels {
     private Model_Affiliated_Company poAffiliatCompany;  
     private Model_Labor poLabor;    
     private Model_Labor_Model poLaborModel;  
+    private Model_Labor_Category poLaborCategory;  
 }
