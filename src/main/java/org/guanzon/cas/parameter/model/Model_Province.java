@@ -33,6 +33,7 @@ public class Model_Province extends Model{
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
+
             
             //initialize other connections
             poRegion = new ParamModels(poGRider).Region();

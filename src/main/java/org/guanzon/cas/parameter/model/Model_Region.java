@@ -53,6 +53,38 @@ public class Model_Region extends Model{
         return (String) getValue("sRegionNm");
     }
     
+    public JSONObject setMinimumWage(Number minimumWage){
+        return setValue("nMinWages", minimumWage);
+    }
+    
+    public Number getMinimumWage(){
+        return (Number) getValue("nMinWages");
+    }
+    
+    public JSONObject setCOLAmount(Number colAmount){
+        return setValue("nColaAmtx", colAmount);
+    }
+    
+    public Number getCOLAmount(){
+        return (Number) getValue("nColaAmtx");
+    }
+        
+    public JSONObject setMinimumWage2(Number minimumWage2){
+        return setValue("nMinWage2", minimumWage2);
+    }
+    
+    public Number getMinimumWage2(){
+        return (Number) getValue("nMinWage2");
+    }
+    
+    public JSONObject setCOLAmount2(Number colAmount2){
+        return setValue("nColaAmt2", colAmount2);
+    }
+    
+    public Number getCOLAmount2(){
+        return (Number) getValue("nColaAmt2");
+    }
+    
     public JSONObject setRecordStatus(String recordStatus){
         return setValue("cRecdStat", recordStatus);
     }
