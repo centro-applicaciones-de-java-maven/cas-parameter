@@ -24,6 +24,8 @@ public class Model_Model extends Model {
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
+            
+            poEntity.updateObject("nYearModl", 0);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             poEntity.updateString("cEndOfLfe", RecordStatus.ACTIVE);
             //end - assign default values
@@ -130,12 +132,12 @@ public class Model_Model extends Model {
         return (String) getValue("sSeriesID");
     }
 
-    public JSONObject setYearModel(Integer yearModel) {
+    public JSONObject setYearModel(int yearModel) {
         return setValue("nYearModl", yearModel);
     }
 
-    public Integer getYearModel() {
-        return (Integer) getValue("nYearModl");
+    public int getYearModel() {
+        return (int) getValue("nYearModl");
     }
 
     public JSONObject setEndOfLife(String endOfLife) {

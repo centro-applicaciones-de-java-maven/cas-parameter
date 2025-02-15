@@ -8,7 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Term extends Model {
+public class Model_Affiliated_Company extends Model {
 
     @Override
     public void initialize() {
@@ -21,8 +21,6 @@ public class Model_Term extends Model {
             MiscUtil.initRowSet(poEntity);
 
             //assign default values
-            
-            poEntity.updateObject("nTermValx", 0.00);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
@@ -40,38 +38,28 @@ public class Model_Term extends Model {
         }
     }
 
-
-    
-    public JSONObject setTermCode(String termCode) {
-        return setValue("sTermCode", termCode);
+    public JSONObject setCompanyId(String companyId) {
+        return setValue("sCompnyCd", companyId);
     }
 
-    public String getTermCode() {
-        return (String) getValue("sTermCode");
+    public String getCompanyId() {
+        return (String) getValue("sCompnyCd");
     }
 
-    public JSONObject setDescription(String description) {
-        return setValue("sDescript", description);
+    public JSONObject setCompanyName(String companyName) {
+        return setValue("sCompnyNm", companyName);
     }
 
-    public String getDescription() {
-        return (String) getValue("sDescript");
+    public String getCompanyName() {
+        return (String) getValue("sCompnyNm");
     }
     
-    public JSONObject setCoverage(String coverage) {
-        return setValue("cCoverage", coverage);
+    public JSONObject setDateAffiliat(Date dateAffiliat) {
+        return setValue("dAffiliat", dateAffiliat);
     }
 
-    public String getCoverage() {
-        return (String) getValue("cCoverage");
-    }
-    
-    public JSONObject setTermValue(Number termValue) {
-        return setValue("nTermValx", termValue);
-    }
-
-    public Number getTermValue() {
-        return (Number) getValue("nTermValx");
+    public Date getDateAffiliat() {
+        return (Date) getValue("dAffiliat");
     }
     
     public JSONObject setRecordStatus(String recordStatus){
@@ -96,5 +84,9 @@ public class Model_Term extends Model {
 
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
+    }
+     @Override
+    public String getNextCode() {
+        return  MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
 }

@@ -59,7 +59,7 @@ public class Region extends Parameter{
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
+            return poModel.openRecord((String) poJSON.get("sRegionID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -85,5 +85,73 @@ public class Region extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+    }
+    public JSONObject voidTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getRegionId()== null || poModel.getRegionId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("0");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "Province has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
+    }
+
+    
+    public JSONObject postTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getRegionId()== null || poModel.getRegionId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("1");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "Province has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
     }
 }

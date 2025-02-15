@@ -8,7 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Term extends Model {
+public class Model_Size extends Model {
 
     @Override
     public void initialize() {
@@ -21,8 +21,6 @@ public class Model_Term extends Model {
             MiscUtil.initRowSet(poEntity);
 
             //assign default values
-            
-            poEntity.updateObject("nTermValx", 0.00);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
@@ -40,38 +38,20 @@ public class Model_Term extends Model {
         }
     }
 
-
-    
-    public JSONObject setTermCode(String termCode) {
-        return setValue("sTermCode", termCode);
+    public JSONObject setSizeId(String sizeId) {
+        return setValue("sSizeIDxx", sizeId);
     }
 
-    public String getTermCode() {
-        return (String) getValue("sTermCode");
+    public String getSizeId() {
+        return (String) getValue("sSizeIDxx");
     }
 
-    public JSONObject setDescription(String description) {
-        return setValue("sDescript", description);
+    public JSONObject setSizeName(String description) {
+        return setValue("sSizeName", description);
     }
 
-    public String getDescription() {
-        return (String) getValue("sDescript");
-    }
-    
-    public JSONObject setCoverage(String coverage) {
-        return setValue("cCoverage", coverage);
-    }
-
-    public String getCoverage() {
-        return (String) getValue("cCoverage");
-    }
-    
-    public JSONObject setTermValue(Number termValue) {
-        return setValue("nTermValx", termValue);
-    }
-
-    public Number getTermValue() {
-        return (Number) getValue("nTermValx");
+    public String getSizeName() {
+        return (String) getValue("sSizeName");
     }
     
     public JSONObject setRecordStatus(String recordStatus){

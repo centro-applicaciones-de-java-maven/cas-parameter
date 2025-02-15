@@ -6,10 +6,12 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_Term extends Model {
-
+public class Model_Color_Detail extends Model {
+    
+    private Model_Color poColor;
     @Override
     public void initialize() {
         try {
@@ -21,8 +23,6 @@ public class Model_Term extends Model {
             MiscUtil.initRowSet(poEntity);
 
             //assign default values
-            
-            poEntity.updateObject("nTermValx", 0.00);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
@@ -31,7 +31,8 @@ public class Model_Term extends Model {
 
             poEntity.absolute(1);
 
-            ID = poEntity.getMetaData().getColumnLabel(1);
+            ID = ("sColorIDx");
+            poColor = new ParamModels(poGRider).Color();
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -39,15 +40,34 @@ public class Model_Term extends Model {
             System.exit(1);
         }
     }
-
-
     
-    public JSONObject setTermCode(String termCode) {
-        return setValue("sTermCode", termCode);
+    public Model_Color Color(){
+        if (!"".equals((String) getValue("sColorCde"))){
+            if (poColor.getEditMode() == EditMode.READY && 
+                poColor.getColorId().equals((String) getValue("sColorCde")))
+                return poColor;
+            else{
+                poJSON = poColor.openRecord((String) getValue("sColorCde"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poColor;
+                else {
+                    poColor.initialize();
+                    return poColor;
+                }
+            }
+        } else {
+            poColor.initialize();
+            return poColor;
+        }
     }
 
-    public String getTermCode() {
-        return (String) getValue("sTermCode");
+    public JSONObject setColorId(String colorId) {
+        return setValue("sColorIDx", colorId);
+    }
+
+    public String getColorId() {
+        return (String) getValue("sColorIDx");
     }
 
     public JSONObject setDescription(String description) {
@@ -58,20 +78,12 @@ public class Model_Term extends Model {
         return (String) getValue("sDescript");
     }
     
-    public JSONObject setCoverage(String coverage) {
-        return setValue("cCoverage", coverage);
+    public JSONObject setColorCode(String colorCode) {
+        return setValue("sColorCde", colorCode);
     }
 
-    public String getCoverage() {
-        return (String) getValue("cCoverage");
-    }
-    
-    public JSONObject setTermValue(Number termValue) {
-        return setValue("nTermValx", termValue);
-    }
-
-    public Number getTermValue() {
-        return (Number) getValue("nTermValx");
+    public String getColorCode() {
+        return (String) getValue("sColorCde");
     }
     
     public JSONObject setRecordStatus(String recordStatus){

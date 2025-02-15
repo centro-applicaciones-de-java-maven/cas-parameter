@@ -7,7 +7,6 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Company;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Company extends Parameter{
@@ -17,7 +16,11 @@ public class Company extends Parameter{
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Company();
+        poModel = new Model_Company();
+        poModel.setApplicationDriver(poGRider);
+        poModel.setXML("Model_Company");
+        poModel.setTableName("Company");
+        poModel.initialize();
     }
     
     @Override
@@ -33,13 +36,25 @@ public class Company extends Parameter{
             
             if (poModel.getCompanyId().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Company ID must not be empty.");
+                poJSON.put("message", "Company must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getComapanyName().isEmpty()){
+            if (poModel.getCompanyName()== null ||  poModel.getCompanyName().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Company name must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getCompanyCode()== null ||  poModel.getCompanyCode().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Company code must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getEmployerNo()== null ||  poModel.getEmployerNo().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Employer No must not be empty.");
                 return poJSON;
             }
         }
@@ -72,13 +87,13 @@ public class Company extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Description»Code",
-                "sCompnyID»sCompnyNm»sCompnyCd",
-                "sCompnyID»sCompnyNm»sCompnyCd",
+                "ID»Description»Company Code»Employer No",
+                "sCompnyID»sCompnyNm»sCompnyCd»sEmplyrNo",
+                "sCompnyID»sCompnyNm»sCompnyCd»sEmplyrNo",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBinIDxxx"));
+            return poModel.openRecord((String) poJSON.get("sCompnyID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -86,6 +101,8 @@ public class Company extends Parameter{
             return poJSON;
         }
     }
+    
+    
     
     public JSONObject searchRecordWithStatus(String value, boolean byCode) {
         String lsCondition = "";
@@ -105,18 +122,88 @@ public class Company extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Description»Code",
-                "sCompnyID»sCompnyNm»sCompnyCd",
-                "sCompnyID»sCompnyNm»sCompnyCd",
+                "ID»Description»Company Code»Employer No",
+                "sCompnyID»sCompnyNm»sCompnyCd»sEmplyrNo",
+                "sCompnyID»sCompnyNm»sCompnyCd»sEmplyrNo",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBinIDxxx"));
+            return poModel.openRecord((String) poJSON.get("sCompnyID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+    }
+    
+    
+    public JSONObject voidTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getCompanyId()== null || poModel.getCompanyId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("0");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "The company has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
+    }
+
+    
+    public JSONObject postTransaction() {
+        poJSON = new JSONObject();
+
+        if (poModel.getCompanyId()== null || poModel.getCompanyId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+
+        poGRider.beginTrans(); // Start transaction
+
+        poJSON = poModel.updateRecord();
+        if (!"success".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to update record.");
+            return poJSON;
+        }
+
+        poModel.setRecordStatus("1");
+        poModel.setModifyingId(poGRider.getUserID());
+        poModel.setModifiedDate(poGRider.getServerDate());
+        poJSON = poModel.saveRecord();
+
+        if ("success".equals(poJSON.get("result"))) {
+            poGRider.commitTrans();
+            poJSON.put("message", "The company has been activated successfully.");
+        } else {
+            poGRider.rollbackTrans();
+            poJSON.put("message", "Failed to save record. Transaction rolled back.");
+        }
+
+        return poJSON;
     }
 }

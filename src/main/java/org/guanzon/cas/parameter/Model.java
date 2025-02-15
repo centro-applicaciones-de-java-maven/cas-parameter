@@ -40,6 +40,12 @@ public class Model extends Parameter{
                 return poJSON;
             }
             
+            if (poModel.getSeriesId().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Series must not be empty.");
+                return poJSON;
+            }
+            
 //            if (poModel.getNationality().isEmpty()){
 //                poJSON.put("result", "error");
 //                poJSON.put("message", "Nationality must not be empty.");
@@ -82,6 +88,39 @@ public class Model extends Parameter{
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sModelIDx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+
+    public JSONObject searchRecordbyBrand(String value, boolean byCode) {
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "sBrandIDx = " + SQLUtil.toSQL(value));
+                 lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        System.out.println("search by brand == " + lsSQL);
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Brand ID»Model ID»Model Code",
+                "sBrandIDx»sModelIDx»sDescript",
+                "sBrandIDx»sModelIDx»sDescript",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sBrandIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");

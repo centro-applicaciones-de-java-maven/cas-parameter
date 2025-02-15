@@ -9,6 +9,7 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_Company extends Model {
+
     @Override
     public void initialize() {
         try {
@@ -45,19 +46,19 @@ public class Model_Company extends Model {
         return (String) getValue("sCompnyID");
     }
 
-    public JSONObject setComapanyName(String companyName) {
+    public JSONObject setCompanyName(String companyName) {
         return setValue("sCompnyNm", companyName);
     }
 
-    public String getComapanyName() {
+    public String getCompanyName() {
         return (String) getValue("sCompnyNm");
     }
     
-    public JSONObject setComapanyCode(String companyCode) {
+    public JSONObject setCompanyCode(String companyCode) {
         return setValue("sCompnyCd", companyCode);
     }
 
-    public String getComapanyCode() {
+    public String getCompanyCode() {
         return (String) getValue("sCompnyCd");
     }
     

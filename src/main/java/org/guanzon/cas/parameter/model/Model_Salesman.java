@@ -9,10 +9,7 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_Province extends Model{
-    //other model connections
-    private Model_Region poRegion;
-    
+public class Model_Salesman extends Model {
     @Override
     public void initialize() {
         try {
@@ -33,10 +30,8 @@ public class Model_Province extends Model{
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-
             
             //initialize other connections
-            poRegion = new ParamModels(poGRider).Region();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -46,58 +41,40 @@ public class Model_Province extends Model{
         }
     }
     
-    public Model_Region Region(){
-        if (!"".equals((String) getValue("sRegionID"))){
-            if (poRegion.getEditMode() == EditMode.READY && 
-                poRegion.getRegionId().equals((String) getValue("sRegionID")))
-                return poRegion;
-            else{
-                poJSON = poRegion.openRecord((String) getValue("sRegionID"));
+   
+    
+    public JSONObject setBankID(String bankId) {
+        return setValue("sBankIDxx", bankId);
+    }
 
-                if ("success".equals((String) poJSON.get("result")))
-                    return poRegion;
-                else {
-                    poRegion.initialize();
-                    return poRegion;
-                }
-            }
-        } else {
-            poRegion.initialize();
-            return poRegion;
-        }
+    public String getBankID() {
+        return (String) getValue("sBankIDxx");
     }
-    
-    public JSONObject setProvinceId(String provinceId){
-        return setValue("sProvIDxx", provinceId);
+
+    public JSONObject setBankName(String bankName) {
+        return setValue("sBankName", bankName);
     }
-    
-    public String getProvinceId(){
-        return (String) getValue("sProvIDxx");
+
+    public String getBankName() {
+        return (String) getValue("sBankName");
     }
+
     
-    public JSONObject setProvinceName(String provinceName){
-        return setValue("sProvName", provinceName);
+    public JSONObject setBankCode(String bankCode) {
+        return setValue("sBankCode", bankCode);
     }
-    
-    public String getProvinceName(){
-        return (String) getValue("sProvName");
+
+    public String getBankCode() {
+        return (String) getValue("sBankCode");
     }
-    
-    public JSONObject setRegionId(String regionId){
-        return setValue("sRegionID", regionId);
-    }
-    
-    public String getRegionId(){
-        return (String) getValue("sRegionID");
-    }
-    
-    public JSONObject setRecordStatus(String recordStatus){
+
+    public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }
-    
-    public String getRecordStatus(){
+
+    public String getRecordStatus() {
         return (String) getValue("cRecdStat");
-    }
+    } 
     
     public JSONObject setModifyingId(String modifyingId){
         return setValue("sModified", modifyingId);
@@ -113,5 +90,9 @@ public class Model_Province extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    @Override
+    public String getNextCode() {
+        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
 }

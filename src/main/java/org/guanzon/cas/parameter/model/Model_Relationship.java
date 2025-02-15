@@ -8,7 +8,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Term extends Model {
+public class Model_Relationship extends Model {
 
     @Override
     public void initialize() {
@@ -21,8 +21,6 @@ public class Model_Term extends Model {
             MiscUtil.initRowSet(poEntity);
 
             //assign default values
-            
-            poEntity.updateObject("nTermValx", 0.00);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
@@ -40,38 +38,20 @@ public class Model_Term extends Model {
         }
     }
 
-
-    
-    public JSONObject setTermCode(String termCode) {
-        return setValue("sTermCode", termCode);
+    public JSONObject setRelationId(String relationId) {
+        return setValue("sRelatnID", relationId);
     }
 
-    public String getTermCode() {
-        return (String) getValue("sTermCode");
+    public String getRelationId() {
+        return (String) getValue("sRelatnID");
     }
 
-    public JSONObject setDescription(String description) {
-        return setValue("sDescript", description);
+    public JSONObject setRelationshipDesc(String relationshipDesc) {
+        return setValue("sRelatnDs", relationshipDesc);
     }
 
-    public String getDescription() {
-        return (String) getValue("sDescript");
-    }
-    
-    public JSONObject setCoverage(String coverage) {
-        return setValue("cCoverage", coverage);
-    }
-
-    public String getCoverage() {
-        return (String) getValue("cCoverage");
-    }
-    
-    public JSONObject setTermValue(Number termValue) {
-        return setValue("nTermValx", termValue);
-    }
-
-    public Number getTermValue() {
-        return (Number) getValue("nTermValx");
+    public String getRelationshipDesc() {
+        return (String) getValue("sRelatnDs");
     }
     
     public JSONObject setRecordStatus(String recordStatus){
@@ -96,5 +76,10 @@ public class Model_Term extends Model {
 
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
+    }
+    
+    @Override
+    public String getNextCode() {
+        return  MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
 }
