@@ -55,15 +55,28 @@ public class Barangay extends Parameter{
     public Model_Barangay getModel() {
         return poModel;
     }
-    
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
-                "ID»Barangay»Town»Province",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
+                "ID»Barangay",
+                "sBrgyIDxx»sBrgyName",
+                "sBrgyIDxx»sBrgyName",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -75,6 +88,26 @@ public class Barangay extends Parameter{
             return poJSON;
         }
     }
+    
+//    @Override
+//    public JSONObject searchRecord(String value, boolean byCode) {
+//        poJSON = ShowDialogFX.Search(poGRider,
+//                getSQ_Browse(),
+//                value,
+//                "ID»Barangay",
+//                "sBrgyIDxx»sBrgyName",
+//                "a.sBrgyIDxx»a.sBrgyName",
+//                byCode ? 0 : 1);
+//
+//        if (poJSON != null) {
+//            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
+//        } else {
+//            poJSON = new JSONObject();
+//            poJSON.put("result", "error");
+//            poJSON.put("message", "No record loaded.");
+//            return poJSON;
+//        }
+//    }
     
     public JSONObject searchRecord(String value, boolean byCode, String townId){
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
@@ -137,40 +170,40 @@ public class Barangay extends Parameter{
         }
     }
         
-    @Override
-    public String getSQ_Browse(){
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-        
-        return MiscUtil.addCondition(
-                    "SELECT" +
-                        "  a.sBrgyIDxx" +
-                        ", a.sBrgyName" +
-                        ", a.sTownIDxx" +
-                        ", a.cHasRoute" +
-                        ", a.cBlackLst" +
-                        ", a.cRecdStat" +
-                        ", IFNULL(b.sTownName, '') sTownName" +
-                        ", IFNULL(b.sZippCode, '') sZippCode" +
-                        ", IFNULL(b.sMuncplCd, '') sMuncplCd" +
-                        ", IFNULL(c.sProvName, '') sProvName" +
-                        ", IFNULL(c.sProvIDxx, '') sProvIDxx" +
-                    " FROM Barangay a" +
-                        ", TownCity b" +
-                        ", Province c" +
-                    " WHERE a.sTownIDxx = b.sTownIDxx" +
-                        " AND b.sProvIDxx = c.sProvIDxx",
-            lsCondition);
-    }
+//    @Override
+//    public String getSQ_Browse(){
+//        String lsCondition = "";
+//
+//        if (psRecdStat.length() > 1) {
+//            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+//                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+//            }
+//
+//            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
+//        } else {
+//            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+//        }
+//        
+//        return MiscUtil.addCondition(
+//                    "SELECT" +
+//                        "  a.sBrgyIDxx" +
+//                        ", a.sBrgyName" +
+//                        ", a.sTownIDxx" +
+//                        ", a.cHasRoute" +
+//                        ", a.cBlackLst" +
+//                        ", a.cRecdStat" +
+//                        ", IFNULL(b.sTownName, '') sTownName" +
+//                        ", IFNULL(b.sZippCode, '') sZippCode" +
+//                        ", IFNULL(b.sMuncplCd, '') sMuncplCd" +
+//                        ", IFNULL(c.sProvName, '') sProvName" +
+//                        ", IFNULL(c.sProvIDxx, '') sProvIDxx" +
+//                    " FROM Barangay a" +
+//                        ", TownCity b" +
+//                        ", Province c" +
+//                    " WHERE a.sTownIDxx = b.sTownIDxx" +
+//                        " AND b.sProvIDxx = c.sProvIDxx",
+//            lsCondition);
+//    }
     
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();
