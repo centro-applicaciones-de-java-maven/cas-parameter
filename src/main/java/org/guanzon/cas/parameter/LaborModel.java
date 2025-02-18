@@ -283,35 +283,95 @@ public class LaborModel extends Parameter {
     }
 
     public JSONObject LaborList(String fsValue) {
-        StringBuilder lsSQL = new StringBuilder(
-                "SELECT a.sLaborIDx, a.sLaborNme, "
-                + "COALESCE(b.sModelIDx, '') AS sModelIDx, "
-                + "COALESCE(b.nAmountxx, 0) AS nAmountxx, "
-                + "b.cRecdStat "
-                + "FROM Labor a "
-                + "LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx ");
+    StringBuilder lsSQL = new StringBuilder(
+        "SELECT a.sLaborIDx, a.sLaborNme, "
+        + "COALESCE(b.sModelIDx, NULL) AS sModelIDx, "   // Set sModelIDx to NULL when no match
+        + "COALESCE(b.nAmountxx, 0) AS nAmountxx, "      // Set nAmountxx to 0 when no match
+        + "COALESCE(b.cRecdStat, '') AS cRecdStat "     // Handle missing cRecdStat with empty string
+        + "FROM Labor a "
+        + "LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx AND (b.sModelIDx = " + SQLUtil.toSQL(fsValue) + " OR b.sModelIDx IS NULL) "
+    );
 
-        lsSQL.append(MiscUtil.addCondition("", "b.sModelIDx = " + SQLUtil.toSQL(fsValue) + " OR b.sModelIDx IS NULL "));
-        lsSQL.append(" ORDER BY a.sLaborIDx");
+    // Adding condition to handle specific model ID or NULL matches
+    lsSQL.append(MiscUtil.addCondition("", "b.sModelIDx = " + SQLUtil.toSQL(fsValue) + " OR b.sModelIDx IS NULL "));
+    lsSQL.append("ORDER BY a.sLaborIDx");
 
-        System.out.println("Executing SQL: " + lsSQL.toString());
+    System.out.println("Executing SQL: " + lsSQL.toString());
 
-        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
-        JSONObject poJSON = new JSONObject();
-        modelID = fsValue;
-        try {
-            cacheLaborList = new CachedRowSetImpl();  // ✅ Initialize CachedRowSet
-            cacheLaborList.populate(loRS); // ✅ Store result in cache
+    ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+    JSONObject poJSON = new JSONObject();
+    modelID = fsValue;
+    
+    try {
+        cacheLaborList = new CachedRowSetImpl();  // ✅ Initialize CachedRowSet
+        cacheLaborList.populate(loRS); // ✅ Store result in cache
 
-            poJSON.put("result", "success");
-            poJSON.put("message", "Record loaded successfully.");
+        poJSON.put("result", "success");
+        poJSON.put("message", "Record loaded successfully.");
 
-        } catch (SQLException e) {
-            poJSON.put("result", "error");
-            poJSON.put("message", e.getMessage());
-        }
-        return poJSON;
+    } catch (SQLException e) {
+        poJSON.put("result", "error");
+        poJSON.put("message", e.getMessage());
     }
+    return poJSON;
+}
+
+//public JSONObject LaborList(String fsValue) {
+//        StringBuilder lsSQL = new StringBuilder();
+//        JSONObject poJSON = new JSONObject();
+//
+//        try {
+//            // First, check if fsValue exists in the labor_model table
+//            String checkSQL = "SELECT COUNT(*) FROM labor_model WHERE sModelIDx = " + SQLUtil.toSQL(fsValue);
+//            ResultSet checkResult = poGRider.executeQuery(checkSQL);
+//            checkResult.next();
+//            int count = checkResult.getInt(1);
+//
+//            if (count > 0) {
+//                // If fsValue exists in labor_model, fetch all labor records that are not in labor_model
+//                lsSQL.append("SELECT a.sLaborIDx, a.sLaborNme, ")
+//                        .append("COALESCE(b.sModelIDx, '') AS sModelIDx, ")
+//                        .append("COALESCE(b.nAmountxx, 0) AS nAmountxx, ")
+//                        .append("b.cRecdStat ")
+//                        .append("FROM Labor a ")
+//                        .append("LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx ")
+//                        .append("WHERE (b.sModelIDx = ").append(SQLUtil.toSQL(fsValue))
+//                        .append(" OR b.sModelIDx IS NULL) ")
+//                        .append("AND a.sLaborIDx NOT IN (SELECT sLaborIDx FROM labor_model WHERE sModelIDx = ").append(SQLUtil.toSQL(fsValue))
+//                        .append(") ORDER BY a.sLaborIDx");
+//
+//                System.out.println("fsValue exists in labor_model = " + lsSQL);
+//
+//            } else {
+//                // If fsValue doesn't exist in labor_model, fetch all labor records
+//                lsSQL.append("SELECT a.sLaborIDx, a.sLaborNme, ")
+//                        .append("COALESCE(b.sModelIDx, '') AS sModelIDx, ")
+//                        .append("COALESCE(b.nAmountxx, 0) AS nAmountxx, ")
+//                        .append("b.cRecdStat ")
+//                        .append("FROM Labor a ")
+//                        .append("LEFT JOIN labor_model b ON a.sLaborIDx = b.sLaborIDx ")
+//                        .append("ORDER BY a.sLaborIDx");
+//                System.out.println("fsValue doesn't exists in labor_model = " + lsSQL);
+//            }
+//
+//            System.out.println("Executing SQL: " + lsSQL.toString());
+//
+//            ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+//
+//            // Initialize CachedRowSet
+//            cacheLaborList = new CachedRowSetImpl();
+//            cacheLaborList.populate(loRS);
+//
+//            poJSON.put("result", "success");
+//            poJSON.put("message", "Record loaded successfully.");
+//
+//        } catch (SQLException e) {
+//            poJSON.put("result", "error");
+//            poJSON.put("message", e.getMessage());
+//        }
+//
+//        return poJSON;
+//    }
 
     // ✅ Getter method to access cache from UI Controller
     public CachedRowSet getCachedLaborList() {

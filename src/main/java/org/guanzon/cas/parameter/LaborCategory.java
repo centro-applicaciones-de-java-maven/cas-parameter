@@ -286,7 +286,8 @@ public class LaborCategory extends Parameter {
                 + "COALESCE(b.nAmountxx, 0) AS nAmountxx, "
                 + "b.cRecdStat "
                 + "FROM Labor a "
-                + "LEFT JOIN Labor_Category b ON a.sLaborIDx = b.sLaborIDx ");
+                + "LEFT JOIN Labor_Category b ON a.sLaborIDx = b.sLaborIDx AND (b.sCategrCd = "  + SQLUtil.toSQL(fsValue) + " OR b.sCategrCd IS NULL) "
+        );
 
         lsSQL.append(MiscUtil.addCondition("", "b.sCategrCd = " + SQLUtil.toSQL(fsValue) + " OR b.sCategrCd IS NULL OR b.sCategrCd = '' "));
         lsSQL.append(" ORDER BY a.sLaborIDx");
