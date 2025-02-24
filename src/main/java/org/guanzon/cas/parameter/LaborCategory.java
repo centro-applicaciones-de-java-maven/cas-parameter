@@ -138,74 +138,7 @@ public class LaborCategory extends Parameter {
             return poJSON;
         }
     }
-
-    public JSONObject voidTransaction() {
-        poJSON = new JSONObject();
-
-        if (poModelCategory.getLaborId() == null || poModelCategory.getLaborId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-
-        poGRider.beginTrans(); // Start transaction
-
-        poJSON = poModelCategory.updateRecord();
-        if (!"success".equals(poJSON.get("result"))) {
-            poGRider.rollbackTrans();
-            poJSON.put("message", "Failed to update record.");
-            return poJSON;
-        }
-
-        poModelCategory.setRecordStatus("0");
-        poModelCategory.setModifyingId(poGRider.getUserID());
-        poModelCategory.setModifiedDate(poGRider.getServerDate());
-        poJSON = poModelCategory.saveRecord();
-
-        if ("success".equals(poJSON.get("result"))) {
-            poGRider.commitTrans();
-            poJSON.put("message", "The category has been activated successfully.");
-        } else {
-            poGRider.rollbackTrans();
-            poJSON.put("message", "Failed to save record. Transaction rolled back.");
-        }
-
-        return poJSON;
-    }
-
-    public JSONObject postTransaction() {
-        poJSON = new JSONObject();
-
-        if (poModelCategory.getLaborId() == null || poModelCategory.getLaborId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-
-        poGRider.beginTrans(); // Start transaction
-
-        poJSON = poModelCategory.updateRecord();
-        if (!"success".equals(poJSON.get("result"))) {
-            poGRider.rollbackTrans();
-            poJSON.put("message", "Failed to update record.");
-            return poJSON;
-        }
-
-        poModelCategory.setRecordStatus("1");
-        poModelCategory.setModifyingId(poGRider.getUserID());
-        poModelCategory.setModifiedDate(poGRider.getServerDate());
-        poJSON = poModelCategory.saveRecord();
-
-        if ("success".equals(poJSON.get("result"))) {
-            poGRider.commitTrans();
-            poJSON.put("message", "The category has been activated successfully.");
-        } else {
-            poGRider.rollbackTrans();
-            poJSON.put("message", "Failed to save record. Transaction rolled back.");
-        }
-
-        return poJSON;
-    }
+    
 
     @Override
     public String getSQ_Browse() {
