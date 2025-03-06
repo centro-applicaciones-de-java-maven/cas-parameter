@@ -237,7 +237,7 @@ public class ParamModels {
             poIndustry = new Model_Industry();
             poIndustry.setApplicationDriver(poGRider);
             poIndustry.setXML("Model_Industry");
-            poIndustry.setTableName("Model_Industry");
+            poIndustry.setTableName("Industry");
             poIndustry.initialize();
         }
 
