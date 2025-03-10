@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -45,7 +46,7 @@ private Model_TownCity poTown;
         }
     }
     
-    public Model_Banks Banks(){
+    public Model_Banks Banks() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sBankIDxx"))){
             if (poBanks.getEditMode() == EditMode.READY && 
                 poBanks.getBankID().equals((String) getValue("sBankIDxx")))
@@ -66,7 +67,7 @@ private Model_TownCity poTown;
         }
     }
     
-    public Model_TownCity TownCity(){
+    public Model_TownCity TownCity() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sTownIDxx"))){
             if (poTown.getEditMode() == EditMode.READY && 
                 poTown.getTownId().equals((String) getValue("sTownIDxx")))
@@ -184,6 +185,6 @@ private Model_TownCity poTown;
     }
     @Override
     public String getNextCode() {
-        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
+        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
     }
 }

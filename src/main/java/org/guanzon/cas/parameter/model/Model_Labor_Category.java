@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -46,7 +47,7 @@ public class Model_Labor_Category extends Model {
         }
     }
     
-    public Model_Category Category() {
+    public Model_Category Category() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sCategrCd"))) {
             if (poModelCategory.getEditMode() == EditMode.READY
                     && poModelCategory.getCategoryId().equals((String) getValue("sCategrCd"))) {
@@ -67,7 +68,7 @@ public class Model_Labor_Category extends Model {
         }
     }
     
-    public Model_Labor Labor() {
+    public Model_Labor Labor() throws SQLException, GuanzonException{
         System.out.println("laborid == " + (String) getValue("sLaborIDx"));
         if (!"".equals((String) getValue("sLaborIDx"))) {
             if (poLabor.getEditMode() == EditMode.READY

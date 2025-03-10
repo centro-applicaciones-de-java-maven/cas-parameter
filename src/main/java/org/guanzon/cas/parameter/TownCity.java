@@ -1,7 +1,9 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -57,7 +59,7 @@ public class TownCity extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -76,7 +78,7 @@ public class TownCity extends Parameter{
         }
     }
     
-    public JSONObject searchRecord(String value, boolean byCode, String provinceId){
+    public JSONObject searchRecord(String value, boolean byCode, String provinceId) throws SQLException, GuanzonException{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
         
         poJSON = ShowDialogFX.Search(poGRider,
@@ -97,7 +99,7 @@ public class TownCity extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -116,7 +118,7 @@ public class TownCity extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode, String provinceId) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode, String provinceId) throws SQLException, GuanzonException{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
         
         poJSON = ShowDialogFX.Search(poGRider,

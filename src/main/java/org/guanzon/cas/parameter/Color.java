@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -64,7 +65,7 @@ public class Color extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -77,10 +78,10 @@ public class Color extends Parameter{
             lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
-//        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        System.out.println("get query = " + getSQ_Browse());
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
                 "ID»Description",
                 "sColorIDx»sDescript",
@@ -97,7 +98,7 @@ public class Color extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -128,83 +129,5 @@ public class Color extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
-    }
-    
-    
-   // ENABLE this Block of codes if list is needed else do not
-//    
-    public JSONObject ColorList() {
-          StringBuilder lsSQL = new StringBuilder("SELECT" +
-           "   sColorIDx" +
-           " , sDescript" +
-           " , sMnColorx" +
-           " , cRecdStat" +
-           " FROM Color");
-
-        // Use SQLUtil.toSQL for handling the dates
-//        String condition = "sColorIDx = " + SQLUtil.toSQL(fsColorID);
-//        lsSQL.append(MiscUtil.addCondition("", condition));
-//        lsSQL.append(" ORDER BY a.nLedgerNo ASC");
-
-        System.out.println("Executing SQL: " + lsSQL.toString());
-
-        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
-        JSONObject poJSON = new JSONObject();
-
-        try {
-            int lnctr = 0;
-
-            if (MiscUtil.RecordCount(loRS) >= 0) {
-                poModelList = new ArrayList<>();
-                while (loRS.next()) {
-                    // Print the result set
-
-                    System.out.println("sColorIDx: " + loRS.getString("sColorIDx"));
-                    System.out.println("sDescript: " + loRS.getString("sDescript"));
-                    System.out.println("cRecdStat: " + loRS.getString("cRecdStat"));
-                    System.out.println("------------------------------------------------------------------------------");
-
-                    poModelList.add(Color(loRS.getString("sColorIDx")));
-                    poModelList.get(poModelList.size() - 1)
-                            .openRecord(loRS.getString("sColorIDx"));
-                    lnctr++;
-                }
-
-                System.out.println("Records found: " + lnctr);
-                poJSON.put("result", "success");
-                poJSON.put("message", "Record loaded successfully.");
-
-            } else {
-                poModelList = new ArrayList<>();
-//                addInvLedger();
-                poJSON.put("result", "error");
-                poJSON.put("continue", true);
-                poJSON.put("message", "No record found .");
-            }
-            MiscUtil.close(loRS);
-        } catch (SQLException e) {
-            poJSON.put("result", "error");
-            poJSON.put("message", e.getMessage());
-        }
-        System.out.println("RESULT == " + poJSON);
-        return poJSON;
-    }
-    
-    private Model_Color Color (String colorID) {
-        Model_Color object = new ParamModels(poGRider).Color();
-
-        JSONObject loJSON = object.openRecord(colorID);
-
-        if ("success".equals((String) loJSON.get("result"))) {
-            return object;
-        } else {
-            return new ParamModels(poGRider).Color();
-        }
-    }
-    public int getListCount() {
-        return poModelList.size();
-    }
-    public Model_Color Color(int row) {
-        return poModelList.get(row);
     }
 }

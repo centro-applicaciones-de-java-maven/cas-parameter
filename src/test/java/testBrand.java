@@ -1,10 +1,8 @@
-
-
-import org.guanzon.appdriver.base.GRider;
+import java.sql.SQLException;
+import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.cas.parameter.Brand;
-import org.guanzon.cas.parameter.Category;
-import org.guanzon.cas.parameter.CategoryLevel2;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -15,7 +13,7 @@ import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testBrand {
-    static GRider instance;
+    static GRiderCAS instance;
     static Brand record;
 
     @BeforeClass
@@ -30,41 +28,45 @@ public class testBrand {
         record.initialize();
     }
 
-//    @Test
-//    public void testNewRecord() {
-//        JSONObject loJSON;
-//
-//        loJSON = record.newRecord();
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }           
-//        
-//        loJSON = record.getModel().setDescription("Franchise");
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        } 
-//        
-//        loJSON = record.getModel().setCategoryCode("0002");
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }  
-//        
-//        loJSON = record.getModel().setModifyingId(instance.getUserID());
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }     
-//        
-//        loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }     
-//        
-//        loJSON = record.saveRecord();
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }  
-//    }
-//   
+    @Test
+    public void testNewRecord() {
+        try {
+            JSONObject loJSON;
+
+            loJSON = record.newRecord();
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }           
+
+            loJSON = record.getModel().setDescription("Franchise");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            } 
+
+            loJSON = record.getModel().setCategoryCode("0002");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }  
+
+            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.saveRecord();
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }  
+        } catch (SQLException | GuanzonException e) {
+            Assert.fail(e.getMessage());
+        }
+    }
+   
 //    @Test
 //    public void testUpdateRecord() {
 //        JSONObject loJSON;
@@ -95,14 +97,14 @@ public class testBrand {
 //        } 
 //    }
     
-    @Test
-    public void testSearch(){
-        JSONObject loJSON = record.searchRecord("", false);        
-        if ("success".equals((String) loJSON.get("result"))){
-            System.out.println(record.getModel().getBrandId());
-            System.out.println(record.getModel().getDescription());
-        } else System.out.println("No record was selected.");
-    }
+//    @Test
+//    public void testSearch(){
+//        JSONObject loJSON = record.searchRecord("", false);        
+//        if ("success".equals((String) loJSON.get("result"))){
+//            System.out.println(record.getModel().getBrandId());
+//            System.out.println(record.getModel().getDescription());
+//        } else System.out.println("No record was selected.");
+//    }
     
     @AfterClass
     public static void tearDownClass() {

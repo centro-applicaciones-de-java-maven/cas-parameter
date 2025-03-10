@@ -1,7 +1,9 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -40,11 +42,11 @@ public class InvLocation extends Parameter{
                 return poJSON;
             }
             
-//            if (poModel.getWarehouseId().isEmpty()){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Warehouse must not be empty.");
-//                return poJSON;
-//            }
+            if (poModel.getWarehouseId().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Warehouse must not be empty.");
+                return poJSON;
+            }
         }
         
         poJSON.put("result", "success");
@@ -57,7 +59,7 @@ public class InvLocation extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -90,7 +92,7 @@ public class InvLocation extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {

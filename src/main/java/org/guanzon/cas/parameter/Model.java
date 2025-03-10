@@ -1,7 +1,9 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -45,12 +47,6 @@ public class Model extends Parameter{
                 poJSON.put("message", "Series must not be empty.");
                 return poJSON;
             }
-            
-//            if (poModel.getNationality().isEmpty()){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Nationality must not be empty.");
-//                return poJSON;
-//            }
         }
         
         poJSON.put("result", "success");
@@ -63,7 +59,7 @@ public class Model extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -96,7 +92,7 @@ public class Model extends Parameter{
         }
     }
 
-    public JSONObject searchRecordbyBrand(String value, boolean byCode) {
+    public JSONObject searchRecordbyBrand(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -129,7 +125,7 @@ public class Model extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {

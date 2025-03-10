@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -41,7 +42,7 @@ public class Model_Color_Detail extends Model {
         }
     }
     
-    public Model_Color Color(){
+    public Model_Color Color() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sColorCde"))){
             if (poColor.getEditMode() == EditMode.READY && 
                 poColor.getColorId().equals((String) getValue("sColorCde")))

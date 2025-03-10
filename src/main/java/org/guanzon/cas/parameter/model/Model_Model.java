@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -50,7 +51,7 @@ public class Model_Model extends Model {
         }
     }
     
-    public Model_Brand Brand(){
+    public Model_Brand Brand() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sBrandIDx"))){
             if (poBrand.getEditMode() == EditMode.READY && 
                 poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
@@ -71,7 +72,7 @@ public class Model_Model extends Model {
         }
     }
     
-    public Model_Model_Series ModelSeries(){
+    public Model_Model_Series ModelSeries() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sSeriesID"))){
             if (poModelSeries.getEditMode() == EditMode.READY && 
                 poModelSeries.getBrandId().equals((String) getValue("sSeriesID")))

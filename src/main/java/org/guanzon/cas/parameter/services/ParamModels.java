@@ -1,6 +1,6 @@
 package org.guanzon.cas.parameter.services;
 
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.cas.parameter.model.Model_Affiliated_Company;
 import org.guanzon.cas.parameter.model.Model_Banks;
 import org.guanzon.cas.parameter.model.Model_Banks_Branch;
@@ -36,7 +36,7 @@ import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
 
 public class ParamModels {
-    public ParamModels(GRider applicationDriver){
+    public ParamModels(GRiderCAS applicationDriver){
         poGRider = applicationDriver;
     }
     
@@ -598,7 +598,7 @@ public class ParamModels {
         return poLaborCategory;
     } 
     
-    private final GRider poGRider;
+    private final GRiderCAS poGRider;
     
     private Model_Barangay poBarangay;
     private Model_Bin poBin;

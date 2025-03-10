@@ -1,7 +1,9 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -57,7 +59,7 @@ public class Bin extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -90,7 +92,7 @@ public class Bin extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
