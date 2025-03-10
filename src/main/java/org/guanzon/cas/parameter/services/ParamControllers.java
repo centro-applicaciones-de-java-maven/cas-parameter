@@ -17,6 +17,7 @@ import org.guanzon.cas.parameter.Color;
 import org.guanzon.cas.parameter.ColorDetail;
 import org.guanzon.cas.parameter.Company;
 import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.Industry;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
 import org.guanzon.cas.parameter.Made;
@@ -225,6 +226,23 @@ public class ParamControllers {
         poCountry.initialize();
         poCountry.newRecord();
         return poCountry;        
+    }
+    
+    public Industry Industry(){
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.InventoryLocation: Application driver is not set.");
+            return null;
+        }
+        
+        if (poIndustry != null) return poIndustry;
+        
+        poIndustry = new Industry();
+        poIndustry.setApplicationDriver(poGRider);
+        poIndustry.setWithParentClass(true);
+        poIndustry.setLogWrapper(poLogWrapper);
+        poIndustry.initialize();
+        poIndustry.newRecord();
+        return poIndustry;        
     }
     
     public InvLocation InventoryLocation(){
@@ -638,6 +656,7 @@ public class ParamControllers {
     private Color poColor;
     private ColorDetail poColorDetail;
     private Country poCountry;
+    private Industry poIndustry;
     private InvLocation poInvLocation;
     private InvType poInvType;
     private Measure poMeasure;

@@ -16,6 +16,7 @@ import org.guanzon.cas.parameter.model.Model_Color;
 import org.guanzon.cas.parameter.model.Model_Color_Detail;
 import org.guanzon.cas.parameter.model.Model_Company;
 import org.guanzon.cas.parameter.model.Model_Country;
+import org.guanzon.cas.parameter.model.Model_Industry;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
 import org.guanzon.cas.parameter.model.Model_Labor;
@@ -224,6 +225,23 @@ public class ParamModels {
         }
 
         return poCountry;
+    }
+    
+    public Model_Industry Industry(){
+        if (poGRider == null){
+            System.err.println("ParamModels.InventoryLocation: Application driver is not set.");
+            return null;
+        }
+        
+        if (poIndustry == null){
+            poIndustry = new Model_Industry();
+            poIndustry.setApplicationDriver(poGRider);
+            poIndustry.setXML("Model_Industry");
+            poIndustry.setTableName("Industry");
+            poIndustry.initialize();
+        }
+
+        return poIndustry;
     }
     
     public Model_Inv_Location InventoryLocation(){
@@ -593,6 +611,7 @@ public class ParamModels {
     private Model_Color poColor;    
     private Model_Color_Detail poColorDetail;
     private Model_Country poCountry;
+    private Model_Industry poIndustry;
     private Model_Inv_Location poInvLocation;
     private Model_Inv_Type poInvType;
     private Model_Measure poMeasure;
