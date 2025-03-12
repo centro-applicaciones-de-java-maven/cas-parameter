@@ -46,12 +46,12 @@ public class Model_Measure extends Model {
         return (String) getValue("sMeasurID");
     }
 
-    public JSONObject setMeasureName(String measureName) {
-        return setValue("sMeasurNm", measureName);
+    public JSONObject setDescription(String measureName) {
+        return setValue("sDescript", measureName);
     }
 
-    public String getMeasureName() {
-        return (String) getValue("sMeasurNm");
+    public String getDescription() {
+        return (String) getValue("sDescript");
     }
     
     public JSONObject setRecordStatus(String recordStatus){

@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
@@ -48,7 +49,7 @@ public class Model_Barangay extends Model{
         }
     }
     
-    public Model_TownCity Town(){
+    public Model_TownCity Town() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sTownIDxx"))){
             if (poTownCity.getEditMode() == EditMode.READY && 
                 poTownCity.getTownId().equals((String) getValue("sTownIDxx")))

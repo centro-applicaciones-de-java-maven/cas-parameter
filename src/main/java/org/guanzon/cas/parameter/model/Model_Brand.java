@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -43,7 +44,7 @@ private Model_Category poCategory;
         }
     }
     
-    public Model_Category Category(){
+    public Model_Category Category() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sCategrCd"))){
             if (poCategory.getEditMode() == EditMode.READY && 
                 poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
@@ -81,12 +82,12 @@ private Model_Category poCategory;
     }
 
     
-    public JSONObject setCategoryCode(String categoryCode) {
-        return setValue("sCategrCd", categoryCode);
+    public JSONObject setIndustryCode(String industryCode) {
+        return setValue("sIndstCdx", industryCode);
     }
 
-    public String getCategoryCode() {
-        return (String) getValue("sCategrCd");
+    public String getIndustryCode() {
+        return (String) getValue("sIndstCdx");
     }
 
     public JSONObject setRecordStatus(String recordStatus) {

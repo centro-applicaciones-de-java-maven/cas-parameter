@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -46,7 +47,7 @@ public class Model_Inv_Location extends Model {
         }
     }
     
-    public Model_Warehouse Warehouse(){
+    public Model_Warehouse Warehouse() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sWHouseID"))){
             if (poWarehouse.getEditMode() == EditMode.READY && 
                 poWarehouse.getWarehouseId().equals((String) getValue("sWHouseID")))
@@ -67,7 +68,7 @@ public class Model_Inv_Location extends Model {
         }
     }
     
-    public Model_Section Section(){
+    public Model_Section Section() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sSectnIDx"))){
             if (poSection.getEditMode() == EditMode.READY && 
                 poSection.getSectionId().equals((String) getValue("sSectnIDx")))

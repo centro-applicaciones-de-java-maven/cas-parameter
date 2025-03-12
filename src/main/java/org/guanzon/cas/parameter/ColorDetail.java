@@ -1,18 +1,16 @@
 package org.guanzon.cas.parameter;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Color;
 import org.guanzon.cas.parameter.model.Model_Color_Detail;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class ColorDetail extends Parameter{
@@ -32,7 +30,7 @@ public class ColorDetail extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException{
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -55,6 +53,9 @@ public class ColorDetail extends Parameter{
             }
         }
         
+        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModel.setModifiedDate(poGRider.getServerDate());
+        
         poJSON.put("result", "success");
         return poJSON;
     }
@@ -65,7 +66,7 @@ public class ColorDetail extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -78,10 +79,10 @@ public class ColorDetail extends Parameter{
             lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
-//        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        System.out.println("get query = " + getSQ_Browse());
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
                 "ID»Description",
                 "sColorIDx»sDescript",
@@ -98,7 +99,7 @@ public class ColorDetail extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {

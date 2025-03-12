@@ -10,7 +10,7 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_Model_Series extends Model {
+public class Model_Model_Variant extends Model {
     private Model_Brand poBrand;
     
     @Override
@@ -24,7 +24,9 @@ public class Model_Model_Series extends Model {
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            poEntity.updateObject("nSelPrice", 0);
+            poEntity.updateObject("nYearMdlx", 0);
+            poEntity.updateObject("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
             poEntity.insertRow();
@@ -46,7 +48,7 @@ public class Model_Model_Series extends Model {
     }
     
     public Model_Brand Brand() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("s"))){
+        if (!"".equals((String) getValue("sBrandIDx"))){
             if (poBrand.getEditMode() == EditMode.READY && 
                 poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
                 return poBrand;
@@ -66,12 +68,12 @@ public class Model_Model_Series extends Model {
         }
     }
     
-    public JSONObject setSeriesID(String seriesId) {
-        return setValue("sSeriesID", seriesId);
+    public JSONObject setVariantId(String seriesId) {
+        return setValue("sVrntIDxx", seriesId);
     }
 
-    public String getSeriesID() {
-        return (String) getValue("sSeriesID");
+    public String getVariantId() {
+        return (String) getValue("sVrntIDxx");
     }
 
 
@@ -82,22 +84,45 @@ public class Model_Model_Series extends Model {
     public String getDescription() {
         return (String) getValue("sDescript");
     }
-
     
-    public JSONObject setBrandId(String brandId) {
-        return setValue("sBrandIDx", brandId);
+    public JSONObject setSellingPrice(double price) {
+        return setValue("nSelPrice", price);
     }
 
-    public String getBrandId() {
-        return (String) getValue("sBrandIDx");
+    public double getSellingPrice() {
+        return (double) getValue("nSelPrice");
+    }
+
+    public JSONObject setYearModel(int yearModel) {
+        return setValue("nYearMdlx", yearModel);
+    }
+
+    public int getYearModel() {
+        return (int) getValue("nYearMdlx");
     }
     
-    public JSONObject setEndOfLife(String endOfLife) {
-        return setValue("cEndOfLfe", endOfLife);
+    public JSONObject setPayload(String payload) {
+        return setValue("sPayloadx", payload);
     }
 
-    public String getEndOfLife() {
-        return (String) getValue("cEndOfLfe");
+    public String getPayload() {
+        return (String) getValue("sPayloadx");
+    }
+    
+    public JSONObject setModelId(String modelId) {
+        return setValue("sModelIDx", modelId);
+    }
+
+    public String getModelId() {
+        return (String) getValue("sModelIDx");
+    }
+    
+    public JSONObject setColorId(String colorId) {
+        return setValue("sColorIDx", colorId);
+    }
+
+    public String getColorId() {
+        return (String) getValue("sColorIDx");
     }
     
     public JSONObject setRecordStatus(String recordStatus) {

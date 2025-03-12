@@ -87,6 +87,6 @@ public class Model_Affiliated_Company extends Model {
     }
      @Override
     public String getNextCode() {
-        return  MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
+        return  MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
     }
 }

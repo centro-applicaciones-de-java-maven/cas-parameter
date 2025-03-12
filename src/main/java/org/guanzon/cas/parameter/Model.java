@@ -1,7 +1,9 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -24,7 +26,7 @@ public class Model extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException{
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -40,18 +42,27 @@ public class Model extends Parameter{
                 return poJSON;
             }
             
-            if (poModel.getSeriesId().isEmpty()){
+            if (poModel.getManufactureYear() == 0){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Series must not be empty.");
+                poJSON.put("message", "Year manufactured is invalid.");
                 return poJSON;
             }
             
-//            if (poModel.getNationality().isEmpty()){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Nationality must not be empty.");
-//                return poJSON;
-//            }
+            if (poModel.getBrandId().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Brand must not be empty.");
+                return poJSON;
+            }
+            
+            if (poModel.getIndustryCode().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Industry must not be empty.");
+                return poJSON;
+            }
         }
+        
+        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModel.setModifiedDate(poGRider.getServerDate());
         
         poJSON.put("result", "success");
         return poJSON;
@@ -63,7 +74,7 @@ public class Model extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -81,10 +92,10 @@ public class Model extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
-                byCode ? 0 : 1);
+                "ID»Model Code»Description",
+                "sModelIDx»sModelCde»sDescript",
+                "sModelIDx»sModelCde»sDescript",
+                byCode ? 0 : 2);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sModelIDx"));
@@ -94,72 +105,5 @@ public class Model extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
-    }
-
-    public JSONObject searchRecordbyBrand(String value, boolean byCode) {
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "sBrandIDx = " + SQLUtil.toSQL(value));
-                 lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        System.out.println("search by brand == " + lsSQL);
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "Brand ID»Model ID»Model Code",
-                "sBrandIDx»sModelIDx»sDescript",
-                "sBrandIDx»sModelIDx»sDescript",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBrandIDx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) {
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,                
-                "ID»Model Code",
-                "sModelIDx»sDescript",
-                "sModelIDx»sDescript",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
+    }    
 }

@@ -3,9 +3,9 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
@@ -47,7 +47,7 @@ public class Model_Labor_Model extends Model {
         }
     }
     
-    public Model_Model Model() {
+    public Model_Model Model() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sModelIDx"))) {
             if (poModel.getEditMode() == EditMode.READY
                     && poModel.getModelId().equals((String) getValue("sModelIDx"))) {
@@ -68,7 +68,7 @@ public class Model_Labor_Model extends Model {
         }
     }
     
-    public Model_Labor Labor() {
+    public Model_Labor Labor() throws SQLException, GuanzonException{
         System.out.println("laborid == " + (String) getValue("sLaborIDx"));
         if (!"".equals((String) getValue("sLaborIDx"))) {
             if (poLabor.getEditMode() == EditMode.READY

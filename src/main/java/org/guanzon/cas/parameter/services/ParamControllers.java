@@ -1,6 +1,6 @@
 package org.guanzon.cas.parameter.services;
 
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.cas.parameter.AffiliatedCompany;
 import org.guanzon.cas.parameter.Banks;
@@ -31,13 +31,10 @@ import org.guanzon.cas.parameter.Section;
 import org.guanzon.cas.parameter.Size;
 import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
-import org.guanzon.cas.parameter.Labor;
-import org.guanzon.cas.parameter.LaborCategory;
-import org.guanzon.cas.parameter.LaborModel;
 import org.guanzon.cas.parameter.Warehouse;
 
 public class ParamControllers {
-    public ParamControllers(GRider applicationDriver, LogWrapper logWrapper){
+    public ParamControllers(GRiderCAS applicationDriver, LogWrapper logWrapper){
         poGRider = applicationDriver;
         poLogWrapper = logWrapper;
     }
@@ -551,56 +548,56 @@ public class ParamControllers {
         return poAffiliatedCompany;        
     }
     
-    public Labor Labor(){
-        if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.Labor: Application driver is not set.");
-            return null;
-        }
-        
-        if (poLabor != null) return poLabor;
-        
-        poLabor = new Labor();
-        poLabor.setApplicationDriver(poGRider);
-        poLabor.setWithParentClass(true);
-        poLabor.setLogWrapper(poLogWrapper);
-        poLabor.initialize();
-        poLabor.newRecord();
-        return poLabor;        
-    }
-    
-    public LaborModel LaborModel(){
-        if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.LaborModel: Application driver is not set.");
-            return null;
-        }
-        
-        if (poLaborModel != null) return poLaborModel;
-        
-        poLaborModel = new LaborModel();
-        poLaborModel.setApplicationDriver(poGRider);
-        poLaborModel.setWithParentClass(true);
-        poLaborModel.setLogWrapper(poLogWrapper);
-        poLaborModel.initialize();
-        poLaborModel.newRecord();
-        return poLaborModel;        
-    }  
-    
-    public LaborCategory LaborCategory(){
-        if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.LaborCategory: Application driver is not set.");
-            return null;
-        }
-        
-        if (poLaborCategory != null) return poLaborCategory;
-        
-        poLaborCategory = new LaborCategory();
-        poLaborCategory.setApplicationDriver(poGRider);
-        poLaborCategory.setWithParentClass(true);
-        poLaborCategory.setLogWrapper(poLogWrapper);
-        poLaborCategory.initialize();
-        poLaborCategory.newRecord();
-        return poLaborCategory;        
-    }
+//    public Labor Labor(){
+//        if (poGRider == null){
+//            poLogWrapper.severe("ParamControllers.Labor: Application driver is not set.");
+//            return null;
+//        }
+//        
+//        if (poLabor != null) return poLabor;
+//        
+//        poLabor = new Labor();
+//        poLabor.setApplicationDriver(poGRider);
+//        poLabor.setWithParentClass(true);
+//        poLabor.setLogWrapper(poLogWrapper);
+//        poLabor.initialize();
+//        poLabor.newRecord();
+//        return poLabor;        
+//    }
+//    
+//    public LaborModel LaborModel(){
+//        if (poGRider == null){
+//            poLogWrapper.severe("ParamControllers.LaborModel: Application driver is not set.");
+//            return null;
+//        }
+//        
+//        if (poLaborModel != null) return poLaborModel;
+//        
+//        poLaborModel = new LaborModel();
+//        poLaborModel.setApplicationDriver(poGRider);
+//        poLaborModel.setWithParentClass(true);
+//        poLaborModel.setLogWrapper(poLogWrapper);
+//        poLaborModel.initialize();
+//        poLaborModel.newRecord();
+//        return poLaborModel;        
+//    }  
+//    
+//    public LaborCategory LaborCategory(){
+//        if (poGRider == null){
+//            poLogWrapper.severe("ParamControllers.LaborCategory: Application driver is not set.");
+//            return null;
+//        }
+//        
+//        if (poLaborCategory != null) return poLaborCategory;
+//        
+//        poLaborCategory = new LaborCategory();
+//        poLaborCategory.setApplicationDriver(poGRider);
+//        poLaborCategory.setWithParentClass(true);
+//        poLaborCategory.setLogWrapper(poLogWrapper);
+//        poLaborCategory.initialize();
+//        poLaborCategory.newRecord();
+//        return poLaborCategory;        
+//    }
     
     @Override
     protected void finalize() throws Throwable {
@@ -631,9 +628,9 @@ public class ParamControllers {
             poSize = null;
             poCompany = null;
             poAffiliatedCompany= null;
-            poLabor = null;
-            poLaborModel = null;
-            poLaborCategory = null;
+//            poLabor = null;
+//            poLaborModel = null;
+//            poLaborCategory = null;
                     
             poLogWrapper = null;
             poGRider = null;
@@ -642,7 +639,7 @@ public class ParamControllers {
         }
     }
     
-    private GRider poGRider;
+    private GRiderCAS poGRider;
     private LogWrapper poLogWrapper;
     
     private Barangay poBarangay;
@@ -675,7 +672,7 @@ public class ParamControllers {
     private Size poSize;  
     private Company poCompany;      
     private AffiliatedCompany poAffiliatedCompany; 
-    private Labor poLabor; 
-    private LaborModel poLaborModel; 
-    private LaborCategory poLaborCategory; 
+//    private Labor poLabor; 
+//    private LaborModel poLaborModel; 
+//    private LaborCategory poLaborCategory; 
 }

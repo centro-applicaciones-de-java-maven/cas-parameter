@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -46,7 +47,7 @@ public class Model_Province extends Model{
         }
     }
     
-    public Model_Region Region(){
+    public Model_Region Region() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sRegionID"))){
             if (poRegion.getEditMode() == EditMode.READY && 
                 poRegion.getRegionId().equals((String) getValue("sRegionID")))

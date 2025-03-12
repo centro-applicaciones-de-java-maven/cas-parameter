@@ -1,7 +1,9 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -24,7 +26,7 @@ public class Branch extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException{
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -47,6 +49,9 @@ public class Branch extends Parameter{
             }
         }
         
+        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModel.setModifiedDate(poGRider.getServerDate());
+        
         poJSON.put("result", "success");
         return poJSON;
     }
@@ -57,7 +62,7 @@ public class Branch extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -75,29 +80,6 @@ public class Branch extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "Code»Branch Name",
-                "sBranchCd»sBranchNm",
-                "sBranchCd»sBranchNm",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBranchCd"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchRecordAttributes(String BranchID,
-                                    boolean byCode) {
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), 
-                                                "sBranchCd = " + SQLUtil.toSQL(BranchID));
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                BranchID,
                 "Code»Branch Name",
                 "sBranchCd»sBranchNm",
                 "sBranchCd»sBranchNm",

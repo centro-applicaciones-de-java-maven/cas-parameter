@@ -2,7 +2,8 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.CategoryLevel3;
+import org.guanzon.cas.parameter.Model;
+import org.guanzon.cas.parameter.ModelVariant;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,9 +13,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class testCategoryLevel3 {
+public class testModelVariant {
     static GRiderCAS instance;
-    static CategoryLevel3 record;
+    static ModelVariant record;
 
     @BeforeClass
     public static void setUpClass() {
@@ -22,7 +23,7 @@ public class testCategoryLevel3 {
 
         instance = MiscUtil.Connect();
         
-        record = new CategoryLevel3();
+        record = new ModelVariant();
         record.setApplicationDriver(instance);
         record.setWithParentClass(false);
         record.initialize();
@@ -38,21 +39,26 @@ public class testCategoryLevel3 {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Franchise");
+            loJSON = record.getModel().setDescription("Standard");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            
+            loJSON = record.getModel().setYearModel(2025);
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+            
+            loJSON = record.getModel().setModelId("00004");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            
+            loJSON = record.getModel().setColorId("00001");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
-            }     
-
+            }
+            
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
@@ -66,7 +72,7 @@ public class testCategoryLevel3 {
 //    public void testUpdateRecord() {
 //        JSONObject loJSON;
 //
-//        loJSON = record.openRecord("0004");
+//        loJSON = record.openRecord("24001");
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }      
@@ -75,6 +81,11 @@ public class testCategoryLevel3 {
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }      
+//        
+////        loJSON = record.getModel().setCountryName("Yeh Yeh");
+////        if ("error".equals((String) loJSON.get("result"))) {
+////            Assert.fail((String) loJSON.get("message"));
+////        }    
 //        
 //        loJSON = record.getModel().setModifyingId(instance.getUserID());
 //        if ("error".equals((String) loJSON.get("result"))) {

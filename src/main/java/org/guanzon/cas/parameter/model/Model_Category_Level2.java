@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -45,7 +46,7 @@ public class Model_Category_Level2 extends Model {
         }
     }
     
-    public Model_Category Category(){
+    public Model_Category Category() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sMainCatx"))){
             if (poCategory.getEditMode() == EditMode.READY && 
                 poCategory.getCategoryId().equals((String) getValue("sMainCatx")))
@@ -65,7 +66,7 @@ public class Model_Category_Level2 extends Model {
             return poCategory;
         }
     }
-    public Model_Inv_Type InvType(){
+    public Model_Inv_Type InvType() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sInvTypCd"))){
             if (poInvType.getEditMode() == EditMode.READY && 
                 poInvType.getInventoryTypeId().equals((String) getValue("sInvTypCd")))
