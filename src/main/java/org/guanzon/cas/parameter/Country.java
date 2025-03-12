@@ -26,7 +26,7 @@ public class Country extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException {
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -48,6 +48,9 @@ public class Country extends Parameter{
                 return poJSON;
             }
         }
+        
+        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModel.setModifiedDate(poGRider.getServerDate());
         
         poJSON.put("result", "success");
         return poJSON;

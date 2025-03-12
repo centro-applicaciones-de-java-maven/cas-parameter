@@ -3,6 +3,7 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.cas.parameter.Model;
+import org.guanzon.cas.parameter.ModelVariant;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,9 +13,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class testModel {
+public class testModelVariant {
     static GRiderCAS instance;
-    static Model record;
+    static ModelVariant record;
 
     @BeforeClass
     public static void setUpClass() {
@@ -22,7 +23,7 @@ public class testModel {
 
         instance = MiscUtil.Connect();
         
-        record = new Model();
+        record = new ModelVariant();
         record.setApplicationDriver(instance);
         record.setWithParentClass(false);
         record.initialize();
@@ -38,32 +39,22 @@ public class testModel {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setModelCode("CCG125SII");
+            loJSON = record.getModel().setDescription("Standard");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
             
-            loJSON = record.getModel().setDescription("TMX 125 Alpha");
+            loJSON = record.getModel().setYearModel(2025);
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }
             
-            loJSON = record.getModel().setManufactureYear(2025);
+            loJSON = record.getModel().setModelId("00004");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
             
-            loJSON = record.getModel().setMainModelId("00001");
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }
-            
-            loJSON = record.getModel().setBrandId("00001");
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }
-            
-            loJSON = record.getModel().setIndustryCode("02");
+            loJSON = record.getModel().setColorId("00001");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }

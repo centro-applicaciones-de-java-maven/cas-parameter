@@ -26,7 +26,7 @@ public class BanksBranch extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException{
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -83,8 +83,10 @@ public class BanksBranch extends Parameter{
                 poJSON.put("message", "Fax No must not be empty.");
                 return poJSON;
             }
-            
         }
+        
+        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModel.setModifiedDate(poGRider.getServerDate());
         
         poJSON.put("result", "success");
         return poJSON;

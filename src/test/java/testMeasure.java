@@ -39,7 +39,7 @@ public class testMeasure {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setMeasureName("Metric Tons");
+            loJSON = record.getModel().setDescription("Litre");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  

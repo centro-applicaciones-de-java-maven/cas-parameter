@@ -54,6 +54,14 @@ public class Model_Color extends Model {
         return (String) getValue("sDescript");
     }
     
+    public JSONObject setColorCode(String colorCode) {
+        return setValue("sColorCde", colorCode);
+    }
+
+    public String getColorCode() {
+        return (String) getValue("sColorCde");
+    }
+    
     public JSONObject setMainColor(String mainColor) {
         return setValue("sMnColorx", mainColor);
     }

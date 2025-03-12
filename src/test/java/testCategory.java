@@ -38,20 +38,20 @@ public class testCategory {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Franchise");
+            loJSON = record.getModel().setDescription("Hospitality");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
 
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            loJSON = record.getModel().setIndustryCode("04");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            
+            loJSON = record.getModel().setInventoryTypeCode("0002");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
-            }     
+            }  
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {

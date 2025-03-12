@@ -26,7 +26,7 @@ public class Brand extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException{
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -42,12 +42,15 @@ public class Brand extends Parameter{
                 return poJSON;
             }
             
-            if (poModel.getCategoryCode() == null || poModel.getCategoryCode().isEmpty()){
+            if (poModel.getIndustryCode()== null || poModel.getIndustryCode().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Category must not be empty.");
+                poJSON.put("message", "Industry must not be empty.");
                 return poJSON;
             }
         }
+        
+        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModel.setModifiedDate(poGRider.getServerDate());
         
         poJSON.put("result", "success");
         return poJSON;

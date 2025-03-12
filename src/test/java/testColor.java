@@ -38,25 +38,20 @@ public class testColor {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Mint Green");
+            loJSON = record.getModel().setDescription("Black");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }  
+            
+            loJSON = record.getModel().setColorCode("BLK");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
 
-            loJSON = record.getModel().setMainColor(null);
+            loJSON = record.getModel().setMainColor("");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {

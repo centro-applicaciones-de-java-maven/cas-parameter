@@ -10,8 +10,9 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_Brand extends Model {
-private Model_Category poCategory;
+public class Model_Model_Variant extends Model {
+    private Model_Brand poBrand;
+    
     @Override
     public void initialize() {
         try {
@@ -23,7 +24,9 @@ private Model_Category poCategory;
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            poEntity.updateObject("nSelPrice", 0);
+            poEntity.updateObject("nYearMdlx", 0);
+            poEntity.updateObject("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
             poEntity.insertRow();
@@ -34,7 +37,7 @@ private Model_Category poCategory;
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poCategory = new ParamModels(poGRider).Category();
+            poBrand = new ParamModels(poGRider).Brand();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -44,34 +47,35 @@ private Model_Category poCategory;
         }
     }
     
-    public Model_Category Category() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sCategrCd"))){
-            if (poCategory.getEditMode() == EditMode.READY && 
-                poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
-                return poCategory;
+    public Model_Brand Brand() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sBrandIDx"))){
+            if (poBrand.getEditMode() == EditMode.READY && 
+                poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
+                return poBrand;
             else{
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
+                poJSON = poBrand.openRecord((String) getValue("sBrandIDx"));
 
                 if ("success".equals((String) poJSON.get("result")))
-                    return poCategory;
+                    return poBrand;
                 else {
-                    poCategory.initialize();
-                    return poCategory;
+                    poBrand.initialize();
+                    return poBrand;
                 }
             }
         } else {
-            poCategory.initialize();
-            return poCategory;
+            poBrand.initialize();
+            return poBrand;
         }
     }
     
-    public JSONObject setBrandId(String brandId) {
-        return setValue("sBrandIDx", brandId);
+    public JSONObject setVariantId(String seriesId) {
+        return setValue("sVrntIDxx", seriesId);
     }
 
-    public String getBrandId() {
-        return (String) getValue("sBrandIDx");
+    public String getVariantId() {
+        return (String) getValue("sVrntIDxx");
     }
+
 
     public JSONObject setDescription(String description) {
         return setValue("sDescript", description);
@@ -80,16 +84,47 @@ private Model_Category poCategory;
     public String getDescription() {
         return (String) getValue("sDescript");
     }
-
     
-    public JSONObject setIndustryCode(String industryCode) {
-        return setValue("sIndstCdx", industryCode);
+    public JSONObject setSellingPrice(double price) {
+        return setValue("nSelPrice", price);
     }
 
-    public String getIndustryCode() {
-        return (String) getValue("sIndstCdx");
+    public double getSellingPrice() {
+        return (double) getValue("nSelPrice");
     }
 
+    public JSONObject setYearModel(int yearModel) {
+        return setValue("nYearMdlx", yearModel);
+    }
+
+    public int getYearModel() {
+        return (int) getValue("nYearMdlx");
+    }
+    
+    public JSONObject setPayload(String payload) {
+        return setValue("sPayloadx", payload);
+    }
+
+    public String getPayload() {
+        return (String) getValue("sPayloadx");
+    }
+    
+    public JSONObject setModelId(String modelId) {
+        return setValue("sModelIDx", modelId);
+    }
+
+    public String getModelId() {
+        return (String) getValue("sModelIDx");
+    }
+    
+    public JSONObject setColorId(String colorId) {
+        return setValue("sColorIDx", colorId);
+    }
+
+    public String getColorId() {
+        return (String) getValue("sColorIDx");
+    }
+    
     public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }

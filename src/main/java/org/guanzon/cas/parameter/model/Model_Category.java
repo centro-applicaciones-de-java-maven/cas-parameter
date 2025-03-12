@@ -54,6 +54,22 @@ public class Model_Category extends Model {
         return (String) getValue("sDescript");
     }
     
+    public JSONObject setIndustryCode(String industryCode) {
+        return setValue("sIndstCdx", industryCode);
+    }
+
+    public String getIndustryCode() {
+        return (String) getValue("sIndstCdx");
+    }
+    
+    public JSONObject setInventoryTypeCode(String inventoryTypeCode) {
+        return setValue("sInvTypCd", inventoryTypeCode);
+    }
+
+    public String getInventoryTypeCode() {
+        return (String) getValue("sInvTypCd");
+    }
+    
     public JSONObject setRecordStatus(String recordStatus){
         return setValue("cRecdStat", recordStatus);
     }
