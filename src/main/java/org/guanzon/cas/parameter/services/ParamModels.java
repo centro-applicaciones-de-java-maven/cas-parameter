@@ -33,6 +33,7 @@ import org.guanzon.cas.parameter.model.Model_Section;
 import org.guanzon.cas.parameter.model.Model_Size;
 import org.guanzon.cas.parameter.model.Model_Term;
 import org.guanzon.cas.parameter.model.Model_TownCity;
+import org.guanzon.cas.parameter.model.Model_Variant;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
 
 public class ParamModels {
@@ -312,21 +313,21 @@ public class ParamModels {
         return poModel;
     }
     
-    public Model_Model_Series ModelSeries(){
+    public Model_Variant ModelVariant(){
         if (poGRider == null){
-            System.err.println("ParamModels.ModelSeries: Application driver is not set.");
+            System.err.println("ParamModels.ModelVariant: Application driver is not set.");
             return null;
         }
         
-        if (poModelSeries == null){
-            poModelSeries = new Model_Model_Series();
-            poModelSeries.setApplicationDriver(poGRider);
-            poModelSeries.setXML("Model_Model_Series");
-            poModelSeries.setTableName("Model_Series");
-            poModelSeries.initialize();
+        if (poModelVariant == null){
+            poModelVariant = new Model_Variant();
+            poModelVariant.setApplicationDriver(poGRider);
+            poModelVariant.setXML("Model_Model_Variant");
+            poModelVariant.setTableName("Model_Variant");
+            poModelVariant.initialize();
         }
 
-        return poModelSeries;
+        return poModelVariant;
     }
     
     public Model_Province Province(){
@@ -616,7 +617,7 @@ public class ParamModels {
     private Model_Inv_Type poInvType;
     private Model_Measure poMeasure;
     private Model_Model poModel;
-    private Model_Model_Series poModelSeries;
+    private Model_Variant poModelVariant;
     private Model_Province poProvince;
     private Model_Region poRegion;
     private Model_Section poSection;

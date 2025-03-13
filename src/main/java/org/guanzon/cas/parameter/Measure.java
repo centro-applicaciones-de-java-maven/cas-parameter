@@ -63,26 +63,14 @@ public class Measure extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        String lsSQL = getSQ_Browse();
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
                 "ID»Description",
-                "sMeasurID»sMeasurNm",
-                "sMeasurID»sMeasurNm",
+                "sMeasurID»sDescript",
+                "sMeasurID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -94,38 +82,4 @@ public class Measure extends Parameter{
             return poJSON;
         }
     }
-    
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-               "ID»Description",
-                "sMeasurID»sMeasurNm",
-                "sMeasurID»sMeasurNm",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sMeasurID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
 }

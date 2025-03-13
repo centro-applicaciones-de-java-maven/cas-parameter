@@ -24,6 +24,7 @@ import org.guanzon.cas.parameter.Made;
 import org.guanzon.cas.parameter.Measure;
 import org.guanzon.cas.parameter.Model;
 import org.guanzon.cas.parameter.ModelSeries;
+import org.guanzon.cas.parameter.ModelVariant;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;
 import org.guanzon.cas.parameter.Relationship;
@@ -310,21 +311,21 @@ public class ParamControllers {
         return poModel;        
     }
     
-    public ModelSeries ModelSeries(){
+    public ModelVariant ModelVariant(){
         if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.ModelSeries: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.ModelVariant: Application driver is not set.");
             return null;
         }
         
-        if (poModelSeries != null) return poModelSeries;
+        if (poModelVariant != null) return poModelVariant;
         
-        poModelSeries = new ModelSeries();
-        poModelSeries.setApplicationDriver(poGRider);
-        poModelSeries.setWithParentClass(true);
-        poModelSeries.setLogWrapper(poLogWrapper);
-        poModelSeries.initialize();
-        poModelSeries.newRecord();
-        return poModelSeries;        
+        poModelVariant = new ModelVariant();
+        poModelVariant.setApplicationDriver(poGRider);
+        poModelVariant.setWithParentClass(true);
+        poModelVariant.setLogWrapper(poLogWrapper);
+        poModelVariant.initialize();
+        poModelVariant.newRecord();
+        return poModelVariant;        
     }
     
     public Province Province(){
@@ -616,7 +617,7 @@ public class ParamControllers {
             poInvType = null;
             poMeasure = null;
             poModel = null;
-            poModelSeries = null;
+            poModelVariant = null;
             poProvince = null;
             poSection = null;
             poTownCity = null;
@@ -658,7 +659,7 @@ public class ParamControllers {
     private InvType poInvType;
     private Measure poMeasure;
     private Model poModel;
-    private ModelSeries poModelSeries;
+    private ModelVariant poModelVariant;
     private Province poProvince;
     private Region poRegion;
     private Section poSection;

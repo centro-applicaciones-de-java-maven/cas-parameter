@@ -75,26 +75,14 @@ public class ModelVariant extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        String lsSQL = getSQ_Browse();
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Model Code",
-                "sVrntIDxx»sDescript",
-                "sVrntIDxx»sDescript",
+                "Code»Model Name»Variant»Year Model»Color",
+                "xModelCde»xModelNme»sDescript»nYearMdlx»xColorNme",
+                "IFNULL(b.sModelCde, '')»IFNULL(b.sDescript, '')»a.sDescript»a.nYearMdlx»IFNULL(c.sDescript, '')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -106,4 +94,39 @@ public class ModelVariant extends Parameter{
             return poJSON;
         }
     }    
+    
+    @Override
+    public String getSQ_Browse(){
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+        
+        String lsSQL = "SELECT" +
+                            "  a.sVrntIDxx" +
+                            ", a.sDescript" +
+                            ", a.nSelPrice" +
+                            ", a.nYearMdlx" +
+                            ", a.sPayloadx" +
+                            ", a.sModelIDx" +
+                            ", a.sColorIDx" +
+                            ", a.cRecdStat" +
+                            ", a.sModified" +
+                            ", a.dModified" +
+                            ", IFNULL(b.sModelCde, '') xModelCde" +
+                            ", IFNULL(b.sDescript, '') xModelNme" +
+                            ", IFNULL(c.sDescript, '') xColorNme" +
+                        " FROM Model_Variant a" +
+                            " LEFT JOIN Model b ON a.sModelIDx = b.sModelIDx" +
+                            " LEFT JOIN Color c ON a.sColorIDx = c.sColorIDx";
+        
+        return MiscUtil.addCondition(lsSQL, lsCondition);
+    }
 }
