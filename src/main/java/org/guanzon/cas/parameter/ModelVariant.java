@@ -93,6 +93,56 @@ public class ModelVariant extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+    }   
+    
+    public JSONObject searchRecord(String value, boolean byCode, String modelId) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (modelId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sModelIDx = " + SQLUtil.toSQL(modelId));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Code»Model Name»Variant»Year Model»Color",
+                "xModelCde»xModelNme»sDescript»nYearMdlx»xColorNme",
+                "IFNULL(b.sModelCde, '')»IFNULL(b.sDescript, '')»a.sDescript»a.nYearMdlx»IFNULL(c.sDescript, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sVrntIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }    
+    
+    public JSONObject searchRecordByModel(String value, boolean byCode, String brandId) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (brandId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "b.sBrandIDx = " + SQLUtil.toSQL(brandId));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Code»Model Name»Variant»Year Model»Color",
+                "xModelCde»xModelNme»sDescript»nYearMdlx»xColorNme",
+                "IFNULL(b.sModelCde, '')»IFNULL(b.sDescript, '')»a.sDescript»a.nYearMdlx»IFNULL(c.sDescript, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sVrntIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
     }    
     
     @Override
@@ -123,9 +173,12 @@ public class ModelVariant extends Parameter{
                             ", IFNULL(b.sModelCde, '') xModelCde" +
                             ", IFNULL(b.sDescript, '') xModelNme" +
                             ", IFNULL(c.sDescript, '') xColorNme" +
+                            ", IFNULL(d.sDescript, '') xBrandNme" +
+                            ", IFNULL(b.sBrandIDx, '') xBrandIDx" +
                         " FROM Model_Variant a" +
                             " LEFT JOIN Model b ON a.sModelIDx = b.sModelIDx" +
-                            " LEFT JOIN Color c ON a.sColorIDx = c.sColorIDx";
+                            " LEFT JOIN Color c ON a.sColorIDx = c.sColorIDx" +
+                            " LEFT JOIN Brand d ON b.sBrandIDx = d.sBrandIDx";
         
         return MiscUtil.addCondition(lsSQL, lsCondition);
     }

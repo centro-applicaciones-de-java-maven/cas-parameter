@@ -23,7 +23,6 @@ import org.guanzon.cas.parameter.InvType;
 import org.guanzon.cas.parameter.Made;
 import org.guanzon.cas.parameter.Measure;
 import org.guanzon.cas.parameter.Model;
-import org.guanzon.cas.parameter.ModelSeries;
 import org.guanzon.cas.parameter.ModelVariant;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;

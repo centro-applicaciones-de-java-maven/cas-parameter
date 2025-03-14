@@ -38,20 +38,10 @@ public class testSection {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setSectionName("J");
+            loJSON = record.getModel().setDescription("E");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
