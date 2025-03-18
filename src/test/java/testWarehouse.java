@@ -38,7 +38,7 @@ public class testWarehouse {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Bldg. C");
+            loJSON = record.getModel().setDescription("Bldg. AAA");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
