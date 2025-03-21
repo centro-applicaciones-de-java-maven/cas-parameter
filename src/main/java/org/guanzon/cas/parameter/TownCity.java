@@ -36,7 +36,7 @@ public class TownCity extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getTownName().isEmpty()){
+            if (poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Town must not be empty.");
                 return poJSON;
@@ -63,11 +63,13 @@ public class TownCity extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
-                "ID»Town»Province»Zip Code»Muni Code",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd",
+                "ID»Town»Province»Zipp Code»Mncplty Code",
+                "sTownIDxx»sTownName»xProvName»sZippCode»sMuncplCd",
                 "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd",
                 byCode ? 0 : 1);
 
@@ -82,54 +84,18 @@ public class TownCity extends Parameter{
     }
     
     public JSONObject searchRecord(String value, boolean byCode, String provinceId) throws SQLException, GuanzonException{
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
+        String lsSQL = getSQ_Browse();
+        
+        if (provinceId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
+        }
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Town»Province»Zip Code»Muni Code",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd",
+                "ID»Town»Province»Zipp Code»Mncplty Code",
+                "sTownIDxx»sTownName»xProvName»sZippCode»sMuncplCd",
                 "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»Town»Province»Zip Code»Muni Code»Has Route»Blacklisted»Record Status",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd»cHasRoute»cBlackLst»cRecdStat",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd»a.cHasRoute»a.cBlackLst»a.cRecdStat",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchRecordWithStatus(String value, boolean byCode, String provinceId) throws SQLException, GuanzonException{
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Town»Province»Zip Code»Muni Code»Has Route»Blacklisted»Record Status",
-                "sTownIDxx»sTownName»sProvName»sZippCode»sMuncplCd»cHasRoute»cBlackLst»cRecdStat",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd»a.cHasRoute»a.cBlackLst»a.cRecdStat",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -156,19 +122,21 @@ public class TownCity extends Parameter{
             lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
         
-        return MiscUtil.addCondition(
-                    "SELECT" +
-                        "  a.sTownIDxx" +
-                        ", a.sTownName" +
-                        ", a.sZippCode" +
-                        ", a.sProvIDxx" +
-                        ", a.sMuncplCd" +
-                        ", a.cHasRoute" +
-                        ", a.cBlackLst" +
-                        ", a.cRecdStat" +
-                        ", IFNULL(b.sProvName, '') sProvName" +
-                    " FROM TownCity a" +
-                        " LEFT JOIN Province b ON a.sProvIDxx = b.sProvIDxx", 
-            lsCondition);
+        String lsSQL = "SELECT" +
+                            "  a.sTownIDxx" +
+                            ", a.sTownName" +
+                            ", a.sZippCode" +
+                            ", a.sProvIDxx" +
+                            ", a.sMuncplCd" +
+                            ", a.cHasRoute" +
+                            ", a.cBlackLst" +
+                            ", a.cRecdStat" +
+                            ", a.sModified" + 
+                            ", a.dModified" +
+                            ", IFNULL(b.sProvName, '') xProvName" +
+                        " FROM TownCity a" +
+                            " LEFT JOIN Province b ON a.sProvIDxx = b.sProvIDxx";
+        
+        return MiscUtil.addCondition(lsSQL, lsCondition);
     }
 }

@@ -38,7 +38,7 @@ public class testProvince {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setProvinceName("Bagong Province");
+            loJSON = record.getModel().setDescription("Pogo grande");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     

@@ -38,22 +38,12 @@ public class testCountry {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setCountryName("Bagong Province");
+            loJSON = record.getModel().setDescription("Mindanao");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
 
-            loJSON = record.getModel().setNationality("15");
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            loJSON = record.getModel().setNationality("Subsaharan");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     

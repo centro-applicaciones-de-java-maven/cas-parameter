@@ -38,7 +38,7 @@ public class testTownCity {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setTownName("Bagong Town");
+            loJSON = record.getModel().setDescription("Bagong Town");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
