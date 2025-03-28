@@ -49,27 +49,6 @@ public class Model_TownCity extends Model{
         }
     }
     
-    public Model_Province Province() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sProvIDxx"))){
-            if (poProvince.getEditMode() == EditMode.READY && 
-                poProvince.getProvinceId().equals((String) getValue("sProvIDxx")))
-                return poProvince;
-            else{
-                poJSON = poProvince.openRecord((String) getValue("sProvIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poProvince;
-                else {
-                    poProvince.initialize();
-                    return poProvince;
-                }
-            }
-        } else {
-            poProvince.initialize();
-            return poProvince;
-        }
-    }
-    
     public JSONObject setTownId(String townId){
         return setValue("sTownIDxx", townId);
     }
@@ -78,11 +57,11 @@ public class Model_TownCity extends Model{
         return (String) getValue("sTownIDxx");
     }
     
-    public JSONObject setTownName(String townName){
+    public JSONObject setDescription(String townName){
         return setValue("sTownName", townName);
     }
     
-    public String getTownName(){
+    public String getDescription(){
         return (String) getValue("sTownName");
     }
     
@@ -148,5 +127,26 @@ public class Model_TownCity extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    public Model_Province Province() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sProvIDxx"))){
+            if (poProvince.getEditMode() == EditMode.READY && 
+                poProvince.getProvinceId().equals((String) getValue("sProvIDxx")))
+                return poProvince;
+            else{
+                poJSON = poProvince.openRecord((String) getValue("sProvIDxx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poProvince;
+                else {
+                    poProvince.initialize();
+                    return poProvince;
+                }
+            }
+        } else {
+            poProvince.initialize();
+            return poProvince;
+        }
     }
 }

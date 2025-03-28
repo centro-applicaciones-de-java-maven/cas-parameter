@@ -63,27 +63,16 @@ public class Category extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
 
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        String lsSQL = getSQ_Browse();
         
         poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Description",
-                "sCategrCd»sDescript",
-                "sCategrCd»sDescript",
-                byCode ? 0 : 1);
+                    lsSQL,
+                    value,
+                    "ID»Description»Industry»Inv. Type",
+                    "a.sCategrCd»a.sDescript»xIndstDsc»xInvTypNm",
+                    "a.sCategrCd»a.sDescript»b.sDescript»c.sDescript",
+                    byCode ? 0 : 1);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sCategrCd"));
@@ -95,30 +84,17 @@ public class Category extends Parameter{
         }
     }
     
-    
-    
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
+    public JSONObject searchRecord(String value, boolean byCode, String industryCode) throws SQLException, GuanzonException{
 
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sIndstCdx = " + SQLUtil.toSQL(industryCode));
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Description",
-                "sCategrCd»sDescript",
-                "sCategrCd»sDescript",
-                byCode ? 0 : 1);
+                    lsSQL,
+                    value,
+                    "ID»Description»Industry»Inv. Type",
+                    "a.sCategrCd»a.sDescript»xIndstDsc»xInvTypNm",
+                    "a.sCategrCd»a.sDescript»b.sDescript»c.sDescript",
+                    byCode ? 0 : 1);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sCategrCd"));
@@ -128,5 +104,63 @@ public class Category extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+    }
+    
+    public JSONObject searchRecord(String value, boolean byCode, String industryCode, String inventoryTypeCode) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (industryCode != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sIndstCdx = " + SQLUtil.toSQL(industryCode));
+        }
+        
+        if (inventoryTypeCode != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sInvTypCd = " + SQLUtil.toSQL(inventoryTypeCode));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                    lsSQL,
+                    value,
+                    "ID»Description»Industry»Inv. Type",
+                    "a.sCategrCd»a.sDescript»xIndstDsc»xInvTypNm",
+                    "a.sCategrCd»a.sDescript»b.sDescript»c.sDescript",
+                    byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sCategrCd"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+
+    @Override
+    public String getSQ_Browse(){
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+        
+        String lsSQL = "SELECT" + 
+                            "  a.sCategrCd" +
+                            ", a.sDescript" +
+                            ", a.sIndstCdx" +
+                            ", a.sInvTypCd" +
+                            ", a.cRecdStat" +
+                            ", b.sDescript xIndstDsc" +
+                            ", c.sDescript xInvTypNm" +
+                        " FROM Category a" +
+                                " LEFT JOIN Industry b ON a.sIndstCdx = b.sIndstCdx" +
+                                " LEFT JOIN Inv_Type c ON a.sInvTypCd = c.sInvTypCd";
+        
+        return MiscUtil.addCondition(lsSQL, lsCondition);
     }
 }

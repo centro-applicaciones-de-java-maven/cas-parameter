@@ -42,11 +42,11 @@ public class Model_Term extends Model {
 
 
     
-    public JSONObject setTermCode(String termCode) {
-        return setValue("sTermCode", termCode);
+    public JSONObject setTermId(String termId) {
+        return setValue("sTermCode", termId);
     }
 
-    public String getTermCode() {
+    public String getTermId() {
         return (String) getValue("sTermCode");
     }
 

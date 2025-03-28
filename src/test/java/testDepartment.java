@@ -2,7 +2,8 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.Province;
+import org.guanzon.cas.parameter.Brand;
+import org.guanzon.cas.parameter.Department;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,9 +13,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class testProvince {
+public class testDepartment {
     static GRiderCAS instance;
-    static Province record;
+    static Department record;
 
     @BeforeClass
     public static void setUpClass() {
@@ -22,7 +23,7 @@ public class testProvince {
 
         instance = MiscUtil.Connect();
         
-        record = new Province();
+        record = new Department();
         record.setApplicationDriver(instance);
         record.setWithParentClass(false);
         record.initialize();
@@ -38,25 +39,15 @@ public class testProvince {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Pogo grande");
+            loJSON = record.getModel().setDescription("Aftersales Management");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
-            }     
+            } 
 
-            loJSON = record.getModel().setRegionId("15");
+            loJSON = record.getModel().setDepartmentCode("ASM");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
+            }  
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
@@ -71,7 +62,7 @@ public class testProvince {
 //    public void testUpdateRecord() {
 //        JSONObject loJSON;
 //
-//        loJSON = record.openRecord("0100");
+//        loJSON = record.openRecord("24009");
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }      
@@ -80,11 +71,6 @@ public class testProvince {
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }      
-//        
-//        loJSON = record.getModel().setProvinceName("Yeh Yeh");
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }    
 //        
 //        loJSON = record.getModel().setModifyingId(instance.getUserID());
 //        if ("error".equals((String) loJSON.get("result"))) {
@@ -101,13 +87,13 @@ public class testProvince {
 //            Assert.fail((String) loJSON.get("message"));
 //        } 
 //    }
-//    
+    
 //    @Test
 //    public void testSearch(){
 //        JSONObject loJSON = record.searchRecord("", false);        
 //        if ("success".equals((String) loJSON.get("result"))){
-//            System.out.println(record.getModel().getProvinceId());
-//            System.out.println(record.getModel().getProvinceName());
+//            System.out.println(record.getModel().getBrandId());
+//            System.out.println(record.getModel().getDescription());
 //        } else System.out.println("No record was selected.");
 //    }
     

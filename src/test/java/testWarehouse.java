@@ -38,26 +38,16 @@ public class testWarehouse {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setWarehouseName("Warehouse 1");
+            loJSON = record.getModel().setDescription("Bldg. AAA");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException e) {
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             Assert.fail(e.getMessage());
         } 
     }
