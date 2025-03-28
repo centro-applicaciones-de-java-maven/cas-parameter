@@ -38,7 +38,7 @@ public class testTerm {
                 Assert.fail((String) loJSON.get("message"));
             }  
 
-            loJSON = record.getModel().setDescription("60 Days");
+            loJSON = record.getModel().setDescription("2 Month(s)");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
@@ -48,16 +48,31 @@ public class testTerm {
                 Assert.fail((String) loJSON.get("message"));
             }
 
-            loJSON = record.getModel().setTermValue(60);
+            loJSON = record.getModel().setTermValue(2);
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             } 
+
+            loJSON = record.getModel().setRecordStatus("1");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+
+            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+        } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         } 
     }

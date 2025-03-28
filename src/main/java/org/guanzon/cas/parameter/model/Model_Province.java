@@ -76,12 +76,12 @@ public class Model_Province extends Model{
         return (String) getValue("sProvIDxx");
     }
     
-    public JSONObject setDescription(String description){
-        return setValue("sDescript", description);
+    public JSONObject setProvinceName(String provinceName){
+        return setValue("sProvName", provinceName);
     }
     
-    public String getDescription(){
-        return (String) getValue("sDescript");
+    public String getProvinceName(){
+        return (String) getValue("sProvName");
     }
     
     public JSONObject setRegionId(String regionId){

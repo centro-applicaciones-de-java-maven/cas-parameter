@@ -16,7 +16,6 @@ import org.guanzon.cas.parameter.model.Model_Color;
 import org.guanzon.cas.parameter.model.Model_Color_Detail;
 import org.guanzon.cas.parameter.model.Model_Company;
 import org.guanzon.cas.parameter.model.Model_Country;
-import org.guanzon.cas.parameter.model.Model_Department;
 import org.guanzon.cas.parameter.model.Model_Industry;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
@@ -26,7 +25,7 @@ import org.guanzon.cas.parameter.model.Model_Labor_Model;
 import org.guanzon.cas.parameter.model.Model_Made;
 import org.guanzon.cas.parameter.model.Model_Measure;
 import org.guanzon.cas.parameter.model.Model_Model;
-import org.guanzon.cas.parameter.model.Model_Model_Variant;
+import org.guanzon.cas.parameter.model.Model_Model_Series;
 import org.guanzon.cas.parameter.model.Model_Province;
 import org.guanzon.cas.parameter.model.Model_Region;
 import org.guanzon.cas.parameter.model.Model_Relationship;
@@ -313,21 +312,21 @@ public class ParamModels {
         return poModel;
     }
     
-    public Model_Model_Variant ModelVariant(){
+    public Model_Model_Series ModelSeries(){
         if (poGRider == null){
-            System.err.println("ParamModels.ModelVariant: Application driver is not set.");
+            System.err.println("ParamModels.ModelSeries: Application driver is not set.");
             return null;
         }
         
-        if (poModelVariant == null){
-            poModelVariant = new Model_Model_Variant();
-            poModelVariant.setApplicationDriver(poGRider);
-            poModelVariant.setXML("Model_Model_Variant");
-            poModelVariant.setTableName("Model_Variant");
-            poModelVariant.initialize();
+        if (poModelSeries == null){
+            poModelSeries = new Model_Model_Series();
+            poModelSeries.setApplicationDriver(poGRider);
+            poModelSeries.setXML("Model_Model_Series");
+            poModelSeries.setTableName("Model_Series");
+            poModelSeries.initialize();
         }
 
-        return poModelVariant;
+        return poModelSeries;
     }
     
     public Model_Province Province(){
@@ -530,23 +529,6 @@ public class ParamModels {
 
         return poCompany;
     }
-    
-    public Model_Department Department(){
-        if (poGRider == null){
-            System.err.println("ParamModels.Department: Application driver is not set.");
-            return null;
-        }
-        
-        if (poDepartment == null){
-            poDepartment = new Model_Department();
-            poDepartment.setApplicationDriver(poGRider);
-            poDepartment.setXML("Model_Department");
-            poDepartment.setTableName("Department");
-            poDepartment.initialize();
-        }
-
-        return poDepartment;
-    }
             
     public Model_Affiliated_Company AffilatedCompany(){
         if (poGRider == null){
@@ -629,13 +611,12 @@ public class ParamModels {
     private Model_Color poColor;    
     private Model_Color_Detail poColorDetail;
     private Model_Country poCountry;
-    private Model_Department poDepartment;
     private Model_Industry poIndustry;
     private Model_Inv_Location poInvLocation;
     private Model_Inv_Type poInvType;
     private Model_Measure poMeasure;
     private Model_Model poModel;
-    private Model_Model_Variant poModelVariant;
+    private Model_Model_Series poModelSeries;
     private Model_Province poProvince;
     private Model_Region poRegion;
     private Model_Section poSection;

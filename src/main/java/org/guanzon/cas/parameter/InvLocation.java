@@ -47,12 +47,6 @@ public class InvLocation extends Parameter{
                 poJSON.put("message", "Warehouse must not be empty.");
                 return poJSON;
             }
-            
-            if (poModel.getSectionId().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Section must not be empty.");
-                return poJSON;
-            }
         }
         
         poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
@@ -69,14 +63,26 @@ public class InvLocation extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsSQL = getSQ_Browse();
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Description»Warehouse»Section",
-                "sLocatnID»sDescript»xWHouseNm»xSectnIDx",
-                "sLocatnID»sDescript»IFNULL(b.sWHouseNm, '')»IFNULL(c.sSectnNme, '')",
+                "ID»Description",
+                "sLocatnID»sDescript",
+                "sLocatnID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -87,10 +93,9 @@ public class InvLocation extends Parameter{
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
-    }    
+    }
     
-    @Override
-    public String getSQ_Browse(){
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -98,25 +103,29 @@ public class InvLocation extends Parameter{
                 lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
             }
 
-            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
         } else {
-            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
-        
-        String lsSQL = "SELECT" +
-                            "  a.sLocatnID" +
-                            ", a.sDescript" +
-                            ", a.sWHouseID" +
-                            ", a.sSectnIDx" +
-                            ", a.cRecdStat" +
-                            ", a.sModified" +
-                            ", a.dModified" +
-                            ", IFNULL(b.sWHouseNm, '') xWHouseNm" +
-                            ", IFNULL(c.sSectnNme, '') xSectnIDx" + 
-                        " FROM Inv_Location a" +
-                            " LEFT JOIN Warehouse b ON a.sWHouseID = b.sWHouseID" +
-                            " LEFT JOIN Section c ON a.sSectnIDx = c.sSectnIDx";
-        
-        return MiscUtil.addCondition(lsSQL, lsCondition);
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Description",
+                "sLocatnID»sDescript",
+                "sLocatnID»sDescript",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sLocatnID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
     }
+    
 }

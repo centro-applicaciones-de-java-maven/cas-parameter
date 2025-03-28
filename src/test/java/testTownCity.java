@@ -38,7 +38,7 @@ public class testTownCity {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Bagong Town");
+            loJSON = record.getModel().setTownName("Bagong Town");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
@@ -82,7 +82,7 @@ public class testTownCity {
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+        } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         } 
     }
