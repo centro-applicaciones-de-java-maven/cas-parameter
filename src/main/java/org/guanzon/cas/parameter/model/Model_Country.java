@@ -38,19 +38,19 @@ public class Model_Country extends Model{
     }
     
     public JSONObject setCountryId(String countryId){
-        return setValue("sCntryIDx", countryId);
+        return setValue("sCntryCde", countryId);
     }
     
     public String getCountryId(){
-        return (String) getValue("sCntryIDx");
+        return (String) getValue("sCntryCde");
     }
     
-    public JSONObject setDescription(String description){
-        return setValue("sDescript", description);
+    public JSONObject setCountryName(String countryName){
+        return setValue("sCntryNme", countryName);
     }
     
-    public String getDescription(){
-        return (String) getValue("sDescript");
+    public String getCountryName(){
+        return (String) getValue("sCntryNme");
     }
     
     public JSONObject setNationality(String nationality){

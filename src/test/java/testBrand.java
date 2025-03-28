@@ -52,7 +52,7 @@ public class testBrand {
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+        } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
     }

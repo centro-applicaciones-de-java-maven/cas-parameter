@@ -8,25 +8,25 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Measure;
+import org.guanzon.cas.parameter.model.Model_Model_Series;
 import org.json.simple.JSONObject;
 
-public class Measure extends Parameter{
-    Model_Measure poModel;
+public class ModelSeries extends Parameter{
+    Model_Model_Series poModelSeries;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Measure();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Measure");
-        poModel.setTableName("Measure");
-        poModel.initialize();
+        poModelSeries = new Model_Model_Series();
+        poModelSeries.setApplicationDriver(poGRider);
+        poModelSeries.setXML("Model_Model_Series");
+        poModelSeries.setTableName("Model_Series");
+        poModelSeries.initialize();
     }
     
     @Override
-    public JSONObject isEntryOkay() throws SQLException{
+    public JSONObject isEntryOkay() throws SQLException {
         poJSON = new JSONObject();
         
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -36,29 +36,29 @@ public class Measure extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getMeasureId().isEmpty()){
+            if (poModelSeries.getSeriesID().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Measure must not be empty.");
+                poJSON.put("message", "Model Series must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModelSeries.getDescription().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Measurement must not be empty.");
+                poJSON.put("message", "Description must not be empty.");
                 return poJSON;
             }
         }
         
-        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
-        poModel.setModifiedDate(poGRider.getServerDate());
+        poModelSeries.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        poModelSeries.setModifiedDate(poGRider.getServerDate());
         
         poJSON.put("result", "success");
         return poJSON;
     }
     
     @Override
-    public Model_Measure getModel() {
-        return poModel;
+    public Model_Model_Series getModel() {
+        return poModelSeries;
     }
     
     @Override
@@ -81,12 +81,12 @@ public class Measure extends Parameter{
                 lsSQL,
                 value,
                 "ID»Description",
-                "sMeasurID»sMeasurNm",
-                "sMeasurID»sMeasurNm",
+                "sSeriesID»sDescript",
+                "sSeriesID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sMeasurID"));
+            return poModelSeries.openRecord((String) poJSON.get("sSeriesID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -113,13 +113,13 @@ public class Measure extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-               "ID»Description",
-                "sMeasurID»sMeasurNm",
-                "sMeasurID»sMeasurNm",
+                "ID»Description",
+                "sSeriesID»sDescript",
+                "sSeriesID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sMeasurID"));
+            return poModelSeries.openRecord((String) poJSON.get("sSeriesID"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -127,5 +127,4 @@ public class Measure extends Parameter{
             return poJSON;
         }
     }
-    
 }

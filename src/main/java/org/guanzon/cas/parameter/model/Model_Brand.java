@@ -11,8 +11,7 @@ import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Brand extends Model {
-    private Model_Industry poIndustry;
-    
+private Model_Category poCategory;
     @Override
     public void initialize() {
         try {
@@ -35,13 +34,34 @@ public class Model_Brand extends Model {
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poIndustry = new ParamModels(poGRider).Industry();
+            poCategory = new ParamModels(poGRider).Category();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
+        }
+    }
+    
+    public Model_Category Category() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sCategrCd"))){
+            if (poCategory.getEditMode() == EditMode.READY && 
+                poCategory.getCategoryId().equals((String) getValue("sCategrCd")))
+                return poCategory;
+            else{
+                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poCategory;
+                else {
+                    poCategory.initialize();
+                    return poCategory;
+                }
+            }
+        } else {
+            poCategory.initialize();
+            return poCategory;
         }
     }
     
@@ -92,26 +112,5 @@ public class Model_Brand extends Model {
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
-    }
-    
-    public Model_Industry Industry() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sIndstCdx"))){
-            if (poIndustry.getEditMode() == EditMode.READY && 
-                poIndustry.getIndustryId().equals((String) getValue("sIndstCdx")))
-                return poIndustry;
-            else{
-                poJSON = poIndustry.openRecord((String) getValue("sIndstCdx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poIndustry;
-                else {
-                    poIndustry.initialize();
-                    return poIndustry;
-                }
-            }
-        } else {
-            poIndustry.initialize();
-            return poIndustry;
-        }
     }
 }

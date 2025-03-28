@@ -38,12 +38,22 @@ public class testCountry {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Mindanao");
+            loJSON = record.getModel().setCountryName("Bagong Province");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
 
-            loJSON = record.getModel().setNationality("Subsaharan");
+            loJSON = record.getModel().setNationality("15");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }     
@@ -52,7 +62,7 @@ public class testCountry {
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+        } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
     }

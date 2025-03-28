@@ -42,7 +42,7 @@ public class Warehouse extends Parameter{
                 return poJSON;
             }
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getWarehouseName().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Warehouse must not be empty.");
                 return poJSON;
@@ -77,6 +77,39 @@ public class Warehouse extends Parameter{
 
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
         
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Description",
+                "sWHouseID»sWHouseNm",
+                "sWHouseID»sWHouseNm",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sWHouseID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,

@@ -13,7 +13,6 @@ import org.json.simple.JSONObject;
 public class Model_Inv_Location extends Model {
     private Model_Warehouse poWarehouse;
     private Model_Section poSection;
-    
     @Override
     public void initialize() {
         try {
@@ -45,6 +44,48 @@ public class Model_Inv_Location extends Model {
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
+        }
+    }
+    
+    public Model_Warehouse Warehouse() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sWHouseID"))){
+            if (poWarehouse.getEditMode() == EditMode.READY && 
+                poWarehouse.getWarehouseId().equals((String) getValue("sWHouseID")))
+                return poWarehouse;
+            else{
+                poJSON = poWarehouse.openRecord((String) getValue("sWHouseID"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poWarehouse;
+                else {
+                    poWarehouse.initialize();
+                    return poWarehouse;
+                }
+            }
+        } else {
+            poWarehouse.initialize();
+            return poWarehouse;
+        }
+    }
+    
+    public Model_Section Section() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sSectnIDx"))){
+            if (poSection.getEditMode() == EditMode.READY && 
+                poSection.getSectionId().equals((String) getValue("sSectnIDx")))
+                return poSection;
+            else{
+                poJSON = poSection.openRecord((String) getValue("sSectnIDx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poSection;
+                else {
+                    poSection.initialize();
+                    return poSection;
+                }
+            }
+        } else {
+            poSection.initialize();
+            return poSection;
         }
     }
     
@@ -102,47 +143,5 @@ public class Model_Inv_Location extends Model {
 
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
-    }
-    
-    public Model_Warehouse Warehouse() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sWHouseID"))){
-            if (poWarehouse.getEditMode() == EditMode.READY && 
-                poWarehouse.getWarehouseId().equals((String) getValue("sWHouseID")))
-                return poWarehouse;
-            else{
-                poJSON = poWarehouse.openRecord((String) getValue("sWHouseID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poWarehouse;
-                else {
-                    poWarehouse.initialize();
-                    return poWarehouse;
-                }
-            }
-        } else {
-            poWarehouse.initialize();
-            return poWarehouse;
-        }
-    }
-    
-    public Model_Section Section() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sSectnIDx"))){
-            if (poSection.getEditMode() == EditMode.READY && 
-                poSection.getSectionId().equals((String) getValue("sSectnIDx")))
-                return poSection;
-            else{
-                poJSON = poSection.openRecord((String) getValue("sSectnIDx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poSection;
-                else {
-                    poSection.initialize();
-                    return poSection;
-                }
-            }
-        } else {
-            poSection.initialize();
-            return poSection;
-        }
     }
 }

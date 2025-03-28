@@ -34,7 +34,7 @@ public class Region extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getRegioneName().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Region must not be empty.");
                 return poJSON;
@@ -59,8 +59,8 @@ public class Region extends Parameter{
                 getSQ_Browse(),
                 value,
                 "ID»Region",
-                "sRegionID»sDescript",
-                "sRegionID»sDescript",
+                "sRegionID»sRegionNm",
+                "sRegionID»sRegionNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -72,4 +72,24 @@ public class Region extends Parameter{
             return poJSON;
         }
     }
+    
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»Region»Record Status",
+                "sRegionID»sRegionNm»cRecdStat",
+                "sRegionID»sRegionNm»cRecdStat",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
 }

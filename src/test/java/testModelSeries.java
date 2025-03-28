@@ -2,8 +2,7 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.Brand;
-import org.guanzon.cas.parameter.Department;
+import org.guanzon.cas.parameter.ModelSeries;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -13,9 +12,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class testDepartment {
+public class testModelSeries {
     static GRiderCAS instance;
-    static Department record;
+    static ModelSeries record;
 
     @BeforeClass
     public static void setUpClass() {
@@ -23,7 +22,7 @@ public class testDepartment {
 
         instance = MiscUtil.Connect();
         
-        record = new Department();
+        record = new ModelSeries();
         record.setApplicationDriver(instance);
         record.setWithParentClass(false);
         record.initialize();
@@ -39,21 +38,36 @@ public class testDepartment {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Aftersales Management");
+            loJSON = record.getModel().setDescription("TMX 155 Series");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             } 
 
-            loJSON = record.getModel().setDepartmentCode("ASM");
+            loJSON = record.getModel().setBrandId("24001");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
+
+            loJSON = record.getModel().setEndOfLife("0");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            } 
+
+            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+        } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
     }
@@ -62,7 +76,7 @@ public class testDepartment {
 //    public void testUpdateRecord() {
 //        JSONObject loJSON;
 //
-//        loJSON = record.openRecord("24009");
+//        loJSON = record.openRecord("24004");
 //        if ("error".equals((String) loJSON.get("result"))) {
 //            Assert.fail((String) loJSON.get("message"));
 //        }      
@@ -92,8 +106,9 @@ public class testDepartment {
 //    public void testSearch(){
 //        JSONObject loJSON = record.searchRecord("", false);        
 //        if ("success".equals((String) loJSON.get("result"))){
-//            System.out.println(record.getModel().getBrandId());
-//            System.out.println(record.getModel().getDescription());
+//            System.out.println(record.getModel().getCountryId());
+//            System.out.println(record.getModel().getCountryName());
+//            System.out.println(record.getModel().getNationality());
 //        } else System.out.println("No record was selected.");
 //    }
     

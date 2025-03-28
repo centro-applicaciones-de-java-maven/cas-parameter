@@ -34,7 +34,7 @@ public class Province extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getProvinceName().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Province must not be empty.");
                 return poJSON;
@@ -65,8 +65,8 @@ public class Province extends Parameter{
                 getSQ_Browse(),
                 value,
                 "ID»Province",
-                "sProvIDxx»sDescript",
-                "sProvIDxx»sDescript",
+                "sProvIDxx»sProvName",
+                "sProvIDxx»sProvName",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -78,4 +78,25 @@ public class Province extends Parameter{
             return poJSON;
         }
     }
+    
+    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»Province»Record Status",
+                "sProvIDxx»sProvName»cRecdStat",
+                "sProvIDxx»sProvName»cRecdStat",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sProvIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
+    
 }
