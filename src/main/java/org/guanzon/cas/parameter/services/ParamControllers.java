@@ -19,6 +19,7 @@ import org.guanzon.cas.parameter.Color;
 import org.guanzon.cas.parameter.ColorDetail;
 import org.guanzon.cas.parameter.Company;
 import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.Department;
 import org.guanzon.cas.parameter.Industry;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
@@ -51,7 +52,7 @@ public class ParamControllers {
         
         poBarangay = new Barangay();
         poBarangay.setApplicationDriver(poGRider);
-        poBarangay.setWithParentClass(true);
+        poBarangay.setWithParentClass(false);
         poBarangay.setLogWrapper(poLogWrapper);
         poBarangay.initialize();
         poBarangay.newRecord();
@@ -225,6 +226,23 @@ public class ParamControllers {
         poCountry.initialize();
         poCountry.newRecord();
         return poCountry;        
+    }
+    
+    public Department Department() throws SQLException, GuanzonException{
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Department: Application driver is not set.");
+            return null;
+        }
+        
+        if (poDepartment != null) return poDepartment;
+        
+        poDepartment = new Department();
+        poDepartment.setApplicationDriver(poGRider);
+        poDepartment.setWithParentClass(true);
+        poDepartment.setLogWrapper(poLogWrapper);
+        poDepartment.initialize();
+        poDepartment.newRecord();
+        return poDepartment;        
     }
     
     public Industry Industry() throws SQLException, GuanzonException{
@@ -673,6 +691,7 @@ public class ParamControllers {
     private Relationship poRelationship;  
     private Size poSize;  
     private Company poCompany;      
+    private Department poDepartment;
     private AffiliatedCompany poAffiliatedCompany; 
 //    private Labor poLabor; 
 //    private LaborModel poLaborModel; 

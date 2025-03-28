@@ -70,7 +70,7 @@ public class Brand extends Parameter{
                 value,
                 "ID»Description»Industry",
                 "sBrandIDx»sDescript»xIndstDsc",
-                "a.sBrandIDx»a.sDescript» b.sDescript",
+                "a.sBrandIDx»a.sDescript»b.sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -95,7 +95,7 @@ public class Brand extends Parameter{
                 value,
                 "ID»Description»Industry",
                 "sBrandIDx»sDescript»xIndstDsc",
-                "a.sBrandIDx»a.sDescript» b.sDescript",
+                "a.sBrandIDx»a.sDescript»b.sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
