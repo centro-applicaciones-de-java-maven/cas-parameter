@@ -38,7 +38,7 @@ public class testIndustry {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("Los Pedritos");
+            loJSON = record.getModel().setDescription("Main Office");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
@@ -57,7 +57,7 @@ public class testIndustry {
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException e) {
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             System.out.println(e.getMessage());
             Assert.fail(e.getMessage());
         }

@@ -46,11 +46,11 @@ public class Model_Warehouse extends Model {
         return (String) getValue("sWHouseID");
     }
 
-    public JSONObject setWarehouseName(String warehouseName) {
+    public JSONObject setDescription(String warehouseName) {
         return setValue("sWHouseNm", warehouseName);
     }
 
-    public String getWarehouseName() {
+    public String getDescription() {
         return (String) getValue("sWHouseNm");
     }
     

@@ -1,6 +1,8 @@
 package org.guanzon.cas.parameter.services;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.cas.parameter.AffiliatedCompany;
 import org.guanzon.cas.parameter.Banks;
@@ -17,13 +19,14 @@ import org.guanzon.cas.parameter.Color;
 import org.guanzon.cas.parameter.ColorDetail;
 import org.guanzon.cas.parameter.Company;
 import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.Department;
 import org.guanzon.cas.parameter.Industry;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
 import org.guanzon.cas.parameter.Made;
 import org.guanzon.cas.parameter.Measure;
 import org.guanzon.cas.parameter.Model;
-import org.guanzon.cas.parameter.ModelSeries;
+import org.guanzon.cas.parameter.ModelVariant;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;
 import org.guanzon.cas.parameter.Relationship;
@@ -39,7 +42,7 @@ public class ParamControllers {
         poLogWrapper = logWrapper;
     }
     
-    public Barangay Barangay(){
+    public Barangay Barangay() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Barangay: Application driver is not set.");
             return null;
@@ -49,14 +52,14 @@ public class ParamControllers {
         
         poBarangay = new Barangay();
         poBarangay.setApplicationDriver(poGRider);
-        poBarangay.setWithParentClass(true);
+        poBarangay.setWithParentClass(false);
         poBarangay.setLogWrapper(poLogWrapper);
         poBarangay.initialize();
         poBarangay.newRecord();
         return poBarangay;        
     }
     
-    public Bin Bin(){
+    public Bin Bin() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Bin: Application driver is not set.");
             return null;
@@ -73,7 +76,7 @@ public class ParamControllers {
         return poBin;        
     }
     
-    public Branch Branch(){
+    public Branch Branch() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Branch: Application driver is not set.");
             return null;
@@ -90,7 +93,7 @@ public class ParamControllers {
         return poBranch;        
     }
     
-    public Brand Brand(){
+    public Brand Brand() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Brand: Application driver is not set.");
             return null;
@@ -107,7 +110,7 @@ public class ParamControllers {
         return poBrand;        
     }
     
-    public Category Category(){
+    public Category Category() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Category: Application driver is not set.");
             return null;
@@ -124,7 +127,7 @@ public class ParamControllers {
         return poCategory;        
     }
     
-    public CategoryLevel2 CategoryLevel2(){
+    public CategoryLevel2 CategoryLevel2() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.CategoryLevel2: Application driver is not set.");
             return null;
@@ -141,7 +144,7 @@ public class ParamControllers {
         return poCategory2;        
     }
     
-    public CategoryLevel3 CategoryLevel3(){
+    public CategoryLevel3 CategoryLevel3() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.CategoryLevel3: Application driver is not set.");
             return null;
@@ -158,7 +161,7 @@ public class ParamControllers {
         return poCategory3;        
     }
     
-    public CategoryLevel4 CategoryLevel4(){
+    public CategoryLevel4 CategoryLevel4() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.CategoryLevel4: Application driver is not set.");
             return null;
@@ -175,7 +178,7 @@ public class ParamControllers {
         return poCategory4;        
     }
     
-    public Color Color(){
+    public Color Color() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Color: Application driver is not set.");
             return null;
@@ -191,7 +194,7 @@ public class ParamControllers {
         poColor.newRecord();
         return poColor;        
     }
-    public ColorDetail ColorDetail(){
+    public ColorDetail ColorDetail() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Color: Application driver is not set.");
             return null;
@@ -208,7 +211,7 @@ public class ParamControllers {
         return poColorDetail;        
     }
     
-    public Country Country(){
+    public Country Country() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Country: Application driver is not set.");
             return null;
@@ -225,7 +228,24 @@ public class ParamControllers {
         return poCountry;        
     }
     
-    public Industry Industry(){
+    public Department Department() throws SQLException, GuanzonException{
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.Department: Application driver is not set.");
+            return null;
+        }
+        
+        if (poDepartment != null) return poDepartment;
+        
+        poDepartment = new Department();
+        poDepartment.setApplicationDriver(poGRider);
+        poDepartment.setWithParentClass(true);
+        poDepartment.setLogWrapper(poLogWrapper);
+        poDepartment.initialize();
+        poDepartment.newRecord();
+        return poDepartment;        
+    }
+    
+    public Industry Industry() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.InventoryLocation: Application driver is not set.");
             return null;
@@ -242,7 +262,7 @@ public class ParamControllers {
         return poIndustry;        
     }
     
-    public InvLocation InventoryLocation(){
+    public InvLocation InventoryLocation() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.InventoryLocation: Application driver is not set.");
             return null;
@@ -259,7 +279,7 @@ public class ParamControllers {
         return poInvLocation;        
     }
     
-    public InvType InventoryType(){
+    public InvType InventoryType() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.InventoryType: Application driver is not set.");
             return null;
@@ -276,7 +296,7 @@ public class ParamControllers {
         return poInvType;        
     }
     
-    public Measure Measurement(){
+    public Measure Measurement() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Measurement: Application driver is not set.");
             return null;
@@ -293,7 +313,7 @@ public class ParamControllers {
         return poMeasure;        
     }
     
-    public Model Model(){
+    public Model Model() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Model: Application driver is not set.");
             return null;
@@ -310,24 +330,24 @@ public class ParamControllers {
         return poModel;        
     }
     
-    public ModelSeries ModelSeries(){
+    public ModelVariant ModelVariant() throws SQLException, GuanzonException{
         if (poGRider == null){
-            poLogWrapper.severe("ParamControllers.ModelSeries: Application driver is not set.");
+            poLogWrapper.severe("ParamControllers.ModelVariant: Application driver is not set.");
             return null;
         }
         
-        if (poModelSeries != null) return poModelSeries;
+        if (poModelVariant != null) return poModelVariant;
         
-        poModelSeries = new ModelSeries();
-        poModelSeries.setApplicationDriver(poGRider);
-        poModelSeries.setWithParentClass(true);
-        poModelSeries.setLogWrapper(poLogWrapper);
-        poModelSeries.initialize();
-        poModelSeries.newRecord();
-        return poModelSeries;        
+        poModelVariant = new ModelVariant();
+        poModelVariant.setApplicationDriver(poGRider);
+        poModelVariant.setWithParentClass(true);
+        poModelVariant.setLogWrapper(poLogWrapper);
+        poModelVariant.initialize();
+        poModelVariant.newRecord();
+        return poModelVariant;        
     }
     
-    public Province Province(){
+    public Province Province() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Province: Application driver is not set.");
             return null;
@@ -344,7 +364,7 @@ public class ParamControllers {
         return poProvince;        
     }
     
-    public Region Region(){
+    public Region Region() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Region: Application driver is not set.");
             return null;
@@ -361,7 +381,7 @@ public class ParamControllers {
         return poRegion;        
     }
     
-    public Section Section(){
+    public Section Section() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Section: Application driver is not set.");
             return null;
@@ -378,7 +398,7 @@ public class ParamControllers {
         return poSection;        
     }
     
-    public TownCity TownCity(){
+    public TownCity TownCity() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.TownCity: Application driver is not set.");
             return null;
@@ -395,7 +415,7 @@ public class ParamControllers {
         return poTownCity;        
     }
     
-    public Term Term(){
+    public Term Term() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.TownCity: Application driver is not set.");
             return null;
@@ -412,7 +432,7 @@ public class ParamControllers {
         return poTerm;        
     }
     
-    public Warehouse Warehouse(){
+    public Warehouse Warehouse() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Warehouse: Application driver is not set.");
             return null;
@@ -429,7 +449,7 @@ public class ParamControllers {
         return poWarehouse;        
     }
     
-    public Banks Banks(){
+    public Banks Banks() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Banks: Application driver is not set.");
             return null;
@@ -446,7 +466,7 @@ public class ParamControllers {
         return poBanks;        
     }
     
-    public BanksBranch BanksBranch(){
+    public BanksBranch BanksBranch() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Banks: Application driver is not set.");
             return null;
@@ -463,7 +483,7 @@ public class ParamControllers {
         return poBanksBranches;        
     }
     
-    public Made Made(){
+    public Made Made() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Made: Application driver is not set.");
             return null;
@@ -480,7 +500,7 @@ public class ParamControllers {
         return poMade;        
     }
     
-    public Relationship Relationship(){
+    public Relationship Relationship() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Made: Application driver is not set.");
             return null;
@@ -497,7 +517,7 @@ public class ParamControllers {
         return poRelationship;        
     }
     
-    public Size Size(){
+    public Size Size() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Size: Application driver is not set.");
             return null;
@@ -514,7 +534,7 @@ public class ParamControllers {
         return poSize;        
     }
     
-    public Company Company(){
+    public Company Company() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.Company: Application driver is not set.");
             return null;
@@ -531,7 +551,7 @@ public class ParamControllers {
         return poCompany;        
     }
     
-    public AffiliatedCompany AffiliatedCompany(){
+    public AffiliatedCompany AffiliatedCompany() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ParamControllers.AffiliatedCompany: Application driver is not set.");
             return null;
@@ -616,7 +636,7 @@ public class ParamControllers {
             poInvType = null;
             poMeasure = null;
             poModel = null;
-            poModelSeries = null;
+            poModelVariant = null;
             poProvince = null;
             poSection = null;
             poTownCity = null;
@@ -658,7 +678,7 @@ public class ParamControllers {
     private InvType poInvType;
     private Measure poMeasure;
     private Model poModel;
-    private ModelSeries poModelSeries;
+    private ModelVariant poModelVariant;
     private Province poProvince;
     private Region poRegion;
     private Section poSection;
@@ -671,6 +691,7 @@ public class ParamControllers {
     private Relationship poRelationship;  
     private Size poSize;  
     private Company poCompany;      
+    private Department poDepartment;
     private AffiliatedCompany poAffiliatedCompany; 
 //    private Labor poLabor; 
 //    private LaborModel poLaborModel; 

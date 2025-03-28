@@ -45,12 +45,12 @@ public class Model_Region extends Model{
         return (String) getValue("sRegionID");
     }
     
-    public JSONObject setRegionName(String regionName){
-        return setValue("sRegionNm", regionName);
+    public JSONObject setDescription(String description){
+        return setValue("sDescript", description);
     }
     
-    public String getRegioneName(){
-        return (String) getValue("sRegionNm");
+    public String getDescription(){
+        return (String) getValue("sDescript");
     }
     
     public JSONObject setMinimumWage(Number minimumWage){

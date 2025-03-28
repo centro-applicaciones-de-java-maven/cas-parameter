@@ -46,11 +46,11 @@ public class Model_Section extends Model {
         return (String) getValue("sSectnIDx");
     }
 
-    public JSONObject setSectionName(String sectionName) {
+    public JSONObject setDescription(String sectionName) {
         return setValue("sSectnNme", sectionName);
     }
 
-    public String getSectionName() {
+    public String getDescription() {
         return (String) getValue("sSectnNme");
     }
     

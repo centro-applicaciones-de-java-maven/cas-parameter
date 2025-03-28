@@ -6,21 +6,19 @@ import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.parameter.model.Model_Measure;
+import org.guanzon.cas.parameter.model.Model_Department;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Measure extends Parameter{
-    Model_Measure poModel;
+public class Department extends Parameter{
+    Model_Department poModel;
     
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Measure();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Measure");
-        poModel.setTableName("Measure");
-        poModel.initialize();
+        ParamModels model = new ParamModels(poGRider);
+        poModel = model.Department();
     }
     
     @Override
@@ -34,15 +32,15 @@ public class Measure extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getMeasureId().isEmpty()){
+            if (poModel.getDescription() == null ||poModel.getDescription().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Measure must not be empty.");
+                poJSON.put("message", "Description must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getDepartmentCode()== null || poModel.getDepartmentCode().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Measurement must not be empty.");
+                poJSON.put("message", "Department code must not be empty.");
                 return poJSON;
             }
         }
@@ -55,7 +53,7 @@ public class Measure extends Parameter{
     }
     
     @Override
-    public Model_Measure getModel() {
+    public Model_Department getModel() {
         return poModel;
     }
     
@@ -66,13 +64,13 @@ public class Measure extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Description",
-                "sMeasurID»sDescript",
-                "sMeasurID»sDescript",
+                "ID»Description»Code",
+                "sDeptIDxx»sDeptName»sDeptCode",
+                "sBrandIDx»sDeptName»sDeptCode",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sMeasurID"));
+            return poModel.openRecord((String) poJSON.get("sBrandIDx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");

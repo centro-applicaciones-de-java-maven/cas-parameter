@@ -16,8 +16,7 @@ import org.json.simple.JSONObject;
 
 public class Color extends Parameter{
     Model_Color poModel;
-    List<Model_Color> poModelList;
-    
+        
     @Override
     public void initialize() {
         psRecdStat = Logical.YES;
@@ -27,7 +26,6 @@ public class Color extends Parameter{
         poModel.setXML("Model_Color");
         poModel.setTableName("Color");
         poModel.initialize();
-        poModelList = new ArrayList<>();
     }
     
     @Override
@@ -68,26 +66,14 @@ public class Color extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        String lsSQL = getSQ_Browse();
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID»Description",
-                "sColorIDx»sDescript",
-                "sColorIDx»sDescript",
+                "ID»Description»Color Code»Parent",
+                "sColorIDx»sDescript»sColorCde»xMnColorx",
+                "a.sColorIDx»a.sDescript»a.sColorCde»IFNULL(b.sDescript, '')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -100,7 +86,8 @@ public class Color extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
+    @Override
+    public String getSQ_Browse(){
         String lsCondition = "";
 
         if (psRecdStat.length() > 1) {
@@ -108,28 +95,23 @@ public class Color extends Parameter{
                 lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
             }
 
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
         } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-               "ID»Description",
-                "sColorIDx»sDescript",
-                "sColorIDx»sDescript",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sColorIDx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
+        
+        String lsSQL = "SELECT" +
+                            "  a.sColorIDx" +
+                            ", a.sDescript" +
+                            ", a.sColorCde" +
+                            ", a.sMnColorx" +
+                            ", a.cRecdStat" +
+                            ", a.sModified" +
+                            ", a.dModified" +
+                            ", IFNULL(b.sDescript, '') xMnColorx" +
+                        " FROM Color a" +
+                            " LEFT JOIN Color b ON a.sMnColorx = a.sColorIDx";
+        
+        return MiscUtil.addCondition(lsSQL, lsCondition);
     }
 }

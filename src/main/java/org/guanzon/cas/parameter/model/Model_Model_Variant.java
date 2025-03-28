@@ -11,7 +11,8 @@ import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Model_Variant extends Model {
-    private Model_Brand poBrand;
+    private Model_Model poModel;
+    private Model_Color poColor;
     
     @Override
     public void initialize() {
@@ -37,7 +38,8 @@ public class Model_Model_Variant extends Model {
             ID = poEntity.getMetaData().getColumnLabel(1);
             
             //initialize other connections
-            poBrand = new ParamModels(poGRider).Brand();
+            poModel = new ParamModels(poGRider).Model();
+            poColor = new ParamModels(poGRider).Color();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -46,28 +48,7 @@ public class Model_Model_Variant extends Model {
             System.exit(1);
         }
     }
-    
-    public Model_Brand Brand() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBrandIDx"))){
-            if (poBrand.getEditMode() == EditMode.READY && 
-                poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
-                return poBrand;
-            else{
-                poJSON = poBrand.openRecord((String) getValue("sBrandIDx"));
 
-                if ("success".equals((String) poJSON.get("result")))
-                    return poBrand;
-                else {
-                    poBrand.initialize();
-                    return poBrand;
-                }
-            }
-        } else {
-            poBrand.initialize();
-            return poBrand;
-        }
-    }
-    
     public JSONObject setVariantId(String seriesId) {
         return setValue("sVrntIDxx", seriesId);
     }
@@ -147,5 +128,47 @@ public class Model_Model_Variant extends Model {
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    public Model_Model Model() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sModelIDx"))){
+            if (poModel.getEditMode() == EditMode.READY && 
+                poModel.getModelId().equals((String) getValue("sModelIDx")))
+                return poModel;
+            else{
+                poJSON = poModel.openRecord((String) getValue("sModelIDx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poModel;
+                else {
+                    poModel.initialize();
+                    return poModel;
+                }
+            }
+        } else {
+            poModel.initialize();
+            return poModel;
+        }
+    }
+    
+    public Model_Color Color() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sColorIDx"))){
+            if (poColor.getEditMode() == EditMode.READY && 
+                poColor.getColorId().equals((String) getValue("sColorIDx")))
+                return poColor;
+            else{
+                poJSON = poColor.openRecord((String) getValue("sColorIDx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poColor;
+                else {
+                    poModel.initialize();
+                    return poColor;
+                }
+            }
+        } else {
+            poColor.initialize();
+            return poColor;
+        }
     }
 }

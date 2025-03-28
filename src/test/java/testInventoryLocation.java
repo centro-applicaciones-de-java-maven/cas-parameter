@@ -38,36 +38,26 @@ public class testInventoryLocation {
                 Assert.fail((String) loJSON.get("message"));
             }           
 
-            loJSON = record.getModel().setDescription("WHouse. 100-F");
+            loJSON = record.getModel().setDescription("Anolid Bldg. A - C");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             } 
 
-            loJSON = record.getModel().setWarehouseId("020");
+            loJSON = record.getModel().setWarehouseId("001");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
 
-            loJSON = record.getModel().setSectionId("007");
+            loJSON = record.getModel().setSectionId("003");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }
-
-            loJSON = record.getModel().setModifyingId(instance.getUserID());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
-
-            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
-            }     
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
-        } catch (SQLException | GuanzonException e) {
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             Assert.fail(e.getMessage());
         }
     }
