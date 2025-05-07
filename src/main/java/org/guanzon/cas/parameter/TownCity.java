@@ -70,7 +70,7 @@ public class TownCity extends Parameter{
                 value,
                 "ID»Town»Province»Zipp Code»Mncplty Code",
                 "sTownIDxx»sTownName»xProvName»sZippCode»sMuncplCd",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd",
+                "a.sTownIDxx»a.sTownName»IFNULL(b.sDescript, '')»a.sZippCode»a.sMuncplCd",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -95,7 +95,7 @@ public class TownCity extends Parameter{
                 value,
                 "ID»Town»Province»Zipp Code»Mncplty Code",
                 "sTownIDxx»sTownName»xProvName»sZippCode»sMuncplCd",
-                "a.sTownIDxx»a.sTownName»IFNULL(b.sProvName, '')»a.sZippCode»a.sMuncplCd",
+                "a.sTownIDxx»a.sTownName»IFNULL(b.sDescript, '')»a.sZippCode»a.sMuncplCd",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -133,7 +133,7 @@ public class TownCity extends Parameter{
                             ", a.cRecdStat" +
                             ", a.sModified" + 
                             ", a.dModified" +
-                            ", IFNULL(b.sProvName, '') xProvName" +
+                            ", IFNULL(b.sDescript, '') xProvName" +
                         " FROM TownCity a" +
                             " LEFT JOIN Province b ON a.sProvIDxx = b.sProvIDxx";
         
