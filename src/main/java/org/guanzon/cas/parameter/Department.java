@@ -66,11 +66,11 @@ public class Department extends Parameter{
                 value,
                 "ID»Description»Code",
                 "sDeptIDxx»sDeptName»sDeptCode",
-                "sBrandIDx»sDeptName»sDeptCode",
+                "sDeptIDxx»sDeptName»sDeptCode",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBrandIDx"));
+            return poModel.openRecord((String) poJSON.get("sDeptIDxx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
