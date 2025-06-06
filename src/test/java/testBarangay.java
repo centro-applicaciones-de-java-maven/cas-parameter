@@ -3,6 +3,7 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.cas.parameter.Barangay;
+import org.guanzon.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -22,10 +23,11 @@ public class testBarangay {
 
         instance = MiscUtil.Connect();
         
-        record = new Barangay();
-        record.setApplicationDriver(instance);
-        record.setWithParentClass(false);
-        record.initialize();
+        try {
+            record = new ParamControllers(instance, null).Barangay();
+        } catch (SQLException | GuanzonException e) {
+            Assert.fail(e.getMessage());
+        }
     }
 
     @Test

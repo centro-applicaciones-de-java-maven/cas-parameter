@@ -2,8 +2,7 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.Color;
-import org.guanzon.cas.parameter.services.ParamControllers;
+import org.guanzon.cas.parameter.TaxCode;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -13,9 +12,9 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class testColor {
+public class testTaxCode {
     static GRiderCAS instance;
-    static Color record;
+    static TaxCode record;
 
     @BeforeClass
     public static void setUpClass() {
@@ -24,7 +23,10 @@ public class testColor {
         instance = MiscUtil.Connect();
         
         try {
-            record = new ParamControllers(instance, null).Color();
+            record = new TaxCode();
+            record.setApplicationDriver(instance);
+            record.setWithParentClass(false);
+            record.initialize();
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
@@ -38,22 +40,22 @@ public class testColor {
             loJSON = record.newRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
-            }           
-
-            loJSON = record.getModel().setDescription("Black");
-            if ("error".equals((String) loJSON.get("result"))) {
-                Assert.fail((String) loJSON.get("message"));
             }  
-            
-            loJSON = record.getModel().setColorCode("BLK");
+
+            loJSON = record.getModel().setTaxCode("WC010");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
 
-            loJSON = record.getModel().setMainColor("");
+            loJSON = record.getModel().setRegularRate(10.00);
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }
+
+            loJSON = record.getModel().setGovernmentRate(15.00);
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            } 
 
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {
@@ -61,7 +63,7 @@ public class testColor {
             }  
         } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             Assert.fail(e.getMessage());
-        }
+        } 
     }
    
 //    @Test
@@ -93,7 +95,7 @@ public class testColor {
 //            Assert.fail((String) loJSON.get("message"));
 //        } 
 //    }
-//    
+    
 //    @Test
 //    public void testSearch(){
 //        JSONObject loJSON = record.searchRecord("", false);        

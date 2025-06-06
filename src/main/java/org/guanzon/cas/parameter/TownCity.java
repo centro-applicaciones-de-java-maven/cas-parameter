@@ -9,20 +9,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_TownCity;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class TownCity extends Parameter{
     Model_TownCity poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_TownCity();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_TownCity");
-        poModel.setTableName("TownCity");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).TownCity();
+        
+        super.initialize();
     }
     
     @Override

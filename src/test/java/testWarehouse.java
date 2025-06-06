@@ -3,6 +3,7 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.cas.parameter.Warehouse;
+import org.guanzon.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -22,10 +23,11 @@ public class testWarehouse {
 
         instance = MiscUtil.Connect();
         
-        record = new Warehouse();
-        record.setApplicationDriver(instance);
-        record.setWithParentClass(false);
-        record.initialize();
+        try {
+            record = new ParamControllers(instance, null).Warehouse();
+        } catch (SQLException | GuanzonException e) {
+            Assert.fail(e.getMessage());
+        }
     }
 
     @Test

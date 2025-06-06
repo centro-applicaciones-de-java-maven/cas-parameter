@@ -97,6 +97,14 @@ public class Model_Branch extends Model {
         return (String) getValue("sCompnyID");
     }
     
+    public JSONObject setIndustryCode(String industryCode) {
+        return setValue("sIndstCdx", industryCode);
+    }
+
+    public String getIndustryCode() {
+        return (String) getValue("sIndstCdx");
+    }
+    
     public JSONObject setAddress(String address) {
         return setValue("sAddressx", address);
     }

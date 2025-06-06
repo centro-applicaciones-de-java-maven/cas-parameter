@@ -9,20 +9,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Bin;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Bin extends Parameter{
     Model_Bin poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Bin();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Bin");
-        poModel.setTableName("Bin");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Bin();
+        
+        super.initialize();
     }
     
     @Override

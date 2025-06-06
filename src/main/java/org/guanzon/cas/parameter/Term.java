@@ -9,20 +9,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Term;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Term extends Parameter{
     Model_Term poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Term();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Term");
-        poModel.setTableName("Term");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Term();
+        
+        super.initialize();
     }
     
     @Override

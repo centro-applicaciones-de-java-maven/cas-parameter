@@ -9,20 +9,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Company;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Company extends Parameter{
     Model_Company poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Company();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Company");
-        poModel.setTableName("Company");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Company();
+        
+        super.initialize();
     }
     
     @Override

@@ -4,25 +4,22 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
-import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Industry;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Industry extends Parameter{
     Model_Industry poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Industry();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Industry");
-        poModel.setTableName("Industry");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Industry();
+        
+        super.initialize();
     }
     
     @Override

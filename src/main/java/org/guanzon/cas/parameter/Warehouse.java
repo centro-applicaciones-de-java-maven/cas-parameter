@@ -9,20 +9,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Warehouse extends Parameter{
     Model_Warehouse poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Warehouse();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Warehouse");
-        poModel.setTableName("Warehouse");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Warehouse();
+        
+        super.initialize();
     }
     
     @Override

@@ -32,6 +32,7 @@ import org.guanzon.cas.parameter.Region;
 import org.guanzon.cas.parameter.Relationship;
 import org.guanzon.cas.parameter.Section;
 import org.guanzon.cas.parameter.Size;
+import org.guanzon.cas.parameter.TaxCode;
 import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Warehouse;
@@ -568,6 +569,23 @@ public class ParamControllers {
         return poAffiliatedCompany;        
     }
     
+    public TaxCode TaxCode() throws SQLException, GuanzonException{
+        if (poGRider == null){
+            poLogWrapper.severe("ParamControllers.TaxCode: Application driver is not set.");
+            return null;
+        }
+        
+        if (poTaxCode != null) return poTaxCode;
+        
+        poTaxCode = new TaxCode();
+        poTaxCode.setApplicationDriver(poGRider);
+        poTaxCode.setWithParentClass(true);
+        poTaxCode.setLogWrapper(poLogWrapper);
+        poTaxCode.initialize();
+        poTaxCode.newRecord();
+        return poTaxCode;        
+    }
+    
 //    public Labor Labor(){
 //        if (poGRider == null){
 //            poLogWrapper.severe("ParamControllers.Labor: Application driver is not set.");
@@ -648,6 +666,7 @@ public class ParamControllers {
             poSize = null;
             poCompany = null;
             poAffiliatedCompany= null;
+            poTaxCode = null;
 //            poLabor = null;
 //            poLaborModel = null;
 //            poLaborCategory = null;
@@ -693,6 +712,7 @@ public class ParamControllers {
     private Company poCompany;      
     private Department poDepartment;
     private AffiliatedCompany poAffiliatedCompany; 
+    private TaxCode poTaxCode;
 //    private Labor poLabor; 
 //    private LaborModel poLaborModel; 
 //    private LaborCategory poLaborCategory; 

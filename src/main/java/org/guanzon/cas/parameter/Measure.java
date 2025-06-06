@@ -7,20 +7,19 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Measure;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Measure extends Parameter{
     Model_Measure poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Measure();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Measure");
-        poModel.setTableName("Measure");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Measurement();
+        
+        super.initialize();
     }
     
     @Override

@@ -7,20 +7,19 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Region;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Region extends Parameter{
     Model_Region poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Region();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Region");
-        poModel.setTableName("Region");
-        poModel.initialize();
+        poModel = new ParamModels(poGRider).Region();
+        
+        super.initialize();
     }
     
     @Override

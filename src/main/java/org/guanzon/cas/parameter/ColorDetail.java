@@ -11,22 +11,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Color_Detail;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class ColorDetail extends Parameter{
     Model_Color_Detail poModel;
-    List<Model_Color_Detail> poModelList;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Color_Detail();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Color_Detail");
-        poModel.setTableName("Color_Detail");
-        poModel.initialize();
-        poModelList = new ArrayList<>();
+        poModel = new ParamModels(poGRider).ColorDetail();
+        
+        super.initialize();
     }
     
     @Override

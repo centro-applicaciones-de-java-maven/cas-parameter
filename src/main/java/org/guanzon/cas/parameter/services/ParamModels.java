@@ -32,6 +32,7 @@ import org.guanzon.cas.parameter.model.Model_Region;
 import org.guanzon.cas.parameter.model.Model_Relationship;
 import org.guanzon.cas.parameter.model.Model_Section;
 import org.guanzon.cas.parameter.model.Model_Size;
+import org.guanzon.cas.parameter.model.Model_Tax_Code;
 import org.guanzon.cas.parameter.model.Model_Term;
 import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
@@ -616,6 +617,23 @@ public class ParamModels {
         return poLaborCategory;
     } 
     
+    public Model_Tax_Code TaxCode(){
+        if (poGRider == null){
+            System.err.println("ParamModels.TaxCode: Application driver is not set.");
+            return null;
+        }
+        
+        if (poTaxCode  == null){
+            poTaxCode = new Model_Tax_Code();
+            poTaxCode.setApplicationDriver(poGRider);
+            poTaxCode.setXML("Model_Tax_Code");
+            poTaxCode.setTableName("Tax_Code");
+            poTaxCode.initialize();
+        }
+
+        return poTaxCode;
+    } 
+    
     private final GRiderCAS poGRider;
     
     private Model_Barangay poBarangay;
@@ -652,4 +670,5 @@ public class ParamModels {
     private Model_Labor poLabor;    
     private Model_Labor_Model poLaborModel;  
     private Model_Labor_Category poLaborCategory;  
+    private Model_Tax_Code poTaxCode;
 }
