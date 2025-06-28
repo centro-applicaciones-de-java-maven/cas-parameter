@@ -712,8 +712,5 @@ public class ParamControllers {
     private Company poCompany;      
     private Department poDepartment;
     private AffiliatedCompany poAffiliatedCompany; 
-    private TaxCode poTaxCode;
-//    private Labor poLabor; 
-//    private LaborModel poLaborModel; 
-//    private LaborCategory poLaborCategory; 
+    private TaxCode poTaxCode;            
 }
