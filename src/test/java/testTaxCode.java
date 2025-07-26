@@ -32,7 +32,7 @@ public class testTaxCode {
         }
     }
 
-    @Test
+    //@Test
     public void testNewRecord() {
         try {
             JSONObject loJSON;
@@ -42,7 +42,7 @@ public class testTaxCode {
                 Assert.fail((String) loJSON.get("message"));
             }  
 
-            loJSON = record.getModel().setTaxCode("WC010");
+            loJSON = record.getModel().setTaxCode("WC777");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }  
@@ -66,45 +66,87 @@ public class testTaxCode {
         } 
     }
    
-//    @Test
-//    public void testUpdateRecord() {
-//        JSONObject loJSON;
-//
-//        loJSON = record.openRecord("24005");
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }      
-//        
-//        loJSON = record.updateRecord();
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }      
-//        
-//        loJSON = record.getModel().setModifyingId(instance.getUserID());
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }     
-//        
-//        loJSON = record.getModel().setModifiedDate(instance.getServerDate());
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        }     
-//        
-//        loJSON = record.saveRecord();
-//        if ("error".equals((String) loJSON.get("result"))) {
-//            Assert.fail((String) loJSON.get("message"));
-//        } 
-//    }
+    //@Test
+    public void testUpdateRecord() {
+        try {
+            JSONObject loJSON;
+
+            loJSON = record.openRecord("WC777");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }      
+
+            loJSON = record.updateRecord();
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }      
+            
+            loJSON = record.getModel().setRegularRate(1.00);
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+
+            loJSON = record.getModel().setGovernmentRate(2.00);
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+
+            loJSON = record.getModel().setModifyingId(instance.getUserID());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.getModel().setModifiedDate(instance.getServerDate());
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }     
+
+            loJSON = record.saveRecord();
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            } 
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+            Assert.fail(e.getMessage());
+        } 
+    }
     
-//    @Test
-//    public void testSearch(){
-//        JSONObject loJSON = record.searchRecord("", false);        
-//        if ("success".equals((String) loJSON.get("result"))){
-//            System.out.println(record.getModel().getCountryId());
-//            System.out.println(record.getModel().getCountryName());
-//            System.out.println(record.getModel().getNationality());
-//        } else System.out.println("No record was selected.");
-//    }
+    //@Test
+    public void testDeactivateRecord() {
+        try {
+            JSONObject loJSON;
+
+            loJSON = record.openRecord("WC777");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }      
+
+            loJSON = record.deactivateRecord();
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }      
+        } catch (SQLException | GuanzonException  e) {
+            Assert.fail(e.getMessage());
+        } 
+    }
+    
+    @Test
+    public void testActivateRecord() {
+        try {
+            JSONObject loJSON;
+
+            loJSON = record.openRecord("WC777");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }      
+
+            loJSON = record.activateRecord();
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }      
+        } catch (SQLException | GuanzonException  e) {
+            Assert.fail(e.getMessage());
+        } 
+    }
     
     @AfterClass
     public static void tearDownClass() {

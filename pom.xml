@@ -4,7 +4,6 @@
     <groupId>org.guanzon</groupId>
     <artifactId>cas-parameter</artifactId>
     <version>0.2-SNAPSHOT</version>
-    <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
