@@ -130,23 +130,6 @@ public class Model_TownCity extends Model{
     }
     
     public Model_Province Province() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sProvIDxx"))){
-            if (poProvince.getEditMode() == EditMode.READY && 
-                poProvince.getProvinceId().equals((String) getValue("sProvIDxx")))
-                return poProvince;
-            else{
-                poJSON = poProvince.openRecord((String) getValue("sProvIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poProvince;
-                else {
-                    poProvince.initialize();
-                    return poProvince;
-                }
-            }
-        } else {
-            poProvince.initialize();
-            return poProvince;
-        }
+        return poProvince;
     }
 }

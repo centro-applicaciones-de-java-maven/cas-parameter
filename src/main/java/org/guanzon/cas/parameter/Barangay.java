@@ -126,7 +126,7 @@ public class Barangay extends Parameter{
     }
     
     public JSONObject searchRecord(String value, boolean byCode, String townId) throws SQLException, GuanzonException{
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "sTownIDxx = " + SQLUtil.toSQL(townId));
         
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
