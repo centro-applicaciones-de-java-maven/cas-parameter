@@ -73,8 +73,29 @@ public class Model_TownCity extends Model{
         return (String) getValue("sZippCode");
     }
     
-    public JSONObject setProvinceId(String provinceId){        
-        return setValue("sProvIDxx", provinceId);
+    public JSONObject setProvinceId(String provinceId){     
+        poJSON = setValue("sProvIDxx", provinceId);
+        
+        if ("success".equals(poJSON.get("result"))){
+            if (!provinceId.isEmpty()) {
+                if (!poProvince.getProvinceId().equals(provinceId)) {
+                    try {
+                        poJSON = poProvince.openRecord(provinceId);
+                        
+                        if (!"success".equals(poJSON.get("result"))){
+                            return poJSON;
+                        }
+                    } catch (SQLException | GuanzonException e) {
+                        poJSON = new JSONObject();
+                        poJSON.put("result", "error");
+                        poJSON.put("message", e.getMessage());
+                        return poJSON;
+                    }
+                }
+            }
+        }
+        
+        return poJSON;
     }
     
     public String getProvinceId(){
