@@ -2,7 +2,7 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.TaxCode;
+import ph.com.guanzongroup.cas.parameter.TaxCode;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;

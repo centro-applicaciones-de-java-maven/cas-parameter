@@ -4,7 +4,7 @@ import org.guanzon.appdriver.agent.systables.TransactionAttachment;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.cas.parameter.Bin;
+import ph.com.guanzongroup.cas.parameter.Bin;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
