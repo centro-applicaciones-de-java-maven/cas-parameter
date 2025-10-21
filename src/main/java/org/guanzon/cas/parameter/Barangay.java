@@ -61,52 +61,8 @@ public class Barangay extends Parameter{
     }
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        String lsSQL = getSQ_Browse();
         
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Barangay",
-                "sBrgyIDxx»sBrgyName",
-                "sBrgyIDxx»sBrgyName",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    public JSONObject searchRecordbyTown(String value, String townID, boolean byCode) throws SQLException, GuanzonException{
-        String lsCondition = "";
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "cRecdStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-        
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        lsSQL = lsSQL + ("AND sTownIDxx = " + SQLUtil.toSQL(townID));
-        System.out.println("search by town = " + lsSQL);
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
@@ -132,12 +88,12 @@ public class Barangay extends Parameter{
                 lsSQL,
                 value,
                 "ID»Barangay»Town»Province",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')",
+                "sBrgyIDxx»sBrgyName»xTownName»xProvName",
+                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sDescript, '')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -146,45 +102,35 @@ public class Barangay extends Parameter{
         }
     }
     
-    public JSONObject searchRecordWithStatus(String value, boolean byCode) throws SQLException, GuanzonException{
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»Barangay»Town»Province»Has Route»Blacklisted»Record Status",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName»cHasRoute»cBlackLst»cRecdStat",
-                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')»a.cHasRoute»a.cBlackLst»a.cRecdStat",
-                byCode ? 0 : 1);
+    @Override
+    public String getSQ_Browse(){       
+        String lsCondition = "";
 
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cRecdStat IN (" + lsCondition.substring(2) + ")";
         } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-            return poJSON;
+            lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
-    }
-    
-    public JSONObject searchRecordWithStatus(String value, boolean byCode, String townId) throws SQLException, GuanzonException{
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
         
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Barangay»Town»Province»Has Route»Blacklisted»Record Status",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName»cHasRoute»cBlackLst»cRecdStat",
-                "a.sBrgyIDxx»a.sBrgyName»IFNULL(b.sTownName, '')»IFNULL(c.sProvName, '')»a.cHasRoute»a.cBlackLst»a.cRecdStat",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBrgyIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-            return poJSON;
-        }
+        String lsSQL = "SELECT" +
+                            "  a.sBrgyIDxx" +
+                            ", a.sBrgyName" +
+                            ", a.sTownIDxx" +
+                            ", a.cHasRoute" +
+                            ", a.cBlackLst" +
+                            ", IFNULL(b.sTownName, '') xTownName" + 
+                            ", IFNULL(c.sDescript, '') xProvName" +
+                        " FROM Barangay a" + 
+                            " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
+                            " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx";
+        
+        lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
+        
+        System.out.println(lsSQL);
+        return lsSQL;
     }
-       
-    
 }

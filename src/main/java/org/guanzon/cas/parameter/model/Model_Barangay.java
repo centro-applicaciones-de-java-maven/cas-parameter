@@ -48,28 +48,7 @@ public class Model_Barangay extends Model{
             System.exit(1);
         }
     }
-    
-    public Model_TownCity Town() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTownCity.getEditMode() == EditMode.READY && 
-                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
-                return poTownCity;
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity;
-                else {
-                    poTownCity.initialize();
-                    return poTownCity;
-                }
-            }
-        } else {
-            poTownCity.initialize();
-            return poTownCity;
-        }
-    }
-    
+        
     public JSONObject setBarangayId(String barangayId){
         return setValue("sBrgyIDxx", barangayId);
     }
@@ -87,7 +66,28 @@ public class Model_Barangay extends Model{
     }
     
     public JSONObject setTownId(String townId){
-        return setValue("sTownIDxx", townId);
+        poJSON =  setValue("sTownIDxx", townId);
+        
+        if ("success".equals(poJSON.get("result"))){
+            if (!townId.isEmpty()) {
+                if (!poTownCity.getTownId().equals(townId)) {
+                    try {
+                        poJSON = poTownCity.openRecord(townId);
+                        
+                        if (!"success".equals(poJSON.get("result"))){
+                            return poJSON;
+                        }
+                    } catch (SQLException | GuanzonException e) {
+                        poJSON = new JSONObject();
+                        poJSON.put("result", "error");
+                        poJSON.put("message", e.getMessage());
+                        return poJSON;
+                    }
+                }
+            }
+        }
+        
+        return poJSON;
     }
     
     public String getTownId(){
@@ -132,5 +132,9 @@ public class Model_Barangay extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    public Model_TownCity Town() throws SQLException, GuanzonException{
+        return poTownCity;
     }
 }
