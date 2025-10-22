@@ -2,7 +2,7 @@ package ph.com.guanzongroup.cas.parameter;
 
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
