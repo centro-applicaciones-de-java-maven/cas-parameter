@@ -8,9 +8,10 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import ph.com.guanzongroup.cas.parameter.model.Model_Model;
-import ph.com.guanzongroup.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Model;
 
 public class Model extends Parameter{
     Model_Model poModel;
@@ -19,7 +20,7 @@ public class Model extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Model();
+        poModel = (Model_Model) ObjectInitiator.createModel(poGRider, Tables.MODEL);
         
         super.initialize();
     }

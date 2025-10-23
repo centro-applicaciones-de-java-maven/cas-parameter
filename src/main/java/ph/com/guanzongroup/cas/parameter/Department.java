@@ -6,9 +6,11 @@ import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import ph.com.guanzongroup.cas.parameter.model.Model_Department;
-import ph.com.guanzongroup.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Company;
+import ph.com.guanzongroup.cas.model.Model_Department;
 
 public class Department extends Parameter{
     Model_Department poModel;
@@ -17,7 +19,7 @@ public class Department extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Department();
+        poModel = (Model_Department) ObjectInitiator.createModel(poGRider, Tables.DEPARTMENT);
         
         super.initialize();
     }

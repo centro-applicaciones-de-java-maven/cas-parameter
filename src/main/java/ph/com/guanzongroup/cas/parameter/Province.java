@@ -6,9 +6,10 @@ import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import ph.com.guanzongroup.cas.parameter.model.Model_Province;
-import ph.com.guanzongroup.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Province;
 
 public class Province extends Parameter{
     Model_Province poModel;
@@ -17,7 +18,7 @@ public class Province extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Province();
+        poModel = (Model_Province) ObjectInitiator.createModel(poGRider, Tables.PROVINCE);
         
         super.initialize();
     }

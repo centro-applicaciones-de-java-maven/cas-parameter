@@ -1,9 +1,6 @@
 package ph.com.guanzongroup.cas.parameter;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
@@ -11,9 +8,10 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import ph.com.guanzongroup.cas.parameter.model.Model_Color;
-import ph.com.guanzongroup.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Color;
 
 public class Color extends Parameter{
     Model_Color poModel;
@@ -22,7 +20,7 @@ public class Color extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Color();
+        poModel = (Model_Color) ObjectInitiator.createModel(poGRider, Tables.BANKS);
         
         super.initialize();
     }

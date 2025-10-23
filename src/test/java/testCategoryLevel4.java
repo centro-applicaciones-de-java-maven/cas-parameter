@@ -3,7 +3,6 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import ph.com.guanzongroup.cas.parameter.CategoryLevel4;
-import ph.com.guanzongroup.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -11,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testCategoryLevel4 {
@@ -24,7 +24,7 @@ public class testCategoryLevel4 {
         instance = MiscUtil.Connect();
         
         try {
-            record = new ParamControllers(instance, null).CategoryLevel4();
+            record = (CategoryLevel4) ObjectInitiator.createParameter(instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }

@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testTaxCode {
@@ -23,10 +24,7 @@ public class testTaxCode {
         instance = MiscUtil.Connect();
         
         try {
-            record = new TaxCode();
-            record.setApplicationDriver(instance);
-            record.setWithParentClass(false);
-            record.initialize();
+            record = (TaxCode) ObjectInitiator.createParameter(instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }

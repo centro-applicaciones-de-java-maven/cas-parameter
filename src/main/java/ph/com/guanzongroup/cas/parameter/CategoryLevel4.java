@@ -8,9 +8,10 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
-import ph.com.guanzongroup.cas.parameter.model.Model_Category_Level4;
-import ph.com.guanzongroup.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Category_Level4;
 
 public class CategoryLevel4 extends Parameter{
     Model_Category_Level4 poModel;
@@ -19,7 +20,7 @@ public class CategoryLevel4 extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Category4();
+        poModel = (Model_Category_Level4) ObjectInitiator.createModel(poGRider, Tables.CATEGORY4);
         
         super.initialize();
     }

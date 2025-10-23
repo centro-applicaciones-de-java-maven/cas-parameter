@@ -2,9 +2,7 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import ph.com.guanzongroup.cas.parameter.Brand;
 import ph.com.guanzongroup.cas.parameter.Department;
-import ph.com.guanzongroup.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testDepartment {
@@ -25,7 +24,7 @@ public class testDepartment {
         instance = MiscUtil.Connect();
         
         try {
-            record = new ParamControllers(instance, null).Department();
+            record = (Department) ObjectInitiator.createParameter(instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
