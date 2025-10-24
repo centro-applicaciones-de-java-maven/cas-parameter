@@ -64,9 +64,9 @@ public class Province extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
-                "IDÂ»Province",
-                "sProvIDxxÂ»sDescript",
-                "sProvIDxxÂ»sDescript",
+                "ID»Province",
+                "sProvIDxx»sDescript",
+                "sProvIDxx»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

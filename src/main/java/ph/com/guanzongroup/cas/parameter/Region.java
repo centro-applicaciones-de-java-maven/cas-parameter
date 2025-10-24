@@ -58,9 +58,9 @@ public class Region extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
-                "IDÂ»Region",
-                "sRegionIDÂ»sDescript",
-                "sRegionIDÂ»sDescript",
+                "ID»Region",
+                "sRegionID»sDescript",
+                "sRegionID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

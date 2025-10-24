@@ -80,9 +80,9 @@ public class Warehouse extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»Description",
-                "sWHouseIDÂ»sWHouseNm",
-                "sWHouseIDÂ»sWHouseNm",
+                "ID»Description",
+                "sWHouseID»sWHouseNm",
+                "sWHouseID»sWHouseNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

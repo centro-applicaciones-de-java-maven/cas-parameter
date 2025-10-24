@@ -66,9 +66,9 @@ public class InvType extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»Description",
-                "sInvTypCdÂ»sDescript",
-                "sInvTypCdÂ»sDescript",
+                "ID»Description",
+                "sInvTypCd»sDescript",
+                "sInvTypCd»sDescript",
                 byCode ? 0 : 1);    
 
         if (poJSON != null) {

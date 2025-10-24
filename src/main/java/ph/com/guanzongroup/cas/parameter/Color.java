@@ -68,9 +68,9 @@ public class Color extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»DescriptionÂ»Color CodeÂ»Parent",
-                "sColorIDxÂ»sDescriptÂ»sColorCdeÂ»xMnColorx",
-                "a.sColorIDxÂ»a.sDescriptÂ»a.sColorCdeÂ»IFNULL(b.sDescript, '')",
+                "ID»Description»Color Code»Parent",
+                "sColorIDx»sDescript»sColorCde»xMnColorx",
+                "a.sColorIDx»a.sDescript»a.sColorCde»IFNULL(b.sDescript, '')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

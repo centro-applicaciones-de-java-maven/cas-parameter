@@ -66,9 +66,9 @@ public class Measure extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»Description",
-                "sMeasurIDÂ»sDescript",
-                "sMeasurIDÂ»sDescript",
+                "ID»Description",
+                "sMeasurID»sDescript",
+                "sMeasurID»sDescript",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

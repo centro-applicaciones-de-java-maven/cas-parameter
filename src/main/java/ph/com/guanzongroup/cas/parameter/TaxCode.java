@@ -86,9 +86,9 @@ public class TaxCode extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "Code罈Regular Rate罈Government Rate",
-                "sTaxCodex罈sRegRatex罈sGovtRate",
-                "sTaxCodex罈sRegRatex罈sGovtRate",
+                "Code舞egular Rate腐overnment Rate",
+                "sTaxCodex製RegRatex製GovtRate",
+                "sTaxCodex製RegRatex製GovtRate",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

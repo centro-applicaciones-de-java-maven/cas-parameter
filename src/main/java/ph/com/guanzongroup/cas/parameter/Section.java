@@ -80,9 +80,9 @@ public class Section extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»Description",
-                "sSectnIDxÂ»sSectnNme",
-                "sSectnIDxÂ»sSectnNme",
+                "ID»Description",
+                "sSectnIDx»sSectnNme",
+                "sSectnIDx»sSectnNme",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

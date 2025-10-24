@@ -80,9 +80,9 @@ public class Country extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID罈Country罈Citizenship",
-                "sCntryIDx罈sDescript罈sNational",
-                "sCntryIDx罈sDescript罈sNational",
+                "ID翟ountry翟itizenship",
+                "sCntryIDx製Descript製National",
+                "sCntryIDx製Descript製National",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

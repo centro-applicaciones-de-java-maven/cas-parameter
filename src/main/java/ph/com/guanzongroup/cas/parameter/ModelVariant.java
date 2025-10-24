@@ -11,9 +11,10 @@ import org.guanzon.appdriver.constant.UserRight;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.constants.Tables;
 import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.iface.ModelVariantImpl;
 import ph.com.guanzongroup.cas.model.Model_Model_Variant;
 
-public class ModelVariant extends Parameter{
+public class ModelVariant extends Parameter implements ModelVariantImpl{
     Model_Model_Variant poModel;
     
     @Override
@@ -80,9 +81,9 @@ public class ModelVariant extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "CodeÂ»Model NameÂ»VariantÂ»Year ModelÂ»Color",
-                "xModelCdeÂ»xModelNmeÂ»sDescriptÂ»nYearMdlxÂ»xColorNme",
-                "IFNULL(b.sModelCde, '')Â»IFNULL(b.sDescript, '')Â»a.sDescriptÂ»a.nYearMdlxÂ»IFNULL(c.sDescript, '')",
+                "Code»Model Name»Variant»Year Model»Color",
+                "xModelCde»xModelNme»sDescript»nYearMdlx»xColorNme",
+                "IFNULL(b.sModelCde, '')»IFNULL(b.sDescript, '')»a.sDescript»a.nYearMdlx»IFNULL(c.sDescript, '')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -94,56 +95,6 @@ public class ModelVariant extends Parameter{
             return poJSON;
         }
     }   
-    
-    public JSONObject searchRecord(String value, boolean byCode, String modelId) throws SQLException, GuanzonException{
-        String lsSQL = getSQ_Browse();
-        
-        if (modelId != null){
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sModelIDx = " + SQLUtil.toSQL(modelId));
-        }
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "CodeÂ»Model NameÂ»VariantÂ»Year ModelÂ»Color",
-                "xModelCdeÂ»xModelNmeÂ»sDescriptÂ»nYearMdlxÂ»xColorNme",
-                "IFNULL(b.sModelCde, '')Â»IFNULL(b.sDescript, '')Â»a.sDescriptÂ»a.nYearMdlxÂ»IFNULL(c.sDescript, '')",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sVrntIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }    
-    
-    public JSONObject searchRecordByModel(String value, boolean byCode, String brandId) throws SQLException, GuanzonException{
-        String lsSQL = getSQ_Browse();
-        
-        if (brandId != null){
-            lsSQL = MiscUtil.addCondition(lsSQL, "b.sBrandIDx = " + SQLUtil.toSQL(brandId));
-        }
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "CodeÂ»Model NameÂ»VariantÂ»Year ModelÂ»Color",
-                "xModelCdeÂ»xModelNmeÂ»sDescriptÂ»nYearMdlxÂ»xColorNme",
-                "IFNULL(b.sModelCde, '')Â»IFNULL(b.sDescript, '')Â»a.sDescriptÂ»a.nYearMdlxÂ»IFNULL(c.sDescript, '')",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sVrntIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }    
     
     @Override
     public String getSQ_Browse(){
@@ -181,5 +132,57 @@ public class ModelVariant extends Parameter{
                             " LEFT JOIN Brand d ON b.sBrandIDx = d.sBrandIDx";
         
         return MiscUtil.addCondition(lsSQL, lsCondition);
+    }
+    
+    @Override
+    public JSONObject searchRecord(String value, boolean byCode, String modelId) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (modelId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sModelIDx = " + SQLUtil.toSQL(modelId));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Code»Model Name»Variant»Year Model»Color",
+                "xModelCde»xModelNme»sDescript»nYearMdlx»xColorNme",
+                "IFNULL(b.sModelCde, '')»IFNULL(b.sDescript, '')»a.sDescript»a.nYearMdlx»IFNULL(c.sDescript, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sVrntIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }    
+    
+    @Override
+    public JSONObject searchRecordByBrand(String value, boolean byCode, String brandId) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (brandId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "b.sBrandIDx = " + SQLUtil.toSQL(brandId));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Code»Model Name»Variant»Year Model»Color",
+                "xModelCde»xModelNme»sDescript»nYearMdlx»xColorNme",
+                "IFNULL(b.sModelCde, '')»IFNULL(b.sDescript, '')»a.sDescript»a.nYearMdlx»IFNULL(c.sDescript, '')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sVrntIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
     }
 }

@@ -80,9 +80,9 @@ public class Branch extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "CodeÂ»Branch Name",
-                "sBranchCdÂ»sBranchNm",
-                "sBranchCdÂ»sBranchNm",
+                "Code»Branch Name",
+                "sBranchCd»sBranchNm",
+                "sBranchCd»sBranchNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

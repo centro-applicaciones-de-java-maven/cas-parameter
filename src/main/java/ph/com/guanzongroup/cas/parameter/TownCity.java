@@ -11,9 +11,10 @@ import org.guanzon.appdriver.constant.UserRight;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.constants.Tables;
 import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.iface.TownCityImpl;
 import ph.com.guanzongroup.cas.model.Model_TownCity;
 
-public class TownCity extends Parameter{
+public class TownCity extends Parameter implements TownCityImpl{
     Model_TownCity poModel;
     
     @Override
@@ -68,34 +69,9 @@ public class TownCity extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»TownÂ»ProvinceÂ»Zipp CodeÂ»Mncplty Code",
-                "sTownIDxxÂ»sTownNameÂ»xProvNameÂ»sZippCodeÂ»sMuncplCd",
-                "a.sTownIDxxÂ»a.sTownNameÂ»IFNULL(b.sDescript, '')Â»a.sZippCodeÂ»a.sMuncplCd",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchRecord(String value, boolean byCode, String provinceId) throws SQLException, GuanzonException{
-        String lsSQL = getSQ_Browse();
-        
-        if (provinceId != null){
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
-        }
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "IDÂ»TownÂ»ProvinceÂ»Zipp CodeÂ»Mncplty Code",
-                "sTownIDxxÂ»sTownNameÂ»xProvNameÂ»sZippCodeÂ»sMuncplCd",
-                "a.sTownIDxxÂ»a.sTownNameÂ»IFNULL(b.sDescript, '')Â»a.sZippCodeÂ»a.sMuncplCd",
+                "ID»Town»Province»Zipp Code»Mncplty Code",
+                "sTownIDxx»sTownName»xProvName»sZippCode»sMuncplCd",
+                "a.sTownIDxx»a.sTownName»IFNULL(b.sDescript, '')»a.sZippCode»a.sMuncplCd",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -138,5 +114,31 @@ public class TownCity extends Parameter{
                             " LEFT JOIN Province b ON a.sProvIDxx = b.sProvIDxx";
         
         return MiscUtil.addCondition(lsSQL, lsCondition);
+    }
+    
+    @Override
+    public JSONObject searchRecord(String value, boolean byCode, String provinceId) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (provinceId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sProvIDxx = " + SQLUtil.toSQL(provinceId));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Town»Province»Zipp Code»Mncplty Code",
+                "sTownIDxx»sTownName»xProvName»sZippCode»sMuncplCd",
+                "a.sTownIDxx»a.sTownName»IFNULL(b.sDescript, '')»a.sZippCode»a.sMuncplCd",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sTownIDxx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
     }
 }

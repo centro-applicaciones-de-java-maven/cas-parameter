@@ -11,9 +11,10 @@ import org.guanzon.appdriver.constant.UserRight;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.constants.Tables;
 import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.iface.BarangayImpl;
 import ph.com.guanzongroup.cas.model.Model_Barangay;
 
-public class Barangay extends Parameter{
+public class Barangay extends Parameter implements BarangayImpl{
     Model_Barangay poModel;
     
     @Override
@@ -94,6 +95,7 @@ public class Barangay extends Parameter{
         }
     }
     
+    @Override
     public JSONObject searchRecord(String value, boolean byCode, String townId) throws SQLException, GuanzonException{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sTownIDxx = " + SQLUtil.toSQL(townId));
         

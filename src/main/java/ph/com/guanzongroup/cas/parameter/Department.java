@@ -9,7 +9,6 @@ import org.guanzon.appdriver.constant.UserRight;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.constants.Tables;
 import ph.com.guanzongroup.cas.core.ObjectInitiator;
-import ph.com.guanzongroup.cas.model.Model_Company;
 import ph.com.guanzongroup.cas.model.Model_Department;
 
 public class Department extends Parameter{
@@ -67,9 +66,9 @@ public class Department extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "ID罈Description罈Code",
-                "sDeptIDxx罈sDeptName罈sDeptCode",
-                "sDeptIDxx罈sDeptName罈sDeptCode",
+                "ID聞escription翟ode",
+                "sDeptIDxx製DeptName製DeptCode",
+                "sDeptIDxx製DeptName製DeptCode",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

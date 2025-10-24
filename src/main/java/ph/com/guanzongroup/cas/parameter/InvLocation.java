@@ -74,9 +74,9 @@ public class InvLocation extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»DescriptionÂ»WarehouseÂ»Section",
-                "sLocatnIDÂ»sDescriptÂ»xWHouseNmÂ»xSectnIDx",
-                "sLocatnIDÂ»sDescriptÂ»IFNULL(b.sWHouseNm, '')Â»IFNULL(c.sSectnNme, '')",
+                "ID»Description»Warehouse»Section",
+                "sLocatnID»sDescript»xWHouseNm»xSectnIDx",
+                "sLocatnID»sDescript»IFNULL(b.sWHouseNm, '')»IFNULL(c.sSectnNme, '')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

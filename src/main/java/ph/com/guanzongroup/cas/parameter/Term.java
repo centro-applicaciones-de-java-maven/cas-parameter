@@ -80,9 +80,9 @@ public class Term extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»DescriptionÂ»Coverage",
-                "sTermCodeÂ»sDescriptÂ»nTermValx",
-                "sTermCodeÂ»sDescriptÂ»nTermValx",
+                "ID»Description»Coverage",
+                "sTermCode»sDescript»nTermValx",
+                "sTermCode»sDescript»nTermValx",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

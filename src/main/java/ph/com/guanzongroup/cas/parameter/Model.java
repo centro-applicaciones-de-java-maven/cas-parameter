@@ -11,9 +11,10 @@ import org.guanzon.appdriver.constant.UserRight;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.constants.Tables;
 import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.iface.ModelImpl;
 import ph.com.guanzongroup.cas.model.Model_Model;
 
-public class Model extends Parameter{
+public class Model extends Parameter implements ModelImpl{
     Model_Model poModel;
     
     @Override
@@ -80,34 +81,9 @@ public class Model extends Parameter{
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
-                "IDÂ»DescriptionÂ»Model CodeÂ»Mfg. YearÂ»Brand",
-                "sModelIDxÂ»sDescriptÂ»sModelCdeÂ»nMfgYearxÂ»xBrandNme",
-                "a.sModelIDxÂ»a.sDescriptÂ»a.sModelCdeÂ»nMfgYearxÂ»b.sDescript",
-                byCode ? 0 : 2);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sModelIDx"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }    
-    
-    public JSONObject searchRecord(String value, boolean byCode, String brandId) throws SQLException, GuanzonException{
-        String lsSQL = getSQ_Browse();
-        
-        if (brandId != null){
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sBrandIDx = " + SQLUtil.toSQL(brandId));
-        }
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "IDÂ»DescriptionÂ»Model CodeÂ»Mfg. YearÂ»Brand",
-                "sModelIDxÂ»sDescriptÂ»sModelCdeÂ»nMfgYearxÂ»xBrandNme",
-                "a.sModelIDxÂ»a.sDescriptÂ»a.sModelCdeÂ»nMfgYearxÂ»b.sDescript",
+                "ID»Description»Model Code»Mfg. Year»Brand",
+                "sModelIDx»sDescript»sModelCde»nMfgYearx»xBrandNme",
+                "a.sModelIDx»a.sDescript»a.sModelCde»nMfgYearx»b.sDescript",
                 byCode ? 0 : 2);
 
         if (poJSON != null) {
@@ -152,4 +128,30 @@ public class Model extends Parameter{
         
         return MiscUtil.addCondition(lsSQL, lsCondition);
     }
+    
+    @Override
+    public JSONObject searchRecord(String value, boolean byCode, String brandId) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
+        if (brandId != null){
+            lsSQL = MiscUtil.addCondition(lsSQL, "a.sBrandIDx = " + SQLUtil.toSQL(brandId));
+        }
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Description»Model Code»Mfg. Year»Brand",
+                "sModelIDx»sDescript»sModelCde»nMfgYearx»xBrandNme",
+                "a.sModelIDx»a.sDescript»a.sModelCde»nMfgYearx»b.sDescript",
+                byCode ? 0 : 2);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sModelIDx"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }  
 }
