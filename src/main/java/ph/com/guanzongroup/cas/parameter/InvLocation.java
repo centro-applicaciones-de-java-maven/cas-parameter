@@ -20,7 +20,7 @@ public class InvLocation extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Inv_Location) ObjectInitiator.createModel(poGRider, Tables.COMPANY);
+        poModel = ObjectInitiator.createModel(Model_Inv_Location.class, poGRider, Tables.COMPANY);
         
         super.initialize();
     }

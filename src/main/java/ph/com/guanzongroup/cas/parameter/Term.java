@@ -20,7 +20,7 @@ public class Term extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Term) ObjectInitiator.createModel(poGRider, Tables.TERM);
+        poModel = ObjectInitiator.createModel(Model_Term.class, poGRider, Tables.TERM);
         
         super.initialize();
     }

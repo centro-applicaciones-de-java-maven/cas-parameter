@@ -20,7 +20,7 @@ public class Country extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Country) ObjectInitiator.createModel(poGRider, Tables.COUNTRY);
+        poModel = ObjectInitiator.createModel(Model_Country.class,poGRider, Tables.COUNTRY);
         
         super.initialize();
     }

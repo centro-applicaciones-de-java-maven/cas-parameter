@@ -20,7 +20,7 @@ public class AffiliatedCompany extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Affiliated_Company) ObjectInitiator.createModel(poGRider, Tables.AFFILIATED_COMPANY);
+        poModel = ObjectInitiator.createModel(Model_Affiliated_Company.class, poGRider, Tables.AFFILIATED_COMPANY);
         
         super.initialize();
     }

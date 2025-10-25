@@ -1,4 +1,5 @@
 import java.sql.SQLException;
+import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
@@ -21,10 +22,10 @@ public class testBin {
     public static void setUpClass() {
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
 
-        instance = MiscUtil.Connect();
+        instance = MiscUtil.Connect("M001250018");
         
         try {
-            record = (Bin) ObjectInitiator.createParameter(instance, false, null);
+            record = ObjectInitiator.createParameter(Bin.class, instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }

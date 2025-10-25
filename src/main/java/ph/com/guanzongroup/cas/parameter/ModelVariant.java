@@ -21,7 +21,7 @@ public class ModelVariant extends Parameter implements ModelVariantImpl{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Model_Variant) ObjectInitiator.createModel(poGRider, Tables.MODEL_VARIANT);
+        poModel = ObjectInitiator.createModel(Model_Model_Variant.class, poGRider, Tables.MODEL_VARIANT);
         
         super.initialize();
     }

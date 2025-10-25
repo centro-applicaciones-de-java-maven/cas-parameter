@@ -21,7 +21,7 @@ public class TownCity extends Parameter implements TownCityImpl{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_TownCity) ObjectInitiator.createModel(poGRider, Tables.TOWN_CITY);
+        poModel = ObjectInitiator.createModel(Model_TownCity.class, poGRider, Tables.TOWN_CITY);
         
         super.initialize();
     }

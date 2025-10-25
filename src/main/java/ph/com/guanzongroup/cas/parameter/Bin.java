@@ -20,7 +20,7 @@ public class Bin extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Bin) ObjectInitiator.createModel(poGRider, Tables.BANKS);
+        poModel = ObjectInitiator.createModel(Model_Bin.class, poGRider, Tables.BIN);
         
         super.initialize();
     }

@@ -20,7 +20,7 @@ public class Made extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Made) ObjectInitiator.createModel(poGRider, Tables.MADE);
+        poModel = ObjectInitiator.createModel(Model_Made.class, poGRider, Tables.MADE);
         
         super.initialize();
     }

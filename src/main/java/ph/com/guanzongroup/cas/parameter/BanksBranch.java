@@ -20,7 +20,7 @@ public class BanksBranch extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Banks_Branch) ObjectInitiator.createModel(poGRider, Tables.BANKS_BRANCHES);
+        poModel = ObjectInitiator.createModel(Model_Banks_Branch.class, poGRider, Tables.BANKS_BRANCHES);
         
         super.initialize();
     }

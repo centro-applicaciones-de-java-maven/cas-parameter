@@ -20,7 +20,7 @@ public class Section extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Section) ObjectInitiator.createModel(poGRider, Tables.SECTION);
+        poModel = ObjectInitiator.createModel(Model_Section.class, poGRider, Tables.SECTION);
         
         super.initialize();
     }

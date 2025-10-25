@@ -21,7 +21,7 @@ public class Category extends Parameter implements CategoryImpl{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Category) ObjectInitiator.createModel(poGRider, Tables.CATEGORY);
+        poModel = ObjectInitiator.createModel(Model_Category.class, poGRider, Tables.CATEGORY);
         
         super.initialize();
     }

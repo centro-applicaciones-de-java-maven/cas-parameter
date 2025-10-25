@@ -18,7 +18,7 @@ public class Province extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Province) ObjectInitiator.createModel(poGRider, Tables.PROVINCE);
+        poModel = ObjectInitiator.createModel(Model_Province.class, poGRider, Tables.PROVINCE);
         
         super.initialize();
     }

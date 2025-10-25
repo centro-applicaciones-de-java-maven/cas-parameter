@@ -21,7 +21,7 @@ public class Brand extends Parameter implements BrandImpl{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Brand) ObjectInitiator.createModel(poGRider, Tables.BRAND);
+        poModel = ObjectInitiator.createModel(Model_Brand.class, poGRider, Tables.BRAND);
         
         super.initialize();
     }

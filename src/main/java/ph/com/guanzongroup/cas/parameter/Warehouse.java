@@ -20,7 +20,7 @@ public class Warehouse extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Warehouse) ObjectInitiator.createModel(poGRider, Tables.WAREHOUSE);
+        poModel = ObjectInitiator.createModel(Model_Warehouse.class, poGRider, Tables.WAREHOUSE);
         
         super.initialize();
     }

@@ -20,7 +20,7 @@ public class Size extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Size) ObjectInitiator.createModel(poGRider, Tables.SIZE);
+        poModel = ObjectInitiator.createModel(Model_Size.class, poGRider, Tables.SIZE);
         
         super.initialize();
     }

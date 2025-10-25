@@ -18,7 +18,7 @@ public class InvType extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Inv_Type) ObjectInitiator.createModel(poGRider, Tables.COMPANY);
+        poModel = ObjectInitiator.createModel(Model_Inv_Type.class,poGRider, Tables.COMPANY);
         
         super.initialize();
     }

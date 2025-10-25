@@ -21,7 +21,7 @@ public class Barangay extends Parameter implements BarangayImpl{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Barangay) ObjectInitiator.createModel(poGRider, Tables.BARANGAY);
+        poModel = ObjectInitiator.createModel(Model_Barangay.class, poGRider, Tables.BARANGAY);
         
         super.initialize();
     }

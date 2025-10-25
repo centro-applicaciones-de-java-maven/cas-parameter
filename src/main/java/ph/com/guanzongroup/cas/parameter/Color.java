@@ -20,7 +20,7 @@ public class Color extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Color) ObjectInitiator.createModel(poGRider, Tables.BANKS);
+        poModel = ObjectInitiator.createModel(Model_Color.class,poGRider, Tables.BANKS);
         
         super.initialize();
     }

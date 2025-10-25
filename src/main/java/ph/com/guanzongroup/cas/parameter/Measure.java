@@ -18,7 +18,7 @@ public class Measure extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Measure) ObjectInitiator.createModel(poGRider, Tables.MEASUREMENT);
+        poModel = ObjectInitiator.createModel(Model_Measure.class, poGRider, Tables.MEASUREMENT);
         
         super.initialize();
     }

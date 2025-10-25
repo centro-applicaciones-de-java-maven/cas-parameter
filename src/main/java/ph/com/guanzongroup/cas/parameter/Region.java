@@ -18,7 +18,7 @@ public class Region extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Region) ObjectInitiator.createModel(poGRider, Tables.REGION);
+        poModel = ObjectInitiator.createModel(Model_Region.class,poGRider, Tables.REGION);
         
         super.initialize();
     }

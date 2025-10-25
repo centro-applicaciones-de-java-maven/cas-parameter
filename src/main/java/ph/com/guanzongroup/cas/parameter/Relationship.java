@@ -20,7 +20,7 @@ public class Relationship extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Relationship) ObjectInitiator.createModel(poGRider, Tables.RELATIONSHIP);
+        poModel = ObjectInitiator.createModel(Model_Relationship.class, poGRider, Tables.RELATIONSHIP);
         
         super.initialize();
     }

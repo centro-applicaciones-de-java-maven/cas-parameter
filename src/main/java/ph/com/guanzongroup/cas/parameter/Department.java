@@ -18,7 +18,7 @@ public class Department extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Department) ObjectInitiator.createModel(poGRider, Tables.DEPARTMENT);
+        poModel = ObjectInitiator.createModel(Model_Department.class, poGRider, Tables.DEPARTMENT);
         
         super.initialize();
     }

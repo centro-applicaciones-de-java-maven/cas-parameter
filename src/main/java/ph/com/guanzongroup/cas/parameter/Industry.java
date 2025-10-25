@@ -18,7 +18,7 @@ public class Industry extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Industry) ObjectInitiator.createModel(poGRider, Tables.INDUSTRY);
+        poModel = ObjectInitiator.createModel(Model_Industry.class,poGRider, Tables.INDUSTRY);
         
         super.initialize();
     }

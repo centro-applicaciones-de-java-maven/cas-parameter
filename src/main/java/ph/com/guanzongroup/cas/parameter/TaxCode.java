@@ -20,7 +20,7 @@ public class TaxCode extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Tax_Code) ObjectInitiator.createModel(poGRider, Tables.TAX_CODE);
+        poModel = ObjectInitiator.createModel(Model_Tax_Code.class, poGRider, Tables.TAX_CODE);
         
         super.initialize();
     }

@@ -20,7 +20,7 @@ public class CategoryLevel3 extends Parameter{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Category_Level3) ObjectInitiator.createModel(poGRider, Tables.CATEGORY3);
+        poModel = ObjectInitiator.createModel(Model_Category_Level3.class, poGRider, Tables.CATEGORY3);
         
         super.initialize();
     }

@@ -21,7 +21,7 @@ public class Model extends Parameter implements ModelImpl{
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = (Model_Model) ObjectInitiator.createModel(poGRider, Tables.MODEL);
+        poModel = ObjectInitiator.createModel(Model_Model.class, poGRider, Tables.MODEL);
         
         super.initialize();
     }
