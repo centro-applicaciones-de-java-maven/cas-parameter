@@ -7,6 +7,10 @@ import org.guanzon.cas.parameter.model.Model_Banks_Branch;
 import org.guanzon.cas.parameter.model.Model_Barangay;
 import org.guanzon.cas.parameter.model.Model_Bin;
 import org.guanzon.cas.parameter.model.Model_Branch;
+import org.guanzon.cas.parameter.model.Model_Branch_Area;
+import org.guanzon.cas.parameter.model.Model_Branch_Cluster;
+import org.guanzon.cas.parameter.model.Model_Branch_Cluster_Delivery;
+import org.guanzon.cas.parameter.model.Model_Branch_Others;
 import org.guanzon.cas.parameter.model.Model_Brand;
 import org.guanzon.cas.parameter.model.Model_Category;
 import org.guanzon.cas.parameter.model.Model_Category_Level2;
@@ -634,11 +638,75 @@ public class ParamModels {
         return poTaxCode;
     } 
     
+    public Model_Branch_Others BranchOthers() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.BranchOthers: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchOthers == null) {
+            this.poBranchOthers = new Model_Branch_Others();
+            this.poBranchOthers.setApplicationDriver(this.poGRider);
+            this.poBranchOthers.setXML("Model_Branch_Others");
+            this.poBranchOthers.setTableName("Branch_Others");
+            this.poBranchOthers.initialize();
+        }
+        return this.poBranchOthers;
+    }
+
+    public Model_Branch_Area BranchArea() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.BranchArea: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchArea == null) {
+            this.poBranchArea = new Model_Branch_Area();
+            this.poBranchArea.setApplicationDriver(this.poGRider);
+            this.poBranchArea.setXML("Model_Branch_Area");
+            this.poBranchArea.setTableName("Branch_Area");
+            this.poBranchArea.initialize();
+        }
+        return this.poBranchArea;
+    }
+
+    public Model_Branch_Cluster BranchCluster() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.BranchCluster: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchCluster == null) {
+            this.poBranchCluster = new Model_Branch_Cluster();
+            this.poBranchCluster.setApplicationDriver(this.poGRider);
+            this.poBranchCluster.setXML("Model_Branch_Cluster");
+            this.poBranchCluster.setTableName("Branch_Cluster");
+            this.poBranchCluster.initialize();
+        }
+        return this.poBranchCluster;
+    }
+
+    public Model_Branch_Cluster_Delivery BranchClusterDelivery() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.BranchClusterDelivery: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchClusterDelivery == null) {
+            this.poBranchClusterDelivery = new Model_Branch_Cluster_Delivery();
+            this.poBranchClusterDelivery.setApplicationDriver(this.poGRider);
+            this.poBranchClusterDelivery.setXML("Model_Branch_Cluster_Delivery");
+            this.poBranchClusterDelivery.setTableName("Branch_Cluster_Delivery");
+            this.poBranchClusterDelivery.initialize();
+        }
+        return this.poBranchClusterDelivery;
+    }
+    
     private final GRiderCAS poGRider;
     
     private Model_Barangay poBarangay;
     private Model_Bin poBin;
     private Model_Branch poBranch;
+    private Model_Branch_Others poBranchOthers;
+    private Model_Branch_Area poBranchArea;
+    private Model_Branch_Cluster poBranchCluster;
+    private Model_Branch_Cluster_Delivery poBranchClusterDelivery;
     private Model_Brand poBrand;
     private Model_Category poCategory;
     private Model_Category_Level2 poCategory2;
