@@ -4,12 +4,17 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.AffiliatedCompany;
 import org.guanzon.cas.parameter.Banks;
 import org.guanzon.cas.parameter.BanksBranch;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Bin;
 import org.guanzon.cas.parameter.Branch;
+import org.guanzon.cas.parameter.BranchArea;
+import org.guanzon.cas.parameter.BranchCluster;
+import org.guanzon.cas.parameter.BranchClusterDelivery;
+import org.guanzon.cas.parameter.BranchOthers;
 import org.guanzon.cas.parameter.Brand;
 import org.guanzon.cas.parameter.Category;
 import org.guanzon.cas.parameter.CategoryLevel2;
@@ -586,96 +591,74 @@ public class ParamControllers {
         return poTaxCode;        
     }
     
-//    public Labor Labor(){
-//        if (poGRider == null){
-//            poLogWrapper.severe("ParamControllers.Labor: Application driver is not set.");
-//            return null;
-//        }
-//        
-//        if (poLabor != null) return poLabor;
-//        
-//        poLabor = new Labor();
-//        poLabor.setApplicationDriver(poGRider);
-//        poLabor.setWithParentClass(true);
-//        poLabor.setLogWrapper(poLogWrapper);
-//        poLabor.initialize();
-//        poLabor.newRecord();
-//        return poLabor;        
-//    }
-//    
-//    public LaborModel LaborModel(){
-//        if (poGRider == null){
-//            poLogWrapper.severe("ParamControllers.LaborModel: Application driver is not set.");
-//            return null;
-//        }
-//        
-//        if (poLaborModel != null) return poLaborModel;
-//        
-//        poLaborModel = new LaborModel();
-//        poLaborModel.setApplicationDriver(poGRider);
-//        poLaborModel.setWithParentClass(true);
-//        poLaborModel.setLogWrapper(poLogWrapper);
-//        poLaborModel.initialize();
-//        poLaborModel.newRecord();
-//        return poLaborModel;        
-//    }  
-//    
-//    public LaborCategory LaborCategory(){
-//        if (poGRider == null){
-//            poLogWrapper.severe("ParamControllers.LaborCategory: Application driver is not set.");
-//            return null;
-//        }
-//        
-//        if (poLaborCategory != null) return poLaborCategory;
-//        
-//        poLaborCategory = new LaborCategory();
-//        poLaborCategory.setApplicationDriver(poGRider);
-//        poLaborCategory.setWithParentClass(true);
-//        poLaborCategory.setLogWrapper(poLogWrapper);
-//        poLaborCategory.initialize();
-//        poLaborCategory.newRecord();
-//        return poLaborCategory;        
-//    }
-    
-    @Override
-    protected void finalize() throws Throwable {
-        try {
-            poBarangay = null;
-            poBin = null;
-            poBrand = null;
-            poCategory = null;
-            poCategory2 = null;
-            poCategory3 = null;
-            poCategory4 = null;
-            poColor = null;
-            poColorDetail = null;
-            poCountry = null;
-            poInvLocation = null;
-            poInvType = null;
-            poMeasure = null;
-            poModel = null;
-            poModelVariant = null;
-            poProvince = null;
-            poSection = null;
-            poTownCity = null;
-            poWarehouse = null;
-            poBanks = null;
-            poBanksBranches = null;
-            poMade = null;
-            poRelationship = null;
-            poSize = null;
-            poCompany = null;
-            poAffiliatedCompany= null;
-            poTaxCode = null;
-//            poLabor = null;
-//            poLaborModel = null;
-//            poLaborCategory = null;
-                    
-            poLogWrapper = null;
-            poGRider = null;
-        } finally {
-            super.finalize();
+    public BranchOthers BranchOthers() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.BranchOthers: Application driver is not set.");
+            return null;
         }
+        if (this.poBranchOthers != null) {
+            return this.poBranchOthers;
+        }
+        this.poBranchOthers = new BranchOthers();
+        this.poBranchOthers.setApplicationDriver(this.poGRider);
+        this.poBranchOthers.setWithParentClass(false);
+        this.poBranchOthers.setLogWrapper(this.poLogWrapper);
+        this.poBranchOthers.initialize();
+        this.poBranchOthers.newRecord();
+        return this.poBranchOthers;
+    }
+
+    public BranchArea BranchArea() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.BranchArea: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchCluster != null) {
+            return this.poBranchArea;
+        }
+        this.poBranchArea = new BranchArea();
+        this.poBranchArea.setApplicationDriver(this.poGRider);
+        this.poBranchArea.setWithParentClass(false);
+        this.poBranchArea.setLogWrapper(this.poLogWrapper);
+        this.poBranchArea.initialize();
+        this.poBranchArea.newRecord();
+        return this.poBranchArea;
+    }
+
+    public BranchCluster BranchCluster() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.BranchCluster: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchCluster != null) {
+            return this.poBranchCluster;
+        }
+        this.poBranchCluster = new BranchCluster();
+        this.poBranchCluster.setApplicationDriver(this.poGRider);
+        this.poBranchCluster.setWithParentClass(false);
+        this.poBranchCluster.setLogWrapper(this.poLogWrapper);
+        this.poBranchCluster.setRecordStatus(RecordStatus.ACTIVE);
+        this.poBranchCluster.initialize();
+        this.poBranchCluster.newRecord();
+        
+        return this.poBranchCluster;
+    }
+
+    public BranchClusterDelivery BranchClusterDelivery() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.BranchClusterDelivery: Application driver is not set.");
+            return null;
+        }
+        if (this.poBranchCluster != null) {
+            return this.poBranchClusterDelivery;
+        }
+        this.poBranchClusterDelivery = new BranchClusterDelivery();
+        this.poBranchClusterDelivery.setApplicationDriver(this.poGRider);
+        this.poBranchClusterDelivery.setWithParentClass(false);
+        this.poBranchClusterDelivery.setLogWrapper(this.poLogWrapper);
+        this.poBranchClusterDelivery.initialize();
+        this.poBranchClusterDelivery.newRecord();
+        return this.poBranchClusterDelivery;
     }
     
     private GRiderCAS poGRider;
@@ -684,6 +667,10 @@ public class ParamControllers {
     private Barangay poBarangay;
     private Bin poBin;
     private Branch poBranch;
+    private BranchOthers poBranchOthers;
+    private BranchArea poBranchArea;
+    private BranchCluster poBranchCluster;
+    private BranchClusterDelivery poBranchClusterDelivery;
     private Brand poBrand;
     private Category poCategory;
     private CategoryLevel2 poCategory2;
