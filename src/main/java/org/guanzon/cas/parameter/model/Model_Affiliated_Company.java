@@ -85,8 +85,9 @@ public class Model_Affiliated_Company extends Model {
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
-     @Override
+    
+    @Override
     public String getNextCode() {
-        return  MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+        return  MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
     }
 }

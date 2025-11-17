@@ -153,4 +153,9 @@ public class Model_Department extends Model {
             return poIndustry;
         }
     }
+    
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");
+    }
 }

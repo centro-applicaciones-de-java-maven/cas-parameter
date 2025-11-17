@@ -137,4 +137,9 @@ public class Model_Barangay extends Model{
     public Model_TownCity Town() throws SQLException, GuanzonException{
         return poTownCity;
     }
+    
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), "");
+    }
 }
