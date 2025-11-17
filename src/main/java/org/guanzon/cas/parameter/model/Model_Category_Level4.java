@@ -77,4 +77,9 @@ public class Model_Category_Level4 extends Model {
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
+    }
 }

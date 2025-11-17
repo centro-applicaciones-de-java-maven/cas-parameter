@@ -144,4 +144,9 @@ public class Model_Category extends Model {
             return poInvType;
         }
     }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
+    }
 }
