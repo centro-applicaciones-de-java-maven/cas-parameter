@@ -171,4 +171,9 @@ public class Model_Model_Variant extends Model {
             return poColor;
         }
     }
+    
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");
+    }
 }

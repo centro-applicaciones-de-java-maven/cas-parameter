@@ -104,6 +104,11 @@ public class Model_Inv_Location extends Model {
         return (Date) getValue("dModified");
     }
     
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");
+    }
+    
     public Model_Warehouse Warehouse() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sWHouseID"))){
             if (poWarehouse.getEditMode() == EditMode.READY && 

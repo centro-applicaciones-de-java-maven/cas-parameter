@@ -641,7 +641,7 @@ public class Model_Branch_Others extends Model {
 
     @Override
     public String getNextCode() {
-        return MiscUtil.getNextCode(this.getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+        return "";
     }
 
     public Model_Branch Branch() throws SQLException, GuanzonException {

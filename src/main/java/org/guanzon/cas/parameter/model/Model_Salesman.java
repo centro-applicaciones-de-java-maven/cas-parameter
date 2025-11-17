@@ -92,6 +92,6 @@ public class Model_Salesman extends Model {
     }
     @Override
     public String getNextCode() {
-        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
     }
 }

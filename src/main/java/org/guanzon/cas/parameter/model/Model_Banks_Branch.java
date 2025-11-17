@@ -183,8 +183,9 @@ private Model_TownCity poTown;
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
     }
+    
     @Override
     public String getNextCode() {
-        return   MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
     }
 }

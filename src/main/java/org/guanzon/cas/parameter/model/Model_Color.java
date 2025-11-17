@@ -93,4 +93,9 @@ public class Model_Color extends Model {
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
+    
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+    }
 }

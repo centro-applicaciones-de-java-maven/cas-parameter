@@ -153,4 +153,9 @@ public class Model_TownCity extends Model{
     public Model_Province Province() throws SQLException, GuanzonException{
         return poProvince;
     }
+    
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");
+    }
 }

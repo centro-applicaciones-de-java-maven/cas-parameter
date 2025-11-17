@@ -158,4 +158,9 @@ public class Model_Model extends Model {
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
     }
+    
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+    }
 }

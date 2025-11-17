@@ -93,4 +93,9 @@ public class Model_Company extends Model {
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
+    
+    @Override
+    public String getNextCode() {
+        return "";
+    }
 }

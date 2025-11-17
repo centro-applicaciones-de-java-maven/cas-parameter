@@ -94,6 +94,11 @@ public class Model_Brand extends Model {
         return (Date) getValue("dModified");
     }
     
+    @Override
+    public String getNextCode() {
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+    }
+    
     public Model_Industry Industry() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sIndstCdx"))){
             if (poIndustry.getEditMode() == EditMode.READY && 
