@@ -25,6 +25,7 @@ public class testCategory {
         
         try {
             record = new ParamControllers(instance, null).Category();
+            record.setWithParentClass(false);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
@@ -33,8 +34,8 @@ public class testCategory {
     @Test
     public void testNewRecord() {
         try {
-            JSONObject loJSON;
-
+            JSONObject loJSON;            
+            
             loJSON = record.newRecord();
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
