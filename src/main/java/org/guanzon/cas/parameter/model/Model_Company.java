@@ -3,13 +3,16 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Company extends Model {
-
+    private Model_TownCity poTownCity;
+    
     @Override
     public void initialize() {
         try {
@@ -30,6 +33,10 @@ public class Model_Company extends Model {
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
+            
+            //initialize other connections
+            poTownCity = new ParamModels(poGRider).TownCity();
+            //end - initialize other connections
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -62,6 +69,43 @@ public class Model_Company extends Model {
         return (String) getValue("sCompnyCd");
     }
     
+    public JSONObject setCompanyAddress(String companyAddress) {
+        return setValue("sAddressx", companyAddress);
+    }
+
+    public String getCompanyAddress() {
+        return (String) getValue("sAddressx");
+    }
+    
+    public JSONObject setCompanyTownId(String companyTownId) {       
+        poJSON = setValue("sTownIDxx", companyTownId);
+        
+        if ("success".equals(poJSON.get("result"))){
+            if (!companyTownId.isEmpty()) {
+                if (!poTownCity.getProvinceId().equals(companyTownId)) {
+                    try {
+                        poJSON = poTownCity.openRecord(companyTownId);
+                        
+                        if (!"success".equals(poJSON.get("result"))){
+                            return poJSON;
+                        }
+                    } catch (SQLException | GuanzonException e) {
+                        poJSON = new JSONObject();
+                        poJSON.put("result", "error");
+                        poJSON.put("message", e.getMessage());
+                        return poJSON;
+                    }
+                }
+            }
+        }
+        
+        return poJSON;
+    }
+
+    public String getCompanyTownId() {
+        return (String) getValue("sTownIDxx");
+    }
+    
     public JSONObject setEmployerNo(String employerNo) {
         return setValue("sEmplyrNo", employerNo);
     }
@@ -92,6 +136,10 @@ public class Model_Company extends Model {
 
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
+    }
+    
+    public Model_TownCity TownCity() throws SQLException, GuanzonException{
+        return poTownCity;
     }
     
     @Override
