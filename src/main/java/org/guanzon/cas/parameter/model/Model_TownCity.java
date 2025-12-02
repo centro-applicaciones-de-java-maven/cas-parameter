@@ -151,6 +151,11 @@ public class Model_TownCity extends Model{
     }
     
     public Model_Province Province() throws SQLException, GuanzonException{
+        if (!getProvinceId().isEmpty() && poProvince == null){
+            //load the province object if null but id has a value
+            setProvinceId(getProvinceId());
+        }
+        
         return poProvince;
     }
     

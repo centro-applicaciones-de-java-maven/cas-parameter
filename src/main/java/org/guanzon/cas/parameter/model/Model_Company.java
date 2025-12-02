@@ -106,6 +106,14 @@ public class Model_Company extends Model {
         return (String) getValue("sTownIDxx");
     }
     
+    public JSONObject setTIN(String TIN) {
+        return setValue("sTaxIDNox", TIN);
+    }
+
+    public String getTIN() {
+        return (String) getValue("sTaxIDNox");
+    }
+    
     public JSONObject setEmployerNo(String employerNo) {
         return setValue("sEmplyrNo", employerNo);
     }
