@@ -77,4 +77,22 @@ public class Province extends Parameter{
             return poJSON;
         }
     }
+    
+    @Override
+    public JSONObject openRecord(String Id) throws SQLException, GuanzonException {
+        if (!pbInitRec){
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "Object is not initialized.");
+            return poJSON;
+        }
+        
+        poJSON =  getModel().openRecord(Id);
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            poModel.setRegionId(poModel.getRegionId());
+        }
+        
+        return poJSON;
+    }
 }
