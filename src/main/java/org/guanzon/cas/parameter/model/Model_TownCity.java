@@ -1,10 +1,12 @@
 package org.guanzon.cas.parameter.model;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -78,7 +80,9 @@ public class Model_TownCity extends Model{
         
         if ("success".equals(poJSON.get("result"))){
             if (!provinceId.isEmpty()) {
-                if (!poProvince.getProvinceId().equals(provinceId)) {
+                if (poProvince.getProvinceId() == null ||
+                    !poProvince.getProvinceId().equals(provinceId)) {
+                    
                     try {
                         poJSON = poProvince.openRecord(provinceId);
                         
@@ -162,5 +166,46 @@ public class Model_TownCity extends Model{
     @Override
     public String getNextCode() {
         return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");
+    }
+    
+    @Override
+    public JSONObject openRecord(String id) throws SQLException, GuanzonException {
+        poJSON = new JSONObject();
+
+        String lsSQL = MiscUtil.makeSelect(this);
+
+        //replace the condition based on the primary key column of the record
+        lsSQL = MiscUtil.addCondition(lsSQL, ID + " = " + SQLUtil.toSQL(id));
+
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+
+        try {
+            if (loRS.next()) {
+                for (int lnCtr = 1; lnCtr <= loRS.getMetaData().getColumnCount(); lnCtr++) {
+                    setValue(lnCtr, loRS.getObject(lnCtr));
+                }
+                
+                MiscUtil.close(loRS);               
+                
+                setProvinceId((String) getValue("sProvIDxx"));
+                
+                pnEditMode = EditMode.READY;
+
+                poJSON = new JSONObject();
+                poJSON.put("result", "success");
+                poJSON.put("message", "Record loaded successfully.");
+            } else {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record to load.");
+            }
+        } catch (SQLException e) {
+            logError(getCurrentMethodName() + "»" + e.getMessage());
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+
+        return poJSON;
     }
 }
