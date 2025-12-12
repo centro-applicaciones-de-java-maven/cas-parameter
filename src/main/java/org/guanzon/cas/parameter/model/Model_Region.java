@@ -58,36 +58,36 @@ public class Model_Region extends Model {
         return (String) getValue("sDescript");
     }
 
-    public JSONObject setMinimumWage(Number minimumWage) {
+    public JSONObject setMinimumWage(Double minimumWage) {
         return setValue("nMinWages", minimumWage);
     }
 
-    public Number getMinimumWage() {
-        return (Number) getValue("nMinWages");
+    public Double getMinimumWage() {
+        return Double.parseDouble(getValue("nMinWages").toString());
     }
 
-    public JSONObject setCOLAmount(Number colAmount) {
+    public JSONObject setCOLAmount(Double colAmount) {
         return setValue("nColaAmtx", colAmount);
     }
 
-    public Number getCOLAmount() {
-        return (Number) getValue("nColaAmtx");
+    public Double getCOLAmount() {
+        return Double.parseDouble(getValue("nColaAmtx").toString());
     }
 
-    public JSONObject setMinimumWage2(Number minimumWage2) {
+    public JSONObject setMinimumWage2(Double minimumWage2) {
         return setValue("nMinWage2", minimumWage2);
     }
 
-    public Number getMinimumWage2() {
-        return (Number) getValue("nMinWage2");
+    public Double getMinimumWage2() {
+        return Double.parseDouble(getValue("nMinWage2").toString());
     }
 
-    public JSONObject setCOLAmount2(Number colAmount2) {
+    public JSONObject setCOLAmount2(Double colAmount2) {
         return setValue("nColaAmt2", colAmount2);
     }
 
-    public Number getCOLAmount2() {
-        return (Number) getValue("nColaAmt2");
+    public Double getCOLAmount2() {
+        return Double.parseDouble(getValue("nColaAmt2").toString());
     }
 
     public JSONObject setRecordStatus(String recordStatus) {
