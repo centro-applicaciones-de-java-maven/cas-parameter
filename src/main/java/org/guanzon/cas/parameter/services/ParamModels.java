@@ -465,7 +465,7 @@ public class ParamModels {
         if (poBanksBranch == null) {
             poBanksBranch = new Model_Banks_Branch();
             poBanksBranch.setApplicationDriver(poGRider);
-            poBanksBranch.setXML("Model_Banks_Branch");
+            poBanksBranch.setXML("Model_Banks_Branches");
             poBanksBranch.setTableName("Banks_Branches");
             poBanksBranch.initialize();
         }
@@ -483,7 +483,7 @@ public class ParamModels {
             poMade = new Model_Made();
             poMade.setApplicationDriver(poGRider);
             poMade.setXML("Model_Made");
-            poMade.setTableName("made");
+            poMade.setTableName("Made");
             poMade.initialize();
         }
 

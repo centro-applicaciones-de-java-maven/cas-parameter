@@ -71,7 +71,7 @@ public class Model_Model_Variant extends Model {
     }
 
     public double getSellingPrice() {
-        return (double) getValue("nSelPrice");
+        return Double.valueOf(getValue("nSelPrice").toString());
     }
 
     public JSONObject setYearModel(int yearModel) {
