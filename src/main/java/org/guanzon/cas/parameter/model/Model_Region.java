@@ -8,107 +8,112 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
-public class Model_Region extends Model{
+public class Model_Region extends Model {
+
     @Override
     public void initialize() {
         try {
             poEntity = MiscUtil.xml2ResultSet(System.getProperty("sys.default.path.metadata") + XML, getTable());
-            
+
             poEntity.last();
             poEntity.moveToInsertRow();
 
             MiscUtil.initRowSet(poEntity);
-            
-            //assign default values
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-            //end - assign default values
 
             poEntity.insertRow();
             poEntity.moveToCurrentRow();
 
             poEntity.absolute(1);
 
+            //assign default values
+            poEntity.updateDouble("nMinWages", 0.0d);
+            poEntity.updateDouble("nColaAmtx", 0.0d);
+            poEntity.updateDouble("nMinWage2", 0.0d);
+            poEntity.updateDouble("nColaAmt2", 0.0d);
+            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            //end - assign default values
+
             ID = poEntity.getMetaData().getColumnLabel(1);
-            
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
         }
     }
-    
-    public JSONObject setRegionId(String regionId){
+
+    public JSONObject setRegionId(String regionId) {
         return setValue("sRegionID", regionId);
     }
-    
-    public String getRegionId(){
+
+    public String getRegionId() {
         return (String) getValue("sRegionID");
     }
-    
-    public JSONObject setDescription(String description){
+
+    public JSONObject setDescription(String description) {
         return setValue("sDescript", description);
     }
-    
-    public String getDescription(){
+
+    public String getDescription() {
         return (String) getValue("sDescript");
     }
-    
-    public JSONObject setMinimumWage(Number minimumWage){
+
+    public JSONObject setMinimumWage(Number minimumWage) {
         return setValue("nMinWages", minimumWage);
     }
-    
-    public Number getMinimumWage(){
+
+    public Number getMinimumWage() {
         return (Number) getValue("nMinWages");
     }
-    
-    public JSONObject setCOLAmount(Number colAmount){
+
+    public JSONObject setCOLAmount(Number colAmount) {
         return setValue("nColaAmtx", colAmount);
     }
-    
-    public Number getCOLAmount(){
+
+    public Number getCOLAmount() {
         return (Number) getValue("nColaAmtx");
     }
-        
-    public JSONObject setMinimumWage2(Number minimumWage2){
+
+    public JSONObject setMinimumWage2(Number minimumWage2) {
         return setValue("nMinWage2", minimumWage2);
     }
-    
-    public Number getMinimumWage2(){
+
+    public Number getMinimumWage2() {
         return (Number) getValue("nMinWage2");
     }
-    
-    public JSONObject setCOLAmount2(Number colAmount2){
+
+    public JSONObject setCOLAmount2(Number colAmount2) {
         return setValue("nColaAmt2", colAmount2);
     }
-    
-    public Number getCOLAmount2(){
+
+    public Number getCOLAmount2() {
         return (Number) getValue("nColaAmt2");
     }
-    
-    public JSONObject setRecordStatus(String recordStatus){
+
+    public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }
-    
-    public String getRecordStatus(){
+
+    public String getRecordStatus() {
         return (String) getValue("cRecdStat");
     }
-    
-    public JSONObject setModifyingId(String modifyingId){
+
+    public JSONObject setModifyingId(String modifyingId) {
         return setValue("sModified", modifyingId);
     }
-    
-    public String getModifyingId(){
+
+    public String getModifyingId() {
         return (String) getValue("sModified");
     }
-    
-    public JSONObject setModifiedDate(Date modifiedDate){
+
+    public JSONObject setModifiedDate(Date modifiedDate) {
         return setValue("dModified", modifiedDate);
     }
-    
-    public Date getModifiedDate(){
+
+    public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
-    
+
     @Override
     public String getNextCode() {
         return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");

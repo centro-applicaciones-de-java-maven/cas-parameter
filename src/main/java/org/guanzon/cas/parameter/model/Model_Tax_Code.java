@@ -20,14 +20,16 @@ public class Model_Tax_Code extends Model {
 
             MiscUtil.initRowSet(poEntity);
 
+            poEntity.insertRow();
+            poEntity.moveToCurrentRow();
+
             //assign default values
             
+            poEntity.updateDouble("sRegRatex", 0.0d);
+            poEntity.updateDouble("sGovtRate", 0.0d);
             poEntity.updateObject("dLastUpdt", poGRider.getServerDate());
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
-
-            poEntity.insertRow();
-            poEntity.moveToCurrentRow();
 
             poEntity.absolute(1);
 
@@ -40,8 +42,6 @@ public class Model_Tax_Code extends Model {
         }
     }
 
-
-    
     public JSONObject setTaxCode(String taxCode) {
         return setValue("sTaxCodex", taxCode);
     }
@@ -57,7 +57,7 @@ public class Model_Tax_Code extends Model {
     public double getRegularRate() {
         return Double.parseDouble(String.valueOf(getValue("sRegRatex")));
     }
-    
+
     public JSONObject setGovernmentRate(double rate) {
         return setValue("sGovtRate", rate);
     }
@@ -65,7 +65,7 @@ public class Model_Tax_Code extends Model {
     public double getGovernmentRate() {
         return Double.parseDouble(String.valueOf(getValue("sGovtRate")));
     }
-    
+
     public JSONObject setLastUpdate(Date lastUpdate) {
         return setValue("dLastUpdt", lastUpdate);
     }
@@ -73,9 +73,8 @@ public class Model_Tax_Code extends Model {
     public Date getLastUpdate() {
         return (Date) getValue("dLastUpdt");
     }
-    
-    
-    public JSONObject setRecordStatus(String recordStatus){
+
+    public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }
 
@@ -98,9 +97,9 @@ public class Model_Tax_Code extends Model {
     public Date getModifiedDate() {
         return (Date) getValue("dModified");
     }
-    
+
     @Override
-    public String getNextCode(){
-        return ""; 
+    public String getNextCode() {
+        return "";
     }
 }
