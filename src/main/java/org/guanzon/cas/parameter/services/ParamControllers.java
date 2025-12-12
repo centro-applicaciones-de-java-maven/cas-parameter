@@ -81,7 +81,7 @@ public class ParamControllers {
 
         poBin = new Bin();
         poBin.setApplicationDriver(poGRider);
-        poBin.setWithParentClass(true);
+        poBin.setWithParentClass(false);
         poBin.setLogWrapper(poLogWrapper);
         poBin.initialize();
         poBin.newRecord();
@@ -100,7 +100,7 @@ public class ParamControllers {
 
         poBranch = new Branch();
         poBranch.setApplicationDriver(poGRider);
-        poBranch.setWithParentClass(true);
+        poBranch.setWithParentClass(false);
         poBranch.setLogWrapper(poLogWrapper);
         poBranch.initialize();
         poBranch.newRecord();
@@ -119,7 +119,7 @@ public class ParamControllers {
 
         poBrand = new Brand();
         poBrand.setApplicationDriver(poGRider);
-        poBrand.setWithParentClass(true);
+        poBrand.setWithParentClass(false);
         poBrand.setLogWrapper(poLogWrapper);
         poBrand.initialize();
         poBrand.newRecord();
@@ -138,7 +138,7 @@ public class ParamControllers {
 
         poCategory = new Category();
         poCategory.setApplicationDriver(poGRider);
-        poCategory.setWithParentClass(true);
+        poCategory.setWithParentClass(false);
         poCategory.setLogWrapper(poLogWrapper);
         poCategory.initialize();
         poCategory.newRecord();
@@ -157,7 +157,7 @@ public class ParamControllers {
 
         poCategory2 = new CategoryLevel2();
         poCategory2.setApplicationDriver(poGRider);
-        poCategory2.setWithParentClass(true);
+        poCategory2.setWithParentClass(false);
         poCategory2.setLogWrapper(poLogWrapper);
         poCategory2.initialize();
         poCategory2.newRecord();
@@ -176,7 +176,7 @@ public class ParamControllers {
 
         poCategory3 = new CategoryLevel3();
         poCategory3.setApplicationDriver(poGRider);
-        poCategory3.setWithParentClass(true);
+        poCategory3.setWithParentClass(false);
         poCategory3.setLogWrapper(poLogWrapper);
         poCategory3.initialize();
         poCategory3.newRecord();
@@ -195,7 +195,7 @@ public class ParamControllers {
 
         poCategory4 = new CategoryLevel4();
         poCategory4.setApplicationDriver(poGRider);
-        poCategory4.setWithParentClass(true);
+        poCategory4.setWithParentClass(false);
         poCategory4.setLogWrapper(poLogWrapper);
         poCategory4.initialize();
         poCategory4.newRecord();
@@ -214,7 +214,7 @@ public class ParamControllers {
 
         poColor = new Color();
         poColor.setApplicationDriver(poGRider);
-        poColor.setWithParentClass(true);
+        poColor.setWithParentClass(false);
         poColor.setLogWrapper(poLogWrapper);
         poColor.initialize();
         poColor.newRecord();
@@ -233,7 +233,7 @@ public class ParamControllers {
 
         poColorDetail = new ColorDetail();
         poColorDetail.setApplicationDriver(poGRider);
-        poColorDetail.setWithParentClass(true);
+        poColorDetail.setWithParentClass(false);
         poColorDetail.setLogWrapper(poLogWrapper);
         poColorDetail.initialize();
         poColorDetail.newRecord();
@@ -252,7 +252,7 @@ public class ParamControllers {
 
         poCountry = new Country();
         poCountry.setApplicationDriver(poGRider);
-        poCountry.setWithParentClass(true);
+        poCountry.setWithParentClass(false);
         poCountry.setLogWrapper(poLogWrapper);
         poCountry.initialize();
         poCountry.newRecord();
@@ -271,7 +271,7 @@ public class ParamControllers {
 
         poDepartment = new Department();
         poDepartment.setApplicationDriver(poGRider);
-        poDepartment.setWithParentClass(true);
+        poDepartment.setWithParentClass(false);
         poDepartment.setLogWrapper(poLogWrapper);
         poDepartment.initialize();
         poDepartment.newRecord();
@@ -290,7 +290,7 @@ public class ParamControllers {
 
         poIndustry = new Industry();
         poIndustry.setApplicationDriver(poGRider);
-        poIndustry.setWithParentClass(true);
+        poIndustry.setWithParentClass(false);
         poIndustry.setLogWrapper(poLogWrapper);
         poIndustry.initialize();
         poIndustry.newRecord();
@@ -309,7 +309,7 @@ public class ParamControllers {
 
         poInvLocation = new InvLocation();
         poInvLocation.setApplicationDriver(poGRider);
-        poInvLocation.setWithParentClass(true);
+        poInvLocation.setWithParentClass(false);
         poInvLocation.setLogWrapper(poLogWrapper);
         poInvLocation.initialize();
         poInvLocation.newRecord();
@@ -328,7 +328,7 @@ public class ParamControllers {
 
         poInvType = new InvType();
         poInvType.setApplicationDriver(poGRider);
-        poInvType.setWithParentClass(true);
+        poInvType.setWithParentClass(false);
         poInvType.setLogWrapper(poLogWrapper);
         poInvType.initialize();
         poInvType.newRecord();
@@ -347,7 +347,7 @@ public class ParamControllers {
 
         poMeasure = new Measure();
         poMeasure.setApplicationDriver(poGRider);
-        poMeasure.setWithParentClass(true);
+        poMeasure.setWithParentClass(false);
         poMeasure.setLogWrapper(poLogWrapper);
         poMeasure.initialize();
         poMeasure.newRecord();
@@ -366,7 +366,7 @@ public class ParamControllers {
 
         poModel = new Model();
         poModel.setApplicationDriver(poGRider);
-        poModel.setWithParentClass(true);
+        poModel.setWithParentClass(false);
         poModel.setLogWrapper(poLogWrapper);
         poModel.initialize();
         poModel.newRecord();
@@ -385,7 +385,7 @@ public class ParamControllers {
 
         poModelVariant = new ModelVariant();
         poModelVariant.setApplicationDriver(poGRider);
-        poModelVariant.setWithParentClass(true);
+        poModelVariant.setWithParentClass(false);
         poModelVariant.setLogWrapper(poLogWrapper);
         poModelVariant.initialize();
         poModelVariant.newRecord();
@@ -404,7 +404,7 @@ public class ParamControllers {
 
         poProvince = new Province();
         poProvince.setApplicationDriver(poGRider);
-        poProvince.setWithParentClass(true);
+        poProvince.setWithParentClass(false);
         poProvince.setLogWrapper(poLogWrapper);
         poProvince.initialize();
         poProvince.newRecord();
@@ -423,7 +423,7 @@ public class ParamControllers {
 
         poRegion = new Region();
         poRegion.setApplicationDriver(poGRider);
-        poRegion.setWithParentClass(true);
+        poRegion.setWithParentClass(false);
         poRegion.setLogWrapper(poLogWrapper);
         poRegion.initialize();
         poRegion.newRecord();
@@ -442,7 +442,7 @@ public class ParamControllers {
 
         poSection = new Section();
         poSection.setApplicationDriver(poGRider);
-        poSection.setWithParentClass(true);
+        poSection.setWithParentClass(false);
         poSection.setLogWrapper(poLogWrapper);
         poSection.initialize();
         poSection.newRecord();
@@ -461,7 +461,7 @@ public class ParamControllers {
 
         poTownCity = new TownCity();
         poTownCity.setApplicationDriver(poGRider);
-        poTownCity.setWithParentClass(true);
+        poTownCity.setWithParentClass(false);
         poTownCity.setLogWrapper(poLogWrapper);
         poTownCity.initialize();
         poTownCity.newRecord();
@@ -480,7 +480,7 @@ public class ParamControllers {
 
         poTerm = new Term();
         poTerm.setApplicationDriver(poGRider);
-        poTerm.setWithParentClass(true);
+        poTerm.setWithParentClass(false);
         poTerm.setLogWrapper(poLogWrapper);
         poTerm.initialize();
         poTerm.newRecord();
@@ -499,7 +499,7 @@ public class ParamControllers {
 
         poWarehouse = new Warehouse();
         poWarehouse.setApplicationDriver(poGRider);
-        poWarehouse.setWithParentClass(true);
+        poWarehouse.setWithParentClass(false);
         poWarehouse.setLogWrapper(poLogWrapper);
         poWarehouse.initialize();
         poWarehouse.newRecord();
@@ -518,7 +518,7 @@ public class ParamControllers {
 
         poBanks = new Banks();
         poBanks.setApplicationDriver(poGRider);
-        poBanks.setWithParentClass(true);
+        poBanks.setWithParentClass(false);
         poBanks.setLogWrapper(poLogWrapper);
         poBanks.initialize();
         poBanks.newRecord();
@@ -537,7 +537,7 @@ public class ParamControllers {
 
         poBanksBranches = new BanksBranch();
         poBanksBranches.setApplicationDriver(poGRider);
-        poBanksBranches.setWithParentClass(true);
+        poBanksBranches.setWithParentClass(false);
         poBanksBranches.setLogWrapper(poLogWrapper);
         poBanksBranches.initialize();
         poBanksBranches.newRecord();
@@ -556,7 +556,7 @@ public class ParamControllers {
 
         poMade = new Made();
         poMade.setApplicationDriver(poGRider);
-        poMade.setWithParentClass(true);
+        poMade.setWithParentClass(false);
         poMade.setLogWrapper(poLogWrapper);
         poMade.initialize();
         poMade.newRecord();
@@ -575,7 +575,7 @@ public class ParamControllers {
 
         poRelationship = new Relationship();
         poRelationship.setApplicationDriver(poGRider);
-        poRelationship.setWithParentClass(true);
+        poRelationship.setWithParentClass(false);
         poRelationship.setLogWrapper(poLogWrapper);
         poRelationship.initialize();
         poRelationship.newRecord();
@@ -594,7 +594,7 @@ public class ParamControllers {
 
         poSize = new Size();
         poSize.setApplicationDriver(poGRider);
-        poSize.setWithParentClass(true);
+        poSize.setWithParentClass(false);
         poSize.setLogWrapper(poLogWrapper);
         poSize.initialize();
         poSize.newRecord();
@@ -613,7 +613,7 @@ public class ParamControllers {
 
         poCompany = new Company();
         poCompany.setApplicationDriver(poGRider);
-        poCompany.setWithParentClass(true);
+        poCompany.setWithParentClass(false);
         poCompany.setLogWrapper(poLogWrapper);
         poCompany.initialize();
         poCompany.newRecord();
@@ -632,7 +632,7 @@ public class ParamControllers {
 
         poAffiliatedCompany = new AffiliatedCompany();
         poAffiliatedCompany.setApplicationDriver(poGRider);
-        poAffiliatedCompany.setWithParentClass(true);
+        poAffiliatedCompany.setWithParentClass(false);
         poAffiliatedCompany.setLogWrapper(poLogWrapper);
         poAffiliatedCompany.initialize();
         poAffiliatedCompany.newRecord();
@@ -651,7 +651,7 @@ public class ParamControllers {
 
         poTaxCode = new TaxCode();
         poTaxCode.setApplicationDriver(poGRider);
-        poTaxCode.setWithParentClass(true);
+        poTaxCode.setWithParentClass(false);
         poTaxCode.setLogWrapper(poLogWrapper);
         poTaxCode.initialize();
         poTaxCode.newRecord();
