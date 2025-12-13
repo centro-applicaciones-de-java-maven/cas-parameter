@@ -23,16 +23,15 @@ public class Model_Tax_Code extends Model {
             poEntity.insertRow();
             poEntity.moveToCurrentRow();
 
+            poEntity.absolute(1);
+
             //assign default values
-            
             poEntity.updateDouble("sRegRatex", 0.0d);
             poEntity.updateDouble("sGovtRate", 0.0d);
             poEntity.updateObject("dLastUpdt", poGRider.getServerDate());
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
-
-            poEntity.absolute(1);
-
+            
             ID = poEntity.getMetaData().getColumnLabel(1);
 
             pnEditMode = EditMode.UNKNOWN;
