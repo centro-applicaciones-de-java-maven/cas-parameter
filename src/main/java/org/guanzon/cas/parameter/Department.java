@@ -148,6 +148,10 @@ public class Department extends Parameter {
 
             } else {
                 loClient.setClientId("");
+
+                JSONObject loResult = new JSONObject();
+                loResult.put("result", "error");
+                return loResult;
             }
 
             //load record
@@ -230,6 +234,9 @@ public class Department extends Parameter {
 
             } else {
                 loClient.setClientId("");
+                JSONObject loResult = new JSONObject();
+                loResult.put("result", "error");
+                return loResult;
             }
 
             //load record
@@ -312,6 +319,9 @@ public class Department extends Parameter {
 
             } else {
                 loClient.setClientId("");
+                JSONObject loResult = new JSONObject();
+                loResult.put("result", "error");
+                return loResult;
             }
 
             //load record
@@ -394,6 +404,9 @@ public class Department extends Parameter {
 
             } else {
                 loClient.setClientId("");
+                JSONObject loResult = new JSONObject();
+                loResult.put("result", "error");
+                return loResult;
             }
 
             //load record
