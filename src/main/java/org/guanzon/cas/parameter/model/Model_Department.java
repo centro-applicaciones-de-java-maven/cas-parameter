@@ -156,6 +156,6 @@ public class Model_Department extends Model {
     
     @Override
     public String getNextCode() {
-        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), "");
+        return "";
     }
 }
