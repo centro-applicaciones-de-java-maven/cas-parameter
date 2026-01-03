@@ -28,6 +28,7 @@ public class Brand extends Parameter{
     public JSONObject isEntryOkay() throws SQLException{
         poJSON = new JSONObject();
         
+        poModel.setIndustryCode(poGRider.getIndustry());
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
             poJSON.put("result", "error");
             poJSON.put("message", "User is not allowed to save record.");
@@ -47,7 +48,6 @@ public class Brand extends Parameter{
                 return poJSON;
             }
         }
-        
         poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
         poModel.setModifiedDate(poGRider.getServerDate());
         
