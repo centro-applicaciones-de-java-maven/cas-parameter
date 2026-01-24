@@ -1,5 +1,6 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
@@ -95,6 +96,40 @@ public class Model extends Parameter {
             return poJSON;
         }
     }
+    
+    
+    
+        
+    public JSONObject searchRecordbyMainModel(String value, boolean byCode) throws SQLException, GuanzonException {
+        String lsSQL = getSQ_Browse();
+        Model_Model loModel; 
+        loModel = new ParamModels(poGRider).Model();
+        
+        lsSQL = MiscUtil.addCondition(lsSQL, "a.sMainModl = ''");
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Description»Model Code»Mfg. Year»Brand",
+                "sModelIDx»sDescript»sModelCde»nMfgYearx»xBrandNme",
+                "a.sModelIDx»a.sDescript»a.sModelCde»nMfgYearx»b.sDescript",
+                byCode ? 0 : 2);
+
+        if (poJSON != null) {
+            JSONObject loResult = loModel.openRecord((String) poJSON.get("sModelIDx"));
+
+            loResult.put("result", "success");
+            loResult.put("message", "Record loaded successfully.");
+            loResult.put("Description", (String) poJSON.get("sDescript"));
+            poModel.setMainModelId((String) poJSON.get("sModelIDx"));
+
+            return loResult;
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
 
     public JSONObject searchRecord(String value, boolean byCode, String brandId) throws SQLException, GuanzonException {
         String lsSQL = getSQ_Browse();
@@ -153,4 +188,39 @@ public class Model extends Parameter {
 
         return MiscUtil.addCondition(lsSQL, lsCondition);
     }
+    
+    public JSONObject getMainModelName(String mainMdlID) throws SQLException {
+
+        JSONObject result = new JSONObject();
+
+        // ✅ Guard clause: check null or empty
+        if (mainMdlID == null || mainMdlID.trim().isEmpty()) {
+            result.put("result", "success");
+            result.put("Description", "");
+            return result; // end method immediately
+        }
+
+        String lsSQL = "SELECT sDescript FROM Model";
+        lsSQL = MiscUtil.addCondition(lsSQL,
+                "sModelIDx = " + SQLUtil.toSQL(mainMdlID));
+        lsSQL += " ORDER BY sModelIDx DESC LIMIT 1";
+
+        System.out.println("EXECUTING SQL: " + lsSQL);
+
+        try (ResultSet loRS = poGRider.executeQuery(lsSQL)) {
+
+            if (loRS != null && loRS.next()) {
+                result.put("result", "success");
+                result.put("Description", loRS.getString("sDescript"));
+            } else {
+                result.put("result", "error");
+                result.put("message", "No record found.");
+                result.put("Description", "");
+            }
+
+            return result;
+        }
+    }
+
+
 }
