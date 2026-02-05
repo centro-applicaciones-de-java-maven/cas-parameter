@@ -28,7 +28,6 @@ public class Model_xxxTransactionSource extends Model {
 
             //assign default values
             poEntity.updateString("cTranType", Logical.NO);
-            poEntity.updateString("cTranType", Logical.NO);
             poEntity.updateString("cWPayType", Logical.NO);
             poEntity.updateNull("sClientTp");
             poEntity.updateObject("dModified", poGRider.getServerDate());

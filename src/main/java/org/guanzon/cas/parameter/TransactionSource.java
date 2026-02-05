@@ -9,17 +9,18 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
+import org.guanzon.cas.parameter.model.Model_xxxTransactionSource;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class TransactionSource extends Parameter{
-    Model_Warehouse poModel;
+    Model_xxxTransactionSource poModel;
     
     @Override
     public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new ParamModels(poGRider).Warehouse();
+        poModel = new ParamModels(poGRider).TransactionSource();
         
         super.initialize();
     }
@@ -35,15 +36,15 @@ public class TransactionSource extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            if (poModel.getWarehouseId().isEmpty()){
+            if (poModel.getSourceCode().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Warehouse must not be empty.");
+                poJSON.put("message", "Source Code must not be empty.");
                 return poJSON;
             }
             
-            if (poModel.getDescription().isEmpty()){
+            if (poModel.getSourceName().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Warehouse must not be empty.");
+                poJSON.put("message", "Source Name must not be empty.");
                 return poJSON;
             }
         }
@@ -56,7 +57,7 @@ public class TransactionSource extends Parameter{
     }
     
     @Override
-    public Model_Warehouse getModel() {
+    public Model_xxxTransactionSource getModel() {
         return poModel;
     }
     
@@ -85,7 +86,7 @@ public class TransactionSource extends Parameter{
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sWHouseID"));
+            return poModel.openRecord((String) poJSON.get("sSourceCD"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
