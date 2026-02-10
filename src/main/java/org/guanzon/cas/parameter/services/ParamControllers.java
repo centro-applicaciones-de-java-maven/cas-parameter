@@ -41,6 +41,7 @@ import org.guanzon.cas.parameter.TaxCode;
 import org.guanzon.cas.parameter.Term;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.TransactionSource;
+import org.guanzon.cas.parameter.TransactionSourceTable;
 import org.guanzon.cas.parameter.Warehouse;
 
 public class ParamControllers {
@@ -744,6 +745,23 @@ public class ParamControllers {
         this.poTransactionSource.newRecord();
         return this.poTransactionSource;
     }
+    
+    public TransactionSourceTable TransactionSourceTable() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.TransactionSourceTable: Application driver is not set.");
+            return null;
+        }
+        if (this.poTransactionSourceTable != null) {
+            return this.poTransactionSourceTable;
+        }
+        this.poTransactionSourceTable = new TransactionSourceTable();
+        this.poTransactionSourceTable.setApplicationDriver(this.poGRider);
+        this.poTransactionSourceTable.setWithParentClass(false);
+        this.poTransactionSourceTable.setLogWrapper(this.poLogWrapper);
+        this.poTransactionSourceTable.initialize();
+        this.poTransactionSourceTable.newRecord();
+        return this.poTransactionSourceTable;
+    }
 
     private GRiderCAS poGRider;
     private LogWrapper poLogWrapper;
@@ -785,4 +803,5 @@ public class ParamControllers {
     private AffiliatedCompany poAffiliatedCompany;
     private TaxCode poTaxCode;
     private TransactionSource poTransactionSource;
+    private TransactionSourceTable poTransactionSourceTable;
 }

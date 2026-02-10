@@ -41,6 +41,7 @@ import org.guanzon.cas.parameter.model.Model_Term;
 import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.guanzon.cas.parameter.model.Model_Warehouse;
 import org.guanzon.cas.parameter.model.Model_xxxTransactionSource;
+import org.guanzon.cas.parameter.model.Model_xxxTransactionSourceTable;
 
 public class ParamModels {
 
@@ -717,6 +718,21 @@ public class ParamModels {
         }
         return this.poTransactionSource;
     }
+    
+    public Model_xxxTransactionSourceTable TransactionSourceTable() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.TransactionSourceTable: Application driver is not set.");
+            return null;
+        }
+        if (this.poTransactionSourceTable == null) {
+            this.poTransactionSourceTable = new Model_xxxTransactionSourceTable();
+            this.poTransactionSourceTable.setApplicationDriver(this.poGRider);
+            this.poTransactionSourceTable.setXML("Model_xxxTransactionSourceTable");
+            this.poTransactionSourceTable.setTableName("xxxTransactionSourceTable");
+            this.poTransactionSourceTable.initialize();
+        }
+        return this.poTransactionSourceTable;
+    }
 
     private final GRiderCAS poGRider;
 
@@ -760,4 +776,5 @@ public class ParamModels {
     private Model_Labor_Category poLaborCategory;
     private Model_Tax_Code poTaxCode;
     private Model_xxxTransactionSource poTransactionSource;
+    private Model_xxxTransactionSourceTable poTransactionSourceTable;
 }
