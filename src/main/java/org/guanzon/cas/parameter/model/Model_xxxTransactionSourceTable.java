@@ -1,9 +1,12 @@
 package org.guanzon.cas.parameter.model;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -29,10 +32,12 @@ public class Model_xxxTransactionSourceTable extends Model {
             //assign default values
             poEntity.updateString("cTablePri", "1");
             poEntity.updateString("cTableTyp", "0");
+            poEntity.updateString("cRecdStat", "1");
            
             //end - assign default values
 
-            ID = poEntity.getMetaData().getColumnLabel(1);
+            ID = "sSourceCD";
+            ID2 = "sTableNme";
 
             //initialize other connections
             //end - initialize other connections
@@ -75,9 +80,18 @@ public class Model_xxxTransactionSourceTable extends Model {
         return (String) getValue("cTableTyp");
     }
     
+    public JSONObject setRecordStatus(String status) {
+        return setValue("cRecdStat", status);
+    }
+
+    public String getRecordStatus() {
+        return (String) getValue("cRecdStat");
+    }
+    
 
     @Override
     public String getNextCode() {
         return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
     }
+    
 }

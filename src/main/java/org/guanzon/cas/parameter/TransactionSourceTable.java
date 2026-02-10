@@ -118,7 +118,7 @@ public class TransactionSourceTable extends Parameter{
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sSourceCD"));
+            return poModel.openRecord((String) poJSON.get("sSourceCD"),(String) poJSON.get("sTableNme"));
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
