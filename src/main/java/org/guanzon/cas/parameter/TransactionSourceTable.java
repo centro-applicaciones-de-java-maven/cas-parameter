@@ -91,9 +91,10 @@ public class TransactionSourceTable extends Parameter{
             return poJSON;
         }
     }
+    
     public JSONObject searchRecord(String value,String SourceCode, boolean byCode) throws SQLException, GuanzonException{
         String lsCondition = "";
-
+        String lsSQL = "";
         if (psRecdStat.length() > 1) {
             for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
                 lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
@@ -104,11 +105,10 @@ public class TransactionSourceTable extends Parameter{
             lsCondition = "cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
         if(SourceCode!= null &&  !SourceCode.isEmpty()){
-            lsCondition = lsCondition + " AND sTableNme LIKE " + SQLUtil.toSQL(SourceCode + "%");
+            lsCondition = lsCondition + " AND sSourceCD = " + SQLUtil.toSQL(SourceCode);
         }
-
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
-        
+        lsSQL = MiscUtil.addCondition(getSQ_Browse(), lsCondition);
+        System.out.println("Executing query : " + lsSQL);
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
