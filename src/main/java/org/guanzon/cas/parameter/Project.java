@@ -105,9 +105,10 @@ public class Project extends Parameter {
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException {
         poJSON = new JSONObject();
+        String allowedDepartment = System.getProperty("allowed.department");
         
-        String AllowedDeptartment = "Engineering Services";
-        if (!poGRider.getDepartment().equals(AllowedDeptartment)) {
+
+        if (!poGRider.getDepartment().equals(allowedDepartment)) {
             poJSON.put("result", "error");
             poJSON.put("message", "You do not have permission to save this record."
                     + "\nOnly users from the Engineering Services department are allowed.");
