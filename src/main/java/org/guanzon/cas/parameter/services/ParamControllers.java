@@ -32,6 +32,7 @@ import org.guanzon.cas.parameter.Made;
 import org.guanzon.cas.parameter.Measure;
 import org.guanzon.cas.parameter.Model;
 import org.guanzon.cas.parameter.ModelVariant;
+import org.guanzon.cas.parameter.Project;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.Region;
 import org.guanzon.cas.parameter.Relationship;
@@ -763,6 +764,24 @@ public class ParamControllers {
         return this.poTransactionSourceTable;
     }
 
+    public Project Project() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.TransactionSourceTable: Application driver is not set.");
+            return null;
+        }
+        if (this.poProject != null) {
+            return this.poProject;
+        }
+        this.poProject = new Project();
+        this.poProject.setApplicationDriver(this.poGRider);
+        this.poProject.setWithParentClass(false);
+        this.poProject.setLogWrapper(this.poLogWrapper);
+        this.poProject.initialize();
+        this.poProject.newRecord();
+        return this.poProject;
+    }        
+            
+            
     private GRiderCAS poGRider;
     private LogWrapper poLogWrapper;
 
@@ -804,4 +823,5 @@ public class ParamControllers {
     private TaxCode poTaxCode;
     private TransactionSource poTransactionSource;
     private TransactionSourceTable poTransactionSourceTable;
+    private Project poProject;
 }

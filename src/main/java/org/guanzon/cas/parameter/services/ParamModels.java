@@ -31,6 +31,7 @@ import org.guanzon.cas.parameter.model.Model_Made;
 import org.guanzon.cas.parameter.model.Model_Measure;
 import org.guanzon.cas.parameter.model.Model_Model;
 import org.guanzon.cas.parameter.model.Model_Model_Variant;
+import org.guanzon.cas.parameter.model.Model_Project;
 import org.guanzon.cas.parameter.model.Model_Province;
 import org.guanzon.cas.parameter.model.Model_Region;
 import org.guanzon.cas.parameter.model.Model_Relationship;
@@ -733,6 +734,21 @@ public class ParamModels {
         }
         return this.poTransactionSourceTable;
     }
+    
+    public Model_Project Project() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.Project: Application driver is not set.");
+            return null;
+        }
+        if (this.poProject == null) {
+            this.poProject = new Model_Project();
+            this.poProject.setApplicationDriver(this.poGRider);
+            this.poProject.setXML("Model_Project");
+            this.poProject.setTableName("Project");
+            this.poProject.initialize();
+        }
+        return this.poProject;
+    }
 
     private final GRiderCAS poGRider;
 
@@ -777,4 +793,5 @@ public class ParamModels {
     private Model_Tax_Code poTaxCode;
     private Model_xxxTransactionSource poTransactionSource;
     private Model_xxxTransactionSourceTable poTransactionSourceTable;
+    private Model_Project poProject;
 }
