@@ -7,6 +7,7 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.cas.parameter.Project;
 import org.guanzon.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -52,6 +53,72 @@ public class testProject {
             }  
         } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             Assert.fail(e.getMessage());
+        } 
+    }
+    
+    @Test
+    public void testConfirmRecord() {
+        try {
+            JSONObject loJSON;
+            
+            loJSON = record.openRecord("GCO126000001");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+            
+
+            loJSON = record.ConfirmRecord("");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }  
+
+        } catch (SQLException | GuanzonException |ParseException |CloneNotSupportedException  e) {
+            Assert.fail(e.getMessage());
+            System.out.println("ERROR :" + e.getMessage());
+        } 
+    }
+    
+    @Test
+    public void testVoidRecord() {
+        try {
+            JSONObject loJSON;
+            
+            loJSON = record.openRecord("GCO126000001");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+            
+
+            loJSON = record.VoidRecord("");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }  
+
+        } catch (SQLException | GuanzonException |ParseException |CloneNotSupportedException  e) {
+            Assert.fail(e.getMessage());
+            System.out.println("ERROR :" + e.getMessage());
+        } 
+    }
+    
+    @Test
+    public void testCancelRecord() {
+        try {
+            JSONObject loJSON;
+            
+            loJSON = record.openRecord("GCO126000001");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }
+            
+
+            loJSON = record.CancelRecord("");
+            if ("error".equals((String) loJSON.get("result"))) {
+                Assert.fail((String) loJSON.get("message"));
+            }  
+
+        } catch (SQLException | GuanzonException |ParseException |CloneNotSupportedException  e) {
+            Assert.fail(e.getMessage());
+            System.out.println("ERROR :" + e.getMessage());
         } 
     }
    

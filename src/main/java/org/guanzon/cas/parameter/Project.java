@@ -1,61 +1,167 @@
 package org.guanzon.cas.parameter;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.parameter.model.Model_Project;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 
-public class Project extends Parameter{
+/**
+ * The {@code Project} class encapsulates the business logic for managing
+ * Project parameters in the system.
+ * <p>
+ * Key responsibilities include:
+ * <ul>
+ * <li>Initializing project records and binding to the {@link Model_Project}
+ * model.</li>
+ * <li>Validating required fields and checking for duplicate entries before
+ * saving.</li>
+ * <li>Searching, loading, and updating existing project records.</li>
+ * <li>Handling record status transitions: open, confirm, cancel, and void.</li>
+ * <li>Managing approval workflows based on user access level.</li>
+ * <li>Ensuring all modifications are tracked with user ID and timestamp
+ * metadata.</li>
+ * <li>Executing critical actions within controlled database transactions to
+ * ensure data integrity.</li>
+ * </ul>
+ * <p>
+ * Duplicate checking is performed by the
+ * {@link #CheckDuplicate(String, String)} method, which ensures that no project
+ * with the same code and description already exists in the database before
+ * saving a new record.
+ * </p>
+ * <p>
+ * This class extends {@link Parameter} and interacts closely with
+ * {@code Model_Project} for persistence, validation, and transactional
+ * operations. It provides a consistent framework for safely managing project
+ * records and enforcing business rules.
+ * </p>
+ *
+ * @author Teejei De Celis
+ * @since 2026-03-26
+ */
+public class Project extends Parameter {
+
+    /**
+     * Model instance for Project
+     */
     Model_Project poModel;
-    
+
+    /**
+     * Initializes the Project parameter.
+     *
+     * Sets default record status and instantiates the Project model.
+     *
+     * @throws SQLException if a database access error occurs
+     * @throws GuanzonException if initialization fails
+     */
     @Override
-    public void initialize() throws SQLException, GuanzonException{
+    public void initialize() throws SQLException, GuanzonException {
         psRecdStat = Logical.YES;
-        
+
         poModel = new ParamModels(poGRider).Project();
-        
+
         super.initialize();
     }
-    
+
+    /**
+     * Validates whether the current Project entry is ready to be saved.
+     * <p>
+     * This method performs the following checks:
+     * <ul>
+     * <li>Verifies that the current user belongs to the allowed department
+     * ("Engineering Services").</li>
+     * <li>Ensures that the Project ID is not empty.</li>
+     * <li>Ensures that the Project Description is not empty.</li>
+     * <li>Checks for duplicate entries using
+     * {@link #CheckDuplicate(String, String)}.</li>
+     * <li>Assigns modification metadata such as modifying user ID and
+     * modification date.</li>
+     * </ul>
+     * <p>
+     * If any validation fails, a JSONObject with {@code "result":"error"} and a
+     * descriptive message is returned. If all validations pass, a JSONObject
+     * with {@code "result":"success"} is returned.
+     *
+     * @return JSONObject containing the validation result:
+     * <ul>
+     * <li>{@code "result":"success"} if the entry passes all checks.</li>
+     * <li>{@code "result":"error"} with a descriptive {@code "message"} if
+     * validation fails.</li>
+     * </ul>
+     * @throws SQLException if a database access error occurs during duplicate
+     * checking.
+     * @throws GuanzonException if a business logic error occurs during
+     * validation.
+     */
     @Override
-    public JSONObject isEntryOkay() throws SQLException {
+    public JSONObject isEntryOkay() throws SQLException, GuanzonException {
         poJSON = new JSONObject();
         
-//        if (poGRider.getUserLevel() < UserRight.SYSADMIN){
-//            poJSON.put("result", "error");
-//            poJSON.put("message", "User is not allowed to save record.");
-//            return poJSON;
-//        } 
-            
-        if (poModel.getProjectDescription().isEmpty()){
+        String AllowedDeptartment = "Engineering Services";
+        if (!poGRider.getDepartment().equals(AllowedDeptartment)) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "You do not have permission to save this record."
+                    + "\nOnly users from the Engineering Services department are allowed.");
+            return poJSON;
+        }
+
+        if (poModel.getProjectID().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "Project Code must not be empty.");
+            return poJSON;
+        }
+
+        if (poModel.getProjectDescription().isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("message", "Project Description must not be empty.");
             return poJSON;
         }
-            
-        
-        
+
         poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
         poModel.setModifiedDate(poGRider.getServerDate());
-        
+
+        poJSON = CheckDuplicate(poModel.getProjectID(), poModel.getProjectDescription());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
         poJSON.put("result", "success");
         return poJSON;
     }
-    
+
+    /**
+     * Retrieves the current Project model instance.
+     *
+     * @return Model_Project instance
+     */
     @Override
     public Model_Project getModel() {
         return poModel;
     }
-    
+
+    /**
+     * Searches for a Project record and loads it into the model.
+     *
+     * @param value the search keyword (code or description)
+     * @param byCode true if searching by project code, false for description
+     * @return JSONObject containing: - loaded record if found - error message
+     * if no record is selected
+     * @throws SQLException if a database error occurs
+     * @throws GuanzonException if search operation fails
+     */
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
+    public JSONObject searchRecord(String value, boolean byCode)
+            throws SQLException, GuanzonException {
+
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -73,6 +179,382 @@ public class Project extends Parameter{
             return poJSON;
         }
     }
-    
-    
+
+    /**
+     * Cancels the current Project record.
+     *
+     * Updates the record status to CANCEL, performs validation, requests
+     * approval (if required), and saves the changes within a database
+     * transaction.
+     *
+     * @param remarks remarks or reason for cancellation
+     * @return JSONObject containing: - "success" if the cancellation is
+     * completed - "error" with message if the process fails
+     * @throws SQLException if a database error occurs
+     * @throws GuanzonException if business logic validation fails
+     * @throws ParseException if date parsing fails
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
+    public JSONObject CancelRecord(String remarks)
+            throws SQLException, GuanzonException, ParseException, CloneNotSupportedException {
+
+        String lsStatus = ProjectConstant.CANCEL;
+        poJSON = new JSONObject();
+        boolean lbConfirm = true;
+
+        if (getModel().getEditMode() != EditMode.READY
+                || getModel().getEditMode() != EditMode.UPDATE) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+        }
+
+        if (getModel().getEditMode() == EditMode.READY) {
+            poJSON = updateRecord();
+            if ("error".equals(poJSON.get("result"))) {
+                return poJSON;
+            }
+        }
+
+        if (lsStatus.equals(poModel.getRecordStatus())) {
+            poJSON.put("error", "Record was already Cancelled.");
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("cRecdStat", lsStatus);
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("sModified", poGRider.getUserID());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("dModified", poGRider.getServerDate());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = isEntryOkay();
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        if (!pbWthParent) {
+            poJSON = seekApproval();
+            if ("error".equals(poJSON.get("result"))) {
+                return poJSON;
+            }
+        }
+
+        poGRider.beginTrans((String) poEvent.get("event"),
+                getModel().getTable(), "PARM",
+                String.valueOf(getModel().getValue(1)));
+
+        poJSON = statusChange(poModel.getTable(),
+                (String) poModel.getValue("sProjCode"),
+                remarks, lsStatus, !lbConfirm, true);
+
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().saveRecord();
+        if ("error".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            return poJSON;
+        }
+
+        poGRider.commitTrans();
+        return poJSON;
+    }
+
+    /**
+     * Confirms the current Project record.
+     *
+     * Updates the record status to CONFIRM, performs validation, approval (if
+     * required), and saves changes within a transaction.
+     *
+     * @param remarks remarks or reason for confirmation
+     * @return JSONObject result of the confirmation process
+     * @throws SQLException if a database error occurs
+     * @throws GuanzonException if business logic fails
+     * @throws ParseException if date parsing fails
+     * @throws CloneNotSupportedException if cloning fails
+     */
+    public JSONObject ConfirmRecord(String remarks)
+            throws SQLException, GuanzonException, ParseException, CloneNotSupportedException {
+
+        String lsStatus = ProjectConstant.CONFIRM;
+        poJSON = new JSONObject();
+        boolean lbConfirm = true;
+
+        if (getModel().getEditMode() != EditMode.READY
+                || getModel().getEditMode() != EditMode.UPDATE) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+        }
+
+        if (getModel().getEditMode() == EditMode.READY) {
+            poJSON = updateRecord();
+            if ("error".equals(poJSON.get("result"))) {
+                return poJSON;
+            }
+        }
+
+        if (lsStatus.equals(poModel.getRecordStatus())) {
+            poJSON.put("error", "Record was already confirmed.");
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("cRecdStat", lsStatus);
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("sModified", poGRider.getUserID());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("dModified", poGRider.getServerDate());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = isEntryOkay();
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        if (!pbWthParent) {
+            poJSON = seekApproval();
+            if ("error".equals(poJSON.get("result"))) {
+                return poJSON;
+            }
+        }
+
+        poGRider.beginTrans((String) poEvent.get("event"),
+                getModel().getTable(), "PARM",
+                String.valueOf(getModel().getValue(1)));
+
+        poJSON = statusChange(poModel.getTable(),
+                (String) poModel.getValue("sProjCode"),
+                remarks, lsStatus, !lbConfirm, true);
+
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().saveRecord();
+        if ("error".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            return poJSON;
+        }
+
+        poGRider.commitTrans();
+        return poJSON;
+    }
+
+    /**
+     * Voids the current Project record.
+     *
+     * Updates the record status to VOID, performs validation, approval (if
+     * required), and saves changes within a transaction.
+     *
+     * @param remarks remarks or reason for voiding
+     * @return JSONObject result of the voiding process
+     * @throws SQLException if a database error occurs
+     * @throws GuanzonException if business logic fails
+     * @throws ParseException if date parsing fails
+     * @throws CloneNotSupportedException if cloning fails
+     */
+    public JSONObject VoidRecord(String remarks)
+            throws SQLException, GuanzonException, ParseException, CloneNotSupportedException {
+
+        String lsStatus = ProjectConstant.VOID;
+        poJSON = new JSONObject();
+        boolean lbConfirm = true;
+
+        if (getModel().getEditMode() != EditMode.READY
+                || getModel().getEditMode() != EditMode.UPDATE) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+        }
+
+        if (getModel().getEditMode() == EditMode.READY) {
+            poJSON = updateRecord();
+            if ("error".equals(poJSON.get("result"))) {
+                return poJSON;
+            }
+        }
+
+        if (lsStatus.equals(poModel.getRecordStatus())) {
+            poJSON.put("error", "Record was already voided.");
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("cRecdStat", lsStatus);
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("sModified", poGRider.getUserID());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().setValue("dModified", poGRider.getServerDate());
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = isEntryOkay();
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        if (!pbWthParent) {
+            poJSON = seekApproval();
+            if ("error".equals(poJSON.get("result"))) {
+                return poJSON;
+            }
+        }
+
+        poGRider.beginTrans((String) poEvent.get("event"),
+                getModel().getTable(), "PARM",
+                String.valueOf(getModel().getValue(1)));
+
+        poJSON = statusChange(poModel.getTable(),
+                (String) poModel.getValue("sProjCode"),
+                remarks, lsStatus, !lbConfirm, true);
+
+        if ("error".equals(poJSON.get("result"))) {
+            return poJSON;
+        }
+
+        poJSON = getModel().saveRecord();
+        if ("error".equals(poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            return poJSON;
+        }
+
+        poGRider.commitTrans();
+        return poJSON;
+    }
+
+    /**
+     * Requests approval from an authorized user if required.
+     *
+     * If the current user has encoder-level access or lower, an approval dialog
+     * is shown to validate higher authorization.
+     *
+     * @return JSONObject containing: - "success" if approval is granted -
+     * "error" if approval fails or unauthorized
+     * @throws SQLException if a database error occurs
+     * @throws GuanzonException if approval process fails
+     */
+    public JSONObject seekApproval() throws SQLException, GuanzonException {
+
+        if (poGRider.getUserLevel() <= UserRight.ENCODER) {
+            poJSON = ShowDialogFX.getUserApproval(poGRider);
+
+            if ("error".equals((String) poJSON.get("result"))) {
+                return poJSON;
+            }
+
+            if (Integer.parseInt(poJSON.get("nUserLevl").toString())
+                    <= UserRight.ENCODER) {
+                poJSON.put("result", "error");
+                poJSON.put("message",
+                        "User is not an authorized approving officer..");
+                return poJSON;
+            }
+        }
+
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+
+    /**
+     * Checks if a Project record already exists in the database based on the
+     * provided project code and project description.
+     * <p>
+     * This method executes a SQL query to search the "Project" table for a
+     * record that matches both the given project code and project description.
+     * If a matching record is found, the method returns a JSON object
+     * containing an error message indicating that the project has already been
+     * encoded. If no matching record exists, the method returns a JSON object
+     * indicating success and that the project can be added.
+     * </p>
+     *
+     * @param fsProjectCode the project code to check for duplicates
+     * @param fsProjectDesc the project description to check for duplicates
+     * @return a {@link JSONObject} containing:
+     * <ul>
+     * <li>{@code "result"} - "error" if a duplicate is found, "success" if no
+     * duplicate is found</li>
+     * <li>{@code "message"} - details about the duplicate or confirmation that
+     * no duplicate exists</li>
+     * </ul>
+     * @throws SQLException if a database access error occurs while executing
+     * the query
+     * @throws GuanzonException for application-specific exceptions or business
+     * logic errors
+     */
+    public JSONObject CheckDuplicate(String fsProjectCode, String fsProjectDesc) throws SQLException, GuanzonException {
+        poJSON = new JSONObject();
+
+        String lsSQL = "SELECT sProjCode,"
+                + " sProjDesc,"
+                + " cRecdStat "
+                + " FROM Project"
+                + " WHERE sProjCode = " + SQLUtil.toSQL(fsProjectCode)
+                + " AND sProjDesc = " + SQLUtil.toSQL(fsProjectDesc);
+
+        System.out.println("EXECUTING SQL: " + lsSQL);
+        ResultSet rs = poGRider.executeQuery(lsSQL);
+        if (rs.next()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "This project has already been encoded.\n "
+                    + "Project Code: " + rs.getString("sProjCode")
+                    + ",\nProject Description: " + rs.getString("sProjDesc"));
+        } else {
+            poJSON.put("result", "success");
+            poJSON.put("message", "No duplicate found. You can proceed.");
+        }
+
+        rs.close();
+        return poJSON;
+    }
+
+    /**
+     * Constants representing Project record statuses.
+     */
+    public static class ProjectConstant {
+
+        /**
+         * Open/Active status
+         */
+        public static final String OPEN = "0";
+
+        /**
+         * Confirmed status
+         */
+        public static final String CONFIRM = "1";
+
+        /**
+         * Cancel status
+         */
+        public static final String CANCEL = "3";
+
+        /**
+         * Void status
+         */
+        public static final String VOID = "4";
+
+    }
 }

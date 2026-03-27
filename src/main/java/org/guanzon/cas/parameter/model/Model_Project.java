@@ -42,7 +42,7 @@ public class Model_Project extends Model{
             MiscUtil.initRowSet(poEntity);
             
             // Set default record status to ACTIVE
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            poEntity.updateString("cRecdStat", RecordStatus.INACTIVE);
             poEntity.updateString("sModified", poGRider.getUserID());
 
             poEntity.insertRow();
@@ -161,6 +161,6 @@ public class Model_Project extends Model{
      */
     @Override
     public String getNextCode() {
-        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+        return "";
     }
 }
