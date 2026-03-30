@@ -2,9 +2,13 @@ package org.guanzon.cas.parameter;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import javax.sql.rowset.CachedRowSet;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
+import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
@@ -129,7 +133,8 @@ public class Project extends Parameter {
 
         poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
         poModel.setModifiedDate(poGRider.getServerDate());
-
+        
+        
         poJSON = CheckDuplicate(poModel.getProjectID(), poModel.getProjectDescription());
         if ("error".equals(poJSON.get("result"))) {
             return poJSON;
@@ -210,30 +215,8 @@ public class Project extends Parameter {
             poJSON.put("message", "No record loaded.");
         }
 
-        if (getModel().getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals(poJSON.get("result"))) {
-                return poJSON;
-            }
-        }
-
         if (lsStatus.equals(poModel.getRecordStatus())) {
             poJSON.put("error", "Record was already Cancelled.");
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("cRecdStat", lsStatus);
-        if ("error".equals(poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("sModified", poGRider.getUserID());
-        if ("error".equals(poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("dModified", poGRider.getServerDate());
-        if ("error".equals(poJSON.get("result"))) {
             return poJSON;
         }
 
@@ -248,26 +231,17 @@ public class Project extends Parameter {
                 return poJSON;
             }
         }
-
-        poGRider.beginTrans((String) poEvent.get("event"),
-                getModel().getTable(), "PARM",
-                String.valueOf(getModel().getValue(1)));
-
+        
         poJSON = statusChange(poModel.getTable(),
                 (String) poModel.getValue("sProjCode"),
-                remarks, lsStatus, !lbConfirm, true);
+                remarks, lsStatus, !lbConfirm, false);
 
         if ("error".equals(poJSON.get("result"))) {
             return poJSON;
         }
 
-        poJSON = getModel().saveRecord();
-        if ("error".equals(poJSON.get("result"))) {
-            poGRider.rollbackTrans();
-            return poJSON;
-        }
-
-        poGRider.commitTrans();
+        poJSON.put("result", "success");
+        poJSON.put("message", "Record successfully cancelled.");
         return poJSON;
     }
 
@@ -297,31 +271,9 @@ public class Project extends Parameter {
             poJSON.put("result", "error");
             poJSON.put("message", "No record loaded.");
         }
-
-        if (getModel().getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals(poJSON.get("result"))) {
-                return poJSON;
-            }
-        }
-
+        
         if (lsStatus.equals(poModel.getRecordStatus())) {
             poJSON.put("error", "Record was already confirmed.");
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("cRecdStat", lsStatus);
-        if ("error".equals(poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("sModified", poGRider.getUserID());
-        if ("error".equals(poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("dModified", poGRider.getServerDate());
-        if ("error".equals(poJSON.get("result"))) {
             return poJSON;
         }
 
@@ -336,26 +288,17 @@ public class Project extends Parameter {
                 return poJSON;
             }
         }
-
-        poGRider.beginTrans((String) poEvent.get("event"),
-                getModel().getTable(), "PARM",
-                String.valueOf(getModel().getValue(1)));
-
+        
         poJSON = statusChange(poModel.getTable(),
                 (String) poModel.getValue("sProjCode"),
-                remarks, lsStatus, !lbConfirm, true);
+                remarks, lsStatus, !lbConfirm, false);
 
         if ("error".equals(poJSON.get("result"))) {
             return poJSON;
         }
 
-        poJSON = getModel().saveRecord();
-        if ("error".equals(poJSON.get("result"))) {
-            poGRider.rollbackTrans();
-            return poJSON;
-        }
-
-        poGRider.commitTrans();
+        poJSON.put("result", "success");
+        poJSON.put("message", "Record successfully confirmed.");
         return poJSON;
     }
 
@@ -386,30 +329,8 @@ public class Project extends Parameter {
             poJSON.put("message", "No record loaded.");
         }
 
-        if (getModel().getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals(poJSON.get("result"))) {
-                return poJSON;
-            }
-        }
-
         if (lsStatus.equals(poModel.getRecordStatus())) {
             poJSON.put("error", "Record was already voided.");
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("cRecdStat", lsStatus);
-        if ("error".equals(poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("sModified", poGRider.getUserID());
-        if ("error".equals(poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        poJSON = getModel().setValue("dModified", poGRider.getServerDate());
-        if ("error".equals(poJSON.get("result"))) {
             return poJSON;
         }
 
@@ -425,10 +346,6 @@ public class Project extends Parameter {
             }
         }
 
-        poGRider.beginTrans((String) poEvent.get("event"),
-                getModel().getTable(), "PARM",
-                String.valueOf(getModel().getValue(1)));
-
         poJSON = statusChange(poModel.getTable(),
                 (String) poModel.getValue("sProjCode"),
                 remarks, lsStatus, !lbConfirm, true);
@@ -437,13 +354,8 @@ public class Project extends Parameter {
             return poJSON;
         }
 
-        poJSON = getModel().saveRecord();
-        if ("error".equals(poJSON.get("result"))) {
-            poGRider.rollbackTrans();
-            return poJSON;
-        }
-
-        poGRider.commitTrans();
+        poJSON.put("result", "success");
+        poJSON.put("message", "Record successfully void.");
         return poJSON;
     }
 
@@ -514,7 +426,9 @@ public class Project extends Parameter {
                 + " cRecdStat "
                 + " FROM Project"
                 + " WHERE sProjCode = " + SQLUtil.toSQL(fsProjectCode)
-                + " AND sProjDesc = " + SQLUtil.toSQL(fsProjectDesc);
+                + " AND sProjDesc = " + SQLUtil.toSQL(fsProjectDesc)
+                + " AND cRecdStat = '1'";
+                 
 
         System.out.println("EXECUTING SQL: " + lsSQL);
         ResultSet rs = poGRider.executeQuery(lsSQL);
@@ -557,5 +471,121 @@ public class Project extends Parameter {
          */
         public static final String VOID = "4";
 
+    }
+    
+    public void ShowStatusHistory() throws SQLException, GuanzonException, Exception{
+        CachedRowSet crs = getStatusHistory();
+        
+        crs.beforeFirst();
+        
+        while(crs.next()){
+            switch (crs.getString("cRefrStat")){
+                case "":
+                    crs.updateString("cRefrStat", "-");
+                    break;
+                case ProjectConstant.OPEN:
+                    crs.updateString("cRefrStat", "OPEN");
+                    break;
+                case ProjectConstant.CONFIRM:
+                    crs.updateString("cRefrStat", "CONFIRM");
+                    break;
+                case ProjectConstant.CANCEL:
+                    crs.updateString("cRefrStat", "CANCEL");
+                    break;
+                case ProjectConstant.VOID:
+                    crs.updateString("cRefrStat", "VOID");
+                    break;
+                default:
+                    char ch = crs.getString("cRefrStat").charAt(0);
+                    String stat = String.valueOf((int) ch - 64);
+                    
+                    switch (stat){
+                        case ProjectConstant.OPEN:
+                            crs.updateString("cRefrStat", "OPEN");
+                            break;
+                        case ProjectConstant.CONFIRM:
+                            crs.updateString("cRefrStat", "CONFIRM");
+                            break;
+                        case ProjectConstant.CANCEL:
+                            crs.updateString("cRefrStat", "CANCEL");
+                            break;
+                        case ProjectConstant.VOID:
+                            crs.updateString("cRefrStat", "VOID");
+                            break;
+                        
+                    }
+            }
+            crs.updateRow(); 
+        }
+        
+        JSONObject loJSON  = getEntryBy();
+        String entryBy = "";
+        String entryDate = "";
+        
+        if ("success".equals((String) loJSON.get("result"))){
+            entryBy = (String) loJSON.get("sCompnyNm");
+            entryDate = (String) loJSON.get("sEntryDte");
+        }
+        
+        showStatusHistoryUI("Project", (String) poModel.getValue("sProjCode"), entryBy, entryDate, crs);
+    }
+    
+    public JSONObject getEntryBy() throws SQLException, GuanzonException {
+        poJSON = new JSONObject();
+        String lsEntry = "";
+        String lsEntryDate = "";
+        String lsSQL =  " SELECT b.sModified, b.dModified " 
+                        + " FROM Project a "
+                        + " LEFT JOIN xxxAuditLogMaster b ON b.sSourceNo = a.sProjCode AND b.sEventNme LIKE 'ADD%NEW' AND b.sRemarksx = " + SQLUtil.toSQL(poModel.getTable());
+        lsSQL = MiscUtil.addCondition(lsSQL, " a.sProjCode =  " + SQLUtil.toSQL(poModel.getProjectID())) ;
+        System.out.println("Execute SQL : " + lsSQL);
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+        try {
+          if (MiscUtil.RecordCount(loRS) > 0L) {
+            if (loRS.next()) {
+                if(loRS.getString("sModified") != null && !"".equals(loRS.getString("sModified"))){
+                    if(loRS.getString("sModified").length() > 10){
+                        lsEntry = getSysUser(poGRider.Decrypt(loRS.getString("sModified"))); 
+                    } else {
+                        lsEntry = getSysUser(loRS.getString("sModified")); 
+                    }
+                    // Get the LocalDateTime from your result set
+                    LocalDateTime dModified = loRS.getObject("dModified", LocalDateTime.class);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss");
+                    lsEntryDate =  dModified.format(formatter);
+                }
+            } 
+          }
+          MiscUtil.close(loRS);
+        } catch (SQLException e) {
+          poJSON.put("result", "error");
+          poJSON.put("message", e.getMessage());
+          return poJSON;
+        } 
+        
+        poJSON.put("result", "success");
+        poJSON.put("sCompnyNm", lsEntry);
+        poJSON.put("sEntryDte", lsEntryDate);
+        return poJSON;
+    }
+    public String getSysUser(String fsId) throws SQLException, GuanzonException {
+        String lsEntry = "";
+        String lsSQL =   " SELECT b.sCompnyNm from xxxSysUser a " 
+                       + " LEFT JOIN Client_Master b ON b.sClientID = a.sEmployNo ";
+        lsSQL = MiscUtil.addCondition(lsSQL, " a.sUserIDxx =  " + SQLUtil.toSQL(fsId)) ;
+        System.out.println("SQL " + lsSQL);
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+        try {
+          if (MiscUtil.RecordCount(loRS) > 0L) {
+            if (loRS.next()) {
+                lsEntry = loRS.getString("sCompnyNm");
+            } 
+          }
+          MiscUtil.close(loRS);
+        } catch (SQLException e) {
+          poJSON.put("result", "error");
+          poJSON.put("message", e.getMessage());
+        } 
+        return lsEntry;
     }
 }
