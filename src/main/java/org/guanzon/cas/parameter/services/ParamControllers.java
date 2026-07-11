@@ -28,6 +28,7 @@ import org.guanzon.cas.parameter.Department;
 import org.guanzon.cas.parameter.Industry;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.InvType;
+import org.guanzon.cas.parameter.InventoryChildUnit;
 import org.guanzon.cas.parameter.InventoryCountType;
 import org.guanzon.cas.parameter.Made;
 import org.guanzon.cas.parameter.Measure;
@@ -783,6 +784,24 @@ public class ParamControllers {
         this.poTransactionSourceTable.newRecord();
         return this.poTransactionSourceTable;
     }
+    
+    public InventoryChildUnit InventoryChildUnit() throws SQLException, GuanzonException {
+        if (poGRider == null) {
+            poLogWrapper.severe("CashFlowcontrollers.InventoryChildUnit: Application driver is not set.");
+            return null;
+        }
+
+        if (poInvChildUnit != null) {
+            return poInvChildUnit;
+        }
+
+        poInvChildUnit = new InventoryChildUnit();
+        poInvChildUnit.setApplicationDriver(poGRider);
+        poInvChildUnit.setWithParentClass(false);
+        poInvChildUnit.setLogWrapper(poLogWrapper);
+        poInvChildUnit.initialize();
+        return poInvChildUnit;
+    }
 
     public Project Project() throws SQLException, GuanzonException {
         if (this.poGRider == null) {
@@ -845,4 +864,5 @@ public class ParamControllers {
     private TransactionSource poTransactionSource;
     private TransactionSourceTable poTransactionSourceTable;
     private Project poProject;
+    private InventoryChildUnit poInvChildUnit;
 }
