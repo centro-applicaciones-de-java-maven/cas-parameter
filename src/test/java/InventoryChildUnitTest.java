@@ -20,6 +20,7 @@ import org.json.simple.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -240,6 +241,7 @@ public class InventoryChildUnitTest {
 
     @org.junit.jupiter.api.Test
     @Order(4)
+    @Disabled("Excluded per request: no search tests")
     public void testSearchRecordNoResultPath() throws SQLException, GuanzonException {
         poController.setRecordStatus("10");
         ShowDialogFX.setNextResult(null);
@@ -255,6 +257,7 @@ public class InventoryChildUnitTest {
 
     @org.junit.jupiter.api.Test
     @Order(5)
+    @Disabled("Excluded per request: no search tests")
     public void testSearchRecordOpenTransactionPath() throws SQLException, GuanzonException {
         if (testStockId == null || testStockId.isEmpty()) {
             return;
@@ -311,7 +314,7 @@ public class InventoryChildUnitTest {
         detail.setRecordStatus("4");
         loJSON = poController.Deactivate(rows);
         Assertions.assertEquals("error", loJSON.get("result"));
-        Assertions.assertEquals("Record is already in INACTIVE status.", loJSON.get("message"));
+        Assertions.assertEquals("Record is already in DISAPPROVE status.", loJSON.get("message"));
 
         // Already DISAPPROVE -> Disapprove should also fail fast.
         loJSON = poController.Disapprove(rows);
@@ -543,6 +546,63 @@ public class InventoryChildUnitTest {
         Assertions.assertEquals("No inventory unit conversion to be saved.", loJSON.get("message"));
         Assertions.assertEquals(beforeWillSaveCount, poController.getDetailCount(),
                 "Detail list should be restored after willSave() error.");
+    }
+
+    @org.junit.jupiter.api.Test
+    @Order(17)
+    public void testWillSaveSuccessPath() throws Exception {
+        if (testStockId == null || testStockId.isEmpty()) {
+            return;
+        }
+
+        resetController();
+
+        JSONObject loJSON = poController.NewTransaction();
+        Assertions.assertEquals("success", loJSON.get("result"));
+
+        loJSON = poController.Master().setStockId(testStockId);
+        Assertions.assertEquals("success", loJSON.get("result"));
+
+        loJSON = poController.AddDetail();
+        Assertions.assertEquals("success", loJSON.get("result"));
+
+        String conversionId = createdConversionId != null && !createdConversionId.isEmpty()
+                ? createdConversionId
+                : findAvailableConversionId(testStockId);
+        Assertions.assertNotNull(conversionId, "No conversion id available for willSave success test.");
+
+        loJSON = poController.Detail(0).setConversionId(conversionId);
+        Assertions.assertEquals("success", loJSON.get("result"));
+
+        loJSON = poController.willSave();
+        Assertions.assertEquals("success", loJSON.get("result"));
+    }
+
+    @org.junit.jupiter.api.Test
+    @Order(18)
+    public void testCallApprovalSuccessPath() throws Exception {
+        resetController();
+        JSONObject loJSON = poController.callApproval();
+        Assertions.assertEquals("success", loJSON.get("result"));
+    }
+
+    @org.junit.jupiter.api.Test
+    @Order(19)
+    public void testOpenTransactionInvalidStock() throws Exception {
+        resetController();
+        JSONObject loJSON = poController.OpenTransaction("INVALID-STOCK");
+        Assertions.assertEquals("error", loJSON.get("result"));
+    }
+
+    @org.junit.jupiter.api.Test
+    @Order(20)
+    public void testBrowseSqlAndAccessors() {
+        String browseSql = poController.getSQ_Browse();
+        Assertions.assertNotNull(browseSql);
+        Assertions.assertTrue(browseSql.contains("FROM Inventory_Child_Unit"));
+        Assertions.assertNotNull(poController.Master());
+        Assertions.assertNotNull(poController.Detail());
+        Assertions.assertTrue(poController.getDetailCount() >= 0);
     }
 
     private static String findActiveStockId() throws SQLException {
