@@ -1,7 +1,51 @@
 package org.guanzon.cas.parameter.services;
 
 import org.guanzon.appdriver.base.GRiderCAS;
-import org.guanzon.cas.parameter.model.*;
+import org.guanzon.cas.parameter.model.Model_Affiliated_Company;
+import org.guanzon.cas.parameter.model.Model_Banks;
+import org.guanzon.cas.parameter.model.Model_Banks_Branch;
+import org.guanzon.cas.parameter.model.Model_Barangay;
+import org.guanzon.cas.parameter.model.Model_Bin;
+import org.guanzon.cas.parameter.model.Model_Branch;
+import org.guanzon.cas.parameter.model.Model_Branch_Area;
+import org.guanzon.cas.parameter.model.Model_Branch_Cluster;
+import org.guanzon.cas.parameter.model.Model_Branch_Cluster_Delivery;
+import org.guanzon.cas.parameter.model.Model_Branch_Others;
+import org.guanzon.cas.parameter.model.Model_Brand;
+import org.guanzon.cas.parameter.model.Model_Category;
+import org.guanzon.cas.parameter.model.Model_Category_Level2;
+import org.guanzon.cas.parameter.model.Model_Category_Level3;
+import org.guanzon.cas.parameter.model.Model_Category_Level4;
+import org.guanzon.cas.parameter.model.Model_Color;
+import org.guanzon.cas.parameter.model.Model_Color_Detail;
+import org.guanzon.cas.parameter.model.Model_Company;
+import org.guanzon.cas.parameter.model.Model_Country;
+import org.guanzon.cas.parameter.model.Model_Department;
+import org.guanzon.cas.parameter.model.Model_Industry;
+import org.guanzon.cas.parameter.model.Model_Inv_Location;
+import org.guanzon.cas.parameter.model.Model_Inv_Type;
+import org.guanzon.cas.parameter.model.Model_Inventory_Child_Unit;
+import org.guanzon.cas.parameter.model.Model_Inventory_Count_Type;
+import org.guanzon.cas.parameter.model.Model_Labor;
+import org.guanzon.cas.parameter.model.Model_Labor_Category;
+import org.guanzon.cas.parameter.model.Model_Labor_Model;
+import org.guanzon.cas.parameter.model.Model_Made;
+import org.guanzon.cas.parameter.model.Model_Measure;
+import org.guanzon.cas.parameter.model.Model_Model;
+import org.guanzon.cas.parameter.model.Model_Model_Variant;
+import org.guanzon.cas.parameter.model.Model_Project;
+import org.guanzon.cas.parameter.model.Model_Province;
+import org.guanzon.cas.parameter.model.Model_Region;
+import org.guanzon.cas.parameter.model.Model_Relationship;
+import org.guanzon.cas.parameter.model.Model_Section;
+import org.guanzon.cas.parameter.model.Model_Size;
+import org.guanzon.cas.parameter.model.Model_Tax_Code;
+import org.guanzon.cas.parameter.model.Model_Term;
+import org.guanzon.cas.parameter.model.Model_TownCity;
+import org.guanzon.cas.parameter.model.Model_Unit_Conversion;
+import org.guanzon.cas.parameter.model.Model_Warehouse;
+import org.guanzon.cas.parameter.model.Model_xxxTransactionSource;
+import org.guanzon.cas.parameter.model.Model_xxxTransactionSourceTable;
 
 public class ParamModels {
 
@@ -725,21 +769,36 @@ public class ParamModels {
         }
         return this.poProject;
     }
+
     public Model_Unit_Conversion UnitConversion() {
         if (this.poGRider == null) {
             System.err.println("ParamModels.Project: Application driver is not set.");
             return null;
         }
-        if (this.poUnitConversion == null) {
-            this.poUnitConversion = new Model_Unit_Conversion();
-            this.poUnitConversion.setApplicationDriver(this.poGRider);
-            this.poUnitConversion.setXML("Model_Unit_Conversion");
-            this.poUnitConversion.setTableName("Unit_Conversion");
-            this.poUnitConversion.initialize();
+        if (this.poConversion == null) {
+            this.poConversion = new Model_Unit_Conversion();
+            this.poConversion.setApplicationDriver(this.poGRider);
+            this.poConversion.setXML("Model_Unit_Conversion");
+            this.poConversion.setTableName("Unit_Conversion");
+            this.poConversion.initialize();
         }
-        return this.poUnitConversion;
+        return this.poConversion;
     }
 
+    public Model_Inventory_Child_Unit Inventory_Child_Unit() {
+        if (this.poGRider == null) {
+            System.err.println("ParamModels.Inventory_Child_Unit: Application driver is not set.");
+            return null;
+        }
+        if (this.poInvChildUnit == null) {
+            this.poInvChildUnit = new Model_Inventory_Child_Unit();
+            this.poInvChildUnit.setApplicationDriver(this.poGRider);
+            this.poInvChildUnit.setXML("Model_Inventory_Child_Unit");
+            this.poInvChildUnit.setTableName("Inventory_Child_Unit");
+            this.poInvChildUnit.initialize();
+        }
+        return this.poInvChildUnit;
+    }
     private final GRiderCAS poGRider;
 
     private Model_Barangay poBarangay;
@@ -785,5 +844,6 @@ public class ParamModels {
     private Model_xxxTransactionSource poTransactionSource;
     private Model_xxxTransactionSourceTable poTransactionSourceTable;
     private Model_Project poProject;
-    private Model_Unit_Conversion poUnitConversion;
+    private Model_Inventory_Child_Unit poInvChildUnit;
+    private Model_Unit_Conversion poConversion;
 }
