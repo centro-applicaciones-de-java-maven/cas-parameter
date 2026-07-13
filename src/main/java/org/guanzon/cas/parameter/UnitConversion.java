@@ -68,6 +68,11 @@ public class UnitConversion extends Parameter{
                 poJSON.put("message", "Converted ID must not be empty.");
                 return poJSON;
             }
+            if (poModel.getQuantityConverted()<= 0){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Quantity converted must be greater than 0.");
+                return poJSON;
+            }
 
         }
         
@@ -87,6 +92,7 @@ public class UnitConversion extends Parameter{
     public JSONObject SearchMeasure(String value, boolean byCode) throws ExceptionInInitializerError, SQLException, GuanzonException {
         Measure object = new ParamControllers(poGRider, logwrapr).Measurement();
         object.setRecordStatus("1");
+        object.setWithParentClass(true);
 
         poJSON = object.searchRecord(value, byCode);
 
@@ -100,6 +106,7 @@ public class UnitConversion extends Parameter{
     public JSONObject SearchConversion(String value, boolean byCode) throws ExceptionInInitializerError, SQLException, GuanzonException {
         Measure object = new ParamControllers(poGRider, logwrapr).Measurement();
         object.setRecordStatus("1");
+        object.setWithParentClass(true);
 
         poJSON = object.searchRecord(value, byCode);
 
@@ -426,34 +433,34 @@ public class UnitConversion extends Parameter{
                 case "":
                     crs.updateString("cRefrStat", "-");
                     break;
-                case AccountChart.AccountChartConstant.OPEN:
+                case UnitConversion.UnitConversionConstant.OPEN:
                     crs.updateString("cRefrStat", "OPEN");
                     break;
-                case AccountChart.AccountChartConstant.DEACTIVATED:
-                    crs.updateString("cRefrStat", "DEACTIVATED");
+                case UnitConversion.UnitConversionConstant.ACTIVE:
+                    crs.updateString("cRefrStat", "ACTIVE");
                     break;
-                case AccountChart.AccountChartConstant.CONFIRMED:
-                    crs.updateString("cRefrStat", "CONFIRMED");
+                case UnitConversion.UnitConversionConstant.INACTIVE:
+                    crs.updateString("cRefrStat", "INACTIVE");
                     break;
-                case AccountChart.AccountChartConstant.VOID:
-                    crs.updateString("cRefrStat", "VOID");
+                case UnitConversion.UnitConversionConstant.DISAPPROVE:
+                    crs.updateString("cRefrStat", "DISAPPROVE");
                     break;
                 default:
                     char ch = crs.getString("cRefrStat").charAt(0);
                     String stat = String.valueOf((int) ch - 64);
 
                     switch (stat){
-                        case AccountChart.AccountChartConstant.OPEN:
+                        case UnitConversion.UnitConversionConstant.OPEN:
                             crs.updateString("cRefrStat", "OPEN");
                             break;
-                        case AccountChart.AccountChartConstant.DEACTIVATED:
-                            crs.updateString("cRefrStat", "DEACTIVATED");
+                        case UnitConversion.UnitConversionConstant.ACTIVE:
+                            crs.updateString("cRefrStat", "ACTIVE");
                             break;
-                        case AccountChart.AccountChartConstant.CONFIRMED:
-                            crs.updateString("cRefrStat", "CONFIRMED");
+                        case UnitConversion.UnitConversionConstant.INACTIVE:
+                            crs.updateString("cRefrStat", "INACTIVE");
                             break;
-                        case AccountChart.AccountChartConstant.VOID:
-                            crs.updateString("cRefrStat", "VOID");
+                        case UnitConversion.UnitConversionConstant.DISAPPROVE:
+                            crs.updateString("cRefrStat", "DISAPPROVE");
                             break;
 
                     }
@@ -470,7 +477,7 @@ public class UnitConversion extends Parameter{
             entryDate = (String) loJSON.get("sEntryDte");
         }
 
-        showStatusHistoryUI("Account Chart", (String) poModel.getValue("sAcctCode"), entryBy, entryDate, crs);
+        showStatusHistoryUI("Unit Conversion", (String) poModel.getValue("sCnvrsnID"), entryBy, entryDate, crs);
     }
 
     public JSONObject getEntryBy() throws SQLException, GuanzonException {
@@ -537,8 +544,8 @@ public class UnitConversion extends Parameter{
         String lsDate = "";
         String lsSQL = "SELECT b.sModified,b.dModified FROM Unit_Conversion a "
                 + " LEFT JOIN Parameter_Status_History b ON b.sSourceNo = a.sCnvrsnID AND b.sTableNme = 'Unit_Conversion' "
-                + " AND ( b.cRefrStat = "+ SQLUtil.toSQL(AccountChart.AccountChartConstant.CONFIRMED)
-                + " OR (ASCII(b.cRefrStat) - 64)  = "+ SQLUtil.toSQL(AccountChart.AccountChartConstant.CONFIRMED) + " )";
+                + " AND ( b.cRefrStat = "+ SQLUtil.toSQL(UnitConversion.UnitConversionConstant.ACTIVE)
+                + " OR (ASCII(b.cRefrStat) - 64)  = "+ SQLUtil.toSQL(UnitConversion.UnitConversionConstant.ACTIVE) + " )";
         lsSQL = MiscUtil.addCondition(lsSQL, " a.sCnvrsnID = " + SQLUtil.toSQL(poModel.getConversionID())) ;
         System.out.println("Execute SQL : " + lsSQL);
         ResultSet loRS = poGRider.executeQuery(lsSQL);
