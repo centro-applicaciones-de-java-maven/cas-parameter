@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.EditMode;
@@ -239,42 +238,42 @@ public class InventoryChildUnitTest {
         Assertions.assertEquals("1", getRecordStatus(testStockId, createdConversionId));
     }
 
-    @org.junit.jupiter.api.Test
-    @Order(4)
-    @Disabled("Excluded per request: no search tests")
-    public void testSearchRecordNoResultPath() throws SQLException, GuanzonException {
-        poController.setRecordStatus("10");
-        ShowDialogFX.setNextResult(null);
+//    @org.junit.jupiter.api.Test
+//    @Order(4)
+//    @Disabled("Excluded per request: no search tests")
+//    public void testSearchRecordNoResultPath() throws SQLException, GuanzonException {
+//        poController.setRecordStatus("10");
+//        ShowDialogFX.setNextResult(null);
+//
+//        try {
+//            JSONObject loJSON = poController.searchRecord("missing", true);
+//            Assertions.assertEquals("error", loJSON.get("result"));
+//            Assertions.assertEquals("No record loaded.", loJSON.get("message"));
+//        } catch (ExceptionInInitializerError | NoClassDefFoundError ex) {
+//            // Ignore UI initialization errors in headless test runs.
+//        }
+//    }
 
-        try {
-            JSONObject loJSON = poController.searchRecord("missing", true);
-            Assertions.assertEquals("error", loJSON.get("result"));
-            Assertions.assertEquals("No record loaded.", loJSON.get("message"));
-        } catch (ExceptionInInitializerError | NoClassDefFoundError ex) {
-            // Ignore UI initialization errors in headless test runs.
-        }
-    }
-
-    @org.junit.jupiter.api.Test
-    @Order(5)
-    @Disabled("Excluded per request: no search tests")
-    public void testSearchRecordOpenTransactionPath() throws SQLException, GuanzonException {
-        if (testStockId == null || testStockId.isEmpty()) {
-            return;
-        }
-
-        JSONObject selected = new JSONObject();
-        selected.put("sStockIDx", testStockId);
-        ShowDialogFX.setNextResult(selected);
-
-        poController.setRecordStatus("1");
-        try {
-            JSONObject loJSON = poController.searchRecord(testStockId, true);
-            Assertions.assertEquals("success", loJSON.get("result"));
-        } catch (ExceptionInInitializerError | NoClassDefFoundError ex) {
-            // Ignore UI initialization errors in headless test runs.
-        }
-    }
+//    @org.junit.jupiter.api.Test
+//    @Order(5)
+//    @Disabled("Excluded per request: no search tests")
+//    public void testSearchRecordOpenTransactionPath() throws SQLException, GuanzonException {
+//        if (testStockId == null || testStockId.isEmpty()) {
+//            return;
+//        }
+//
+//        JSONObject selected = new JSONObject();
+//        selected.put("sStockIDx", testStockId);
+//        ShowDialogFX.setNextResult(selected);
+//
+//        poController.setRecordStatus("1");
+//        try {
+//            JSONObject loJSON = poController.searchRecord(testStockId, true);
+//            Assertions.assertEquals("success", loJSON.get("result"));
+//        } catch (ExceptionInInitializerError | NoClassDefFoundError ex) {
+//            // Ignore UI initialization errors in headless test runs.
+//        }
+//    }
 
     @org.junit.jupiter.api.Test
     @Order(6)

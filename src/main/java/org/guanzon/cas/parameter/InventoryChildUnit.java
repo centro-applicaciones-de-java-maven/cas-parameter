@@ -23,7 +23,6 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.inv.Inventory;
 import org.guanzon.cas.inv.model.Model_Inventory;
@@ -33,9 +32,7 @@ import org.guanzon.cas.parameter.model.Model_Inventory_Child_Unit;
 import org.guanzon.cas.parameter.services.ParamControllers;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import ph.com.guanzongroup.cas.cashflow.status.DisbursementStatic;
 
 
 //Arsiela 07-11-2026
@@ -122,6 +119,7 @@ public class InventoryChildUnit extends Parameter{
             pnEditMode = EditMode.UNKNOWN;
             return poJSON;
         }    
+        Detail().clear();
         pnEditMode = EditMode.ADDNEW;
         return poJSON;
     }
@@ -132,7 +130,10 @@ public class InventoryChildUnit extends Parameter{
             return poJSON;
         }
 
-        populateDetail();
+        poJSON = populateDetail();
+        if ("error".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
         
         pnEditMode = poModel.getEditMode();
         return poJSON;
@@ -315,14 +316,6 @@ public class InventoryChildUnit extends Parameter{
 
     /*Search Master References*/   
 
-    /**
-     *
-     * @param value
-     * @param byCode
-     * @return
-     * @throws SQLException
-     * @throws GuanzonException
-     */
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsSQL = getSQ_Browse();
@@ -394,6 +387,7 @@ public class InventoryChildUnit extends Parameter{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), 
                      " a.sStockIDx = " + SQLUtil.toSQL(Master().getStockId())
                     );
+        lsSQL = lsSQL + " ORDER BY a.nEntryNox ASC ";
         System.out.println("Executing SQL: " + lsSQL);
         ResultSet loRS = poGRider.executeQuery(lsSQL);
         if (MiscUtil.RecordCount(loRS) > 0) {
