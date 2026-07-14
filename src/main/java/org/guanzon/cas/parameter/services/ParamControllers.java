@@ -5,47 +5,7 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.AffiliatedCompany;
-import org.guanzon.cas.parameter.Banks;
-import org.guanzon.cas.parameter.BanksBranch;
-import org.guanzon.cas.parameter.Barangay;
-import org.guanzon.cas.parameter.Bin;
-import org.guanzon.cas.parameter.Branch;
-import org.guanzon.cas.parameter.BranchArea;
-import org.guanzon.cas.parameter.BranchCluster;
-import org.guanzon.cas.parameter.BranchClusterDelivery;
-import org.guanzon.cas.parameter.BranchOthers;
-import org.guanzon.cas.parameter.Brand;
-import org.guanzon.cas.parameter.Category;
-import org.guanzon.cas.parameter.CategoryLevel2;
-import org.guanzon.cas.parameter.CategoryLevel3;
-import org.guanzon.cas.parameter.CategoryLevel4;
-import org.guanzon.cas.parameter.Color;
-import org.guanzon.cas.parameter.ColorDetail;
-import org.guanzon.cas.parameter.Company;
-import org.guanzon.cas.parameter.Country;
-import org.guanzon.cas.parameter.Department;
-import org.guanzon.cas.parameter.Industry;
-import org.guanzon.cas.parameter.InvLocation;
-import org.guanzon.cas.parameter.InvType;
-import org.guanzon.cas.parameter.InventoryChildUnit;
-import org.guanzon.cas.parameter.InventoryCountType;
-import org.guanzon.cas.parameter.Made;
-import org.guanzon.cas.parameter.Measure;
-import org.guanzon.cas.parameter.Model;
-import org.guanzon.cas.parameter.ModelVariant;
-import org.guanzon.cas.parameter.Project;
-import org.guanzon.cas.parameter.Province;
-import org.guanzon.cas.parameter.Region;
-import org.guanzon.cas.parameter.Relationship;
-import org.guanzon.cas.parameter.Section;
-import org.guanzon.cas.parameter.Size;
-import org.guanzon.cas.parameter.TaxCode;
-import org.guanzon.cas.parameter.Term;
-import org.guanzon.cas.parameter.TownCity;
-import org.guanzon.cas.parameter.TransactionSource;
-import org.guanzon.cas.parameter.TransactionSourceTable;
-import org.guanzon.cas.parameter.Warehouse;
+import org.guanzon.cas.parameter.*;
 
 public class ParamControllers {
 
@@ -818,8 +778,24 @@ public class ParamControllers {
         this.poProject.initialize();
         this.poProject.newRecord();
         return this.poProject;
-    }        
-            
+    }
+    public UnitConversion UnitConversion() throws SQLException, GuanzonException {
+        if (this.poGRider == null) {
+            this.poLogWrapper.severe("DeliveryParamController.TransactionSourceTable: Application driver is not set.");
+            return null;
+        }
+        if (this.poUnitConversion != null) {
+            return this.poUnitConversion;
+        }
+        this.poUnitConversion = new UnitConversion();
+        this.poUnitConversion.setApplicationDriver(this.poGRider);
+        this.poUnitConversion.setWithParentClass(false);
+        this.poUnitConversion.setLogWrapper(this.poLogWrapper);
+        this.poUnitConversion.initialize();
+        this.poUnitConversion.newRecord();
+        return this.poUnitConversion;
+    }
+
             
     private GRiderCAS poGRider;
     private LogWrapper poLogWrapper;
@@ -865,4 +841,5 @@ public class ParamControllers {
     private TransactionSourceTable poTransactionSourceTable;
     private Project poProject;
     private InventoryChildUnit poInvChildUnit;
+    private UnitConversion poUnitConversion;
 }
