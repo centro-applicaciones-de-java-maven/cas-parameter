@@ -717,8 +717,8 @@ public class InventoryChildUnitTest {
         List<String> schemaScripts = new ArrayList<>();
         List<String> dataScripts = new ArrayList<>();
 
-        schemaScripts.add("inventory_child_unit_test_schema");
-        dataScripts.add("inventory_child_unit_test_data");
+        schemaScripts.add("inventory_child_unit_schema");
+        dataScripts.add("inventory_child_unit_data");
 
         for (String schema : schemaScripts) {
             try (FileReader schemaReader = new FileReader("test-data/" + schema + ".sql")) {
