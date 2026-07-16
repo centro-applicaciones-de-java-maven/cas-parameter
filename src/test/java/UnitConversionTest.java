@@ -132,10 +132,11 @@ public class UnitConversionTest {
     @Test
     void test02_isEntryOkay_missingConversionId() throws SQLException {
         Model_Unit_Conversion m = poParam.getModel();
-        m.setConversionID("");
-        m.setMeasureID("MSR-001");
+        System.out.print("conversion id : " + m.getConversionID());
         m.setConvertedID("MSR-002");
-
+        m.setMeasureID("MSR-001");
+        m.setQuantityConverted(1.0);
+        
         JSONObject json = poParam.isEntryOkay();
         assertError(json, "missing conversion id");
         Assert.assertEquals("Conversion ID must not be empty.", json.get("message"));
@@ -147,6 +148,7 @@ public class UnitConversionTest {
         m.setConversionID("CNV-001");
         m.setMeasureID("");
         m.setConvertedID("MSR-002");
+        m.setQuantityConverted(1.0);
 
         JSONObject json = poParam.isEntryOkay();
         assertError(json, "missing measure id");
@@ -159,6 +161,7 @@ public class UnitConversionTest {
         m.setConversionID("CNV-001");
         m.setMeasureID("MSR-001");
         m.setConvertedID("");
+        m.setQuantityConverted(1.0);
 
         JSONObject json = poParam.isEntryOkay();
         assertError(json, "missing converted id");
@@ -171,6 +174,7 @@ public class UnitConversionTest {
         m.setConversionID("CNV-001");
         m.setMeasureID("MSR-001");
         m.setConvertedID("MSR-002");
+        m.setQuantityConverted(1.0);
 
         JSONObject json = poParam.isEntryOkay();
         assertSuccess(json, "isEntryOkay success");
@@ -387,7 +391,7 @@ public class UnitConversionTest {
     @Test
     void test24_checkInventoryChildUnit_inactiveAllowed() throws SQLException, GuanzonException {
         System.out.println("--- test24_checkInventoryChildUnit_usedSecondSeed ---");
-        JSONObject json = poParam.checkInventoryChildUnit("GCO100000003");
+        JSONObject json = poParam.checkInventoryChildUnit("GCO100000002");
         System.out.println("checkInventoryChildUnit used-second-seed: " + json.get("result") + " -> " + json.get("message"));
         assertError(json, "checkInventoryChildUnit used second seed");
     }
