@@ -33,25 +33,11 @@ MySQL - 5.7.44-log : Database - gcasys_dbf
 
 
 
-/*Table structure for table `unit_conversion` */
+/*Data for the table `inventory_child_unit` */
 
 
 
-DROP TABLE IF EXISTS `unit_conversion`;
-
-
-
-CREATE TABLE `unit_conversion` (
-  `sCnvrsnID` varchar(12) NOT NULL,
-  `sMeasurID` char(7) DEFAULT NULL,
-  `sConvrtID` char(7) DEFAULT NULL,
-  `nQtyCnvrt` decimal(8,2) DEFAULT NULL,
-  `cRecdStat` char(1) DEFAULT NULL,
-  `sModified` varchar(32) DEFAULT NULL,
-  `dModified` datetime DEFAULT NULL,
-  `dTimeStmp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sCnvrsnID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+insert  into `inventory_child_unit`(`sStockIDx`,`nEntryNox`,`sCnvrsnID`,`cRecdStat`,`sModified`,`dModified`,`dTimeStmp`) values ('GK0123000060',1,'GCO100000002','0','0C2D5DE9702E53A8E2829C0488A90D33','2026-07-11 11:22:00','2026-07-11 11:22:00'),('GK0123000060',2,'GCO100000001','0','0C2D5DE9702E53A8E2829C0488A90D33','2026-07-11 11:24:34','2026-07-11 11:24:34'),('GK0123000060',3,'GCO100000003','0','0C2D5DE9702E53A8E2829C0488A90D33','2026-07-11 11:25:51','2026-07-11 11:25:52');
 
 
 

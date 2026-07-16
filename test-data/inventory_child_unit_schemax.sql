@@ -33,24 +33,23 @@ MySQL - 5.7.44-log : Database - gcasys_dbf
 
 
 
-/*Table structure for table `unit_conversion` */
+/*Table structure for table `inventory_child_unit` */
 
 
 
-DROP TABLE IF EXISTS `unit_conversion`;
+DROP TABLE IF EXISTS `inventory_child_unit`;
 
 
 
-CREATE TABLE `unit_conversion` (
+CREATE TABLE `inventory_child_unit` (
+  `sStockIDx` varchar(12) NOT NULL,
+  `nEntryNox` tinyint(4) NOT NULL,
   `sCnvrsnID` varchar(12) NOT NULL,
-  `sMeasurID` char(7) DEFAULT NULL,
-  `sConvrtID` char(7) DEFAULT NULL,
-  `nQtyCnvrt` decimal(8,2) DEFAULT NULL,
   `cRecdStat` char(1) DEFAULT NULL,
   `sModified` varchar(32) DEFAULT NULL,
   `dModified` datetime DEFAULT NULL,
   `dTimeStmp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`sCnvrsnID`)
+  PRIMARY KEY (`sStockIDx`,`nEntryNox`,`sCnvrsnID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 

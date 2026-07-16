@@ -51,7 +51,7 @@ public class UnitConversion extends Parameter{
         {
             poJSON = new JSONObject();
             
-            if (poModel.getConversionID().isEmpty()){
+            if (poModel.getConversionID() == null || poModel.getConversionID().isEmpty() ){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Conversion ID must not be empty.");
                 return poJSON;

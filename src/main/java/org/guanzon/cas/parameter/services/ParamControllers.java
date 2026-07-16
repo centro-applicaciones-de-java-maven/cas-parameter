@@ -781,7 +781,7 @@ public class ParamControllers {
     }
     public UnitConversion UnitConversion() throws SQLException, GuanzonException {
         if (this.poGRider == null) {
-            this.poLogWrapper.severe("DeliveryParamController.TransactionSourceTable: Application driver is not set.");
+            this.poLogWrapper.severe("ParamController.UnitConversion: Application driver is not set.");
             return null;
         }
         if (this.poUnitConversion != null) {

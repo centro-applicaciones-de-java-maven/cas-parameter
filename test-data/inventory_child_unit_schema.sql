@@ -1,17 +1,7 @@
 DROP TABLE IF EXISTS Inventory_Child_Unit;
 DROP TABLE IF EXISTS Unit_Conversion;
 DROP TABLE IF EXISTS Inventory;
-DROP TABLE IF EXISTS Measure;
 
-CREATE TABLE Measure (
-  sMeasurID CHAR(7) NOT NULL,
-  sDescript VARCHAR(32) NOT NULL,
-  cRecdStat CHAR(1) DEFAULT '1',
-  sModified VARCHAR(32),
-  dModified TIMESTAMP,
-  dTimeStmp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (sMeasurID)
-);
 
 CREATE TABLE Unit_Conversion (
   sCnvrsnID VARCHAR(12) NOT NULL,
