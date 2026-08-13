@@ -88,7 +88,8 @@ public class Brand extends Parameter{
         if (industryCode != null){
             lsSQL = MiscUtil.addCondition(lsSQL, "a.sIndstCdx = " + SQLUtil.toSQL(industryCode));
         }
-        
+
+        System.out.print("Search Brand : " + lsSQL);
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
@@ -98,7 +99,14 @@ public class Brand extends Parameter{
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sBrandIDx"));
+            String brandId = (String) poJSON.get("sBrandIDx");
+            poJSON = poModel.openRecord(brandId);
+
+            if ("success".equals((String) poJSON.get("result"))) {
+                poJSON.put("sBrandIDx", brandId);
+            }
+
+            return poJSON;
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
