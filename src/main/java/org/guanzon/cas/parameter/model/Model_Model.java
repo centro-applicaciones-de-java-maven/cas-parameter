@@ -7,8 +7,8 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Model extends Model {
@@ -38,10 +38,8 @@ public class Model_Model extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            ParamModels model = new ParamModels(poGRider);            
-            poBrand = model.Brand();
-            //end - initialize other connections
+            //poBrand is intentionally NOT constructed here - see Brand() below, which builds it
+            //lazily on first access so opening this record never touches the Brand table.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -51,15 +49,31 @@ public class Model_Model extends Model {
     }
     
     public Model_Brand Brand() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBrandIDx"))){
-            if (poBrand.getEditMode() == EditMode.READY && 
-                poBrand.getBrandId().equals((String) getValue("sBrandIDx")))
+        if (poBrand == null) {
+            poBrand = new Model_Brand();
+            poBrand.setApplicationDriver(poGRider);
+            poBrand.setXML("Model_Brand");
+            poBrand.setTableName("Brand");
+            poBrand.initialize();
+        }
+
+        String brandId = (String) getValue("sBrandIDx");
+
+        if (!"".equals(brandId)){
+            if (poBrand.getEditMode() == EditMode.READY &&
+                poBrand.getBrandId().equals(brandId))
                 return poBrand;
             else{
-                poJSON = poBrand.openRecord((String) getValue("sBrandIDx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Brand", brandId, poBrand)) {
                     return poBrand;
+                }
+
+                poJSON = poBrand.openRecord(brandId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Brand", brandId, poBrand);
+                    return poBrand;
+                }
                 else {
                     poBrand.initialize();
                     return poBrand;

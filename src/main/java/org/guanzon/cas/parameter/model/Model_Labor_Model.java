@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Labor_Model extends Model {
@@ -36,10 +36,10 @@ public class Model_Labor_Model extends Model {
 
             ID = "sLaborIDx";
             ID2 = "sModelIDx";
-            
-            ParamModels model = new ParamModels(poGRider);
-            poModel = model.Model();
-            poLabor = model.Labor();            
+
+            //poModel/poLabor are intentionally NOT constructed here - see Model()/Labor() below,
+            //which build them lazily on first access so opening this record never touches the
+            //Model/Labor tables.
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -48,14 +48,29 @@ public class Model_Labor_Model extends Model {
     }
     
     public Model_Model Model() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sModelIDx"))) {
+        if (poModel == null) {
+            poModel = new Model_Model();
+            poModel.setApplicationDriver(poGRider);
+            poModel.setXML("Model_Model");
+            poModel.setTableName("Model");
+            poModel.initialize();
+        }
+
+        String modelId = (String) getValue("sModelIDx");
+
+        if (!"".equals(modelId)) {
             if (poModel.getEditMode() == EditMode.READY
-                    && poModel.getModelId().equals((String) getValue("sModelIDx"))) {
+                    && poModel.getModelId().equals(modelId)) {
                 return poModel;
             } else {
-                poJSON = poModel.openRecord((String) getValue("sModelIDx"));
+                if (ReferenceCache.tryLoad("Model", modelId, poModel)) {
+                    return poModel;
+                }
+
+                poJSON = poModel.openRecord(modelId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Model", modelId, poModel);
                     return poModel;
                 } else {
                     poModel.initialize();
@@ -67,17 +82,31 @@ public class Model_Labor_Model extends Model {
             return poModel;
         }
     }
-    
+
     public Model_Labor Labor() throws SQLException, GuanzonException{
-        System.out.println("laborid == " + (String) getValue("sLaborIDx"));
-        if (!"".equals((String) getValue("sLaborIDx"))) {
+        if (poLabor == null) {
+            poLabor = new Model_Labor();
+            poLabor.setApplicationDriver(poGRider);
+            poLabor.setXML("Model_Labor");
+            poLabor.setTableName("Labor");
+            poLabor.initialize();
+        }
+
+        String laborId = (String) getValue("sLaborIDx");
+
+        if (!"".equals(laborId)) {
             if (poLabor.getEditMode() == EditMode.READY
-                    && poLabor.getLaborId().equals((String) getValue("sLaborIDx"))) {
+                    && poLabor.getLaborId().equals(laborId)) {
                 return poLabor;
             } else {
-                poJSON = poLabor.openRecord((String) getValue("sLaborIDx"));
+                if (ReferenceCache.tryLoad("Labor", laborId, poLabor)) {
+                    return poLabor;
+                }
+
+                poJSON = poLabor.openRecord(laborId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Labor", laborId, poLabor);
                     return poLabor;
                 } else {
                     poLabor.initialize();

@@ -3,12 +3,12 @@ package org.guanzon.cas.parameter.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.inv.model.Model_Inventory;
 import org.guanzon.cas.inv.services.InvModels;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Inventory_Child_Unit extends Model {
@@ -35,9 +35,10 @@ public class Model_Inventory_Child_Unit extends Model {
             //end - assign default values
 
             poInventory = new InvModels(poGRider).Inventory();
-            poConversion = new ParamModels(poGRider).UnitConversion();
-            poMeasure = new ParamModels(poGRider).Measurement();
-            
+            //poConversion/poMeasure are intentionally NOT constructed here - see UnitConversion()/
+            //Measure() below, which build them lazily on first access so opening this record
+            //never touches the Unit_Conversion/Measure tables.
+
             poEntity.insertRow();
             poEntity.moveToCurrentRow();
 
@@ -138,14 +139,29 @@ public class Model_Inventory_Child_Unit extends Model {
     }
 
     public Model_Unit_Conversion UnitConversion() throws SQLException, GuanzonException {
-        if (!"".equals((String) getValue("sCnvrsnID"))) {
+        if (poConversion == null) {
+            poConversion = new Model_Unit_Conversion();
+            poConversion.setApplicationDriver(poGRider);
+            poConversion.setXML("Model_Unit_Conversion");
+            poConversion.setTableName("Unit_Conversion");
+            poConversion.initialize();
+        }
+
+        String conversionId = (String) getValue("sCnvrsnID");
+
+        if (!"".equals(conversionId)) {
             if (poConversion.getEditMode() == EditMode.READY
-                    && poConversion.getConversionID().equals((String) getValue("sCnvrsnID"))) {
+                    && poConversion.getConversionID().equals(conversionId)) {
                 return poConversion;
             } else {
-                poJSON = poConversion.openRecord((String) getValue("sCnvrsnID"));
+                if (ReferenceCache.tryLoad("Unit_Conversion", conversionId, poConversion)) {
+                    return poConversion;
+                }
+
+                poJSON = poConversion.openRecord(conversionId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Unit_Conversion", conversionId, poConversion);
                     return poConversion;
                 } else {
                     poConversion.initialize();
@@ -159,13 +175,26 @@ public class Model_Inventory_Child_Unit extends Model {
     }
 
     public Model_Measure Measure() throws SQLException, GuanzonException {
+        if (poMeasure == null) {
+            poMeasure = new Model_Measure();
+            poMeasure.setApplicationDriver(poGRider);
+            poMeasure.setXML("Model_Measure");
+            poMeasure.setTableName("Measure");
+            poMeasure.initialize();
+        }
+
         if (!"".equals(UnitConversion().getMeasureID())) {
             psMeasure = UnitConversion().getMeasureID();
-            if (poMeasure.getEditMode() == EditMode.READY && poMeasure.getMeasureId().equals(UnitConversion().getMeasureID())) {
+            if (poMeasure.getEditMode() == EditMode.READY && poMeasure.getMeasureId().equals(psMeasure)) {
                 return poMeasure;
             } else {
-                poJSON = poMeasure.openRecord(UnitConversion().getMeasureID());
+                if (ReferenceCache.tryLoad("Measure", psMeasure, poMeasure)) {
+                    return poMeasure;
+                }
+
+                poJSON = poMeasure.openRecord(psMeasure);
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Measure", psMeasure, poMeasure);
                     return poMeasure;
                 } else {
                     poMeasure.initialize();
@@ -176,8 +205,13 @@ public class Model_Inventory_Child_Unit extends Model {
             if (poMeasure.getEditMode() == EditMode.READY && poMeasure.getMeasureId().equals(psMeasure)) {
                 return poMeasure;
             } else {
+                if (ReferenceCache.tryLoad("Measure", psMeasure, poMeasure)) {
+                    return poMeasure;
+                }
+
                 poJSON = poMeasure.openRecord(psMeasure);
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Measure", psMeasure, poMeasure);
                     return poMeasure;
                 } else {
                     poMeasure.initialize();

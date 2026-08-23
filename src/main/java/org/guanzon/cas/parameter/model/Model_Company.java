@@ -8,8 +8,8 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Company extends Model {
@@ -36,9 +36,9 @@ public class Model_Company extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poTownCity = new ParamModels(poGRider).TownCity();
-            //end - initialize other connections
+            //poTownCity is intentionally NOT constructed here - see TownCity()/setCompanyTownId()
+            //below, which build it lazily on first access so opening this record never touches
+            //the TownCity table.
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -79,19 +79,33 @@ public class Model_Company extends Model {
         return (String) getValue("sAddressx");
     }
     
-    public JSONObject setCompanyTownId(String companyTownId) {       
+    public JSONObject setCompanyTownId(String companyTownId) {
+        if (poTownCity == null) {
+            poTownCity = new Model_TownCity();
+            poTownCity.setApplicationDriver(poGRider);
+            poTownCity.setXML("Model_TownCity");
+            poTownCity.setTableName("TownCity");
+            poTownCity.initialize();
+        }
+
         poJSON = setValue("sTownIDxx", companyTownId);
-        
+
         if ("success".equals(poJSON.get("result"))){
             if (!companyTownId.isEmpty()) {
-                if (poTownCity.getTownId() == null || 
+                if (poTownCity.getTownId() == null ||
                     !poTownCity.getTownId().equals(companyTownId)) {
-                    
+
                     try {
-                        poJSON = poTownCity.openRecord(companyTownId);
-                        
-                        if (!"success".equals(poJSON.get("result"))){
-                            return poJSON;
+                        //TownCity is a small, rarely-changing parameter table - serve repeat
+                        //lookups for the same id from memory instead of hitting the database.
+                        if (!ReferenceCache.tryLoad("TownCity", companyTownId, poTownCity)) {
+                            poJSON = poTownCity.openRecord(companyTownId);
+
+                            if (!"success".equals(poJSON.get("result"))){
+                                return poJSON;
+                            }
+
+                            ReferenceCache.store("TownCity", companyTownId, poTownCity);
                         }
                     } catch (SQLException | GuanzonException e) {
                         poJSON = new JSONObject();
@@ -102,7 +116,7 @@ public class Model_Company extends Model {
                 }
             }
         }
-        
+
         return poJSON;
     }
 
@@ -151,11 +165,19 @@ public class Model_Company extends Model {
     }
     
     public Model_TownCity TownCity() throws SQLException, GuanzonException{
-        if (!getCompanyTownId().isEmpty() && poTownCity == null){
-            //load the province object if null but id has a value
-            setCompanyTownId(getCompanyTownId());
+        if (poTownCity == null) {
+            poTownCity = new Model_TownCity();
+            poTownCity.setApplicationDriver(poGRider);
+            poTownCity.setXML("Model_TownCity");
+            poTownCity.setTableName("TownCity");
+            poTownCity.initialize();
+
+            if (!getCompanyTownId().isEmpty()){
+                //load the town object if just constructed but id has a value
+                setCompanyTownId(getCompanyTownId());
+            }
         }
-        
+
         return poTownCity;
     }
     

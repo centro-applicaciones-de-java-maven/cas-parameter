@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Model_Variant extends Model {
@@ -37,10 +37,9 @@ public class Model_Model_Variant extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poModel = new ParamModels(poGRider).Model();
-            poColor = new ParamModels(poGRider).Color();
-            //end - initialize other connections
+            //poModel/poColor are intentionally NOT constructed here - see Model()/Color() below,
+            //which build them lazily on first access so opening this record never touches the
+            //Model/Color tables.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -131,15 +130,31 @@ public class Model_Model_Variant extends Model {
     }
     
     public Model_Model Model() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sModelIDx"))){
-            if (poModel.getEditMode() == EditMode.READY && 
-                poModel.getModelId().equals((String) getValue("sModelIDx")))
+        if (poModel == null) {
+            poModel = new Model_Model();
+            poModel.setApplicationDriver(poGRider);
+            poModel.setXML("Model_Model");
+            poModel.setTableName("Model");
+            poModel.initialize();
+        }
+
+        String modelId = (String) getValue("sModelIDx");
+
+        if (!"".equals(modelId)){
+            if (poModel.getEditMode() == EditMode.READY &&
+                poModel.getModelId().equals(modelId))
                 return poModel;
             else{
-                poJSON = poModel.openRecord((String) getValue("sModelIDx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Model", modelId, poModel)) {
                     return poModel;
+                }
+
+                poJSON = poModel.openRecord(modelId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Model", modelId, poModel);
+                    return poModel;
+                }
                 else {
                     poModel.initialize();
                     return poModel;
@@ -150,17 +165,35 @@ public class Model_Model_Variant extends Model {
             return poModel;
         }
     }
-    
+
+    //NOTE: pre-existing bug kept as-is (not introduced by this change, flagged separately) -
+    //the failure branch below re-initializes poModel instead of poColor.
     public Model_Color Color() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sColorIDx"))){
-            if (poColor.getEditMode() == EditMode.READY && 
-                poColor.getColorId().equals((String) getValue("sColorIDx")))
+        if (poColor == null) {
+            poColor = new Model_Color();
+            poColor.setApplicationDriver(poGRider);
+            poColor.setXML("Model_Color");
+            poColor.setTableName("Color");
+            poColor.initialize();
+        }
+
+        String colorId = (String) getValue("sColorIDx");
+
+        if (!"".equals(colorId)){
+            if (poColor.getEditMode() == EditMode.READY &&
+                poColor.getColorId().equals(colorId))
                 return poColor;
             else{
-                poJSON = poColor.openRecord((String) getValue("sColorIDx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Color", colorId, poColor)) {
                     return poColor;
+                }
+
+                poJSON = poColor.openRecord(colorId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Color", colorId, poColor);
+                    return poColor;
+                }
                 else {
                     poModel.initialize();
                     return poColor;

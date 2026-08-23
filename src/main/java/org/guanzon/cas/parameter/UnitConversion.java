@@ -3,6 +3,7 @@ package org.guanzon.cas.parameter;
 import com.microsoft.schemas.office.visio.x2012.main.MasterContentsDocument;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
@@ -86,6 +87,13 @@ public class UnitConversion extends Parameter{
     @Override
     public Model_Unit_Conversion getModel() {
         return poModel;
+    }
+
+    @Override
+    protected void saveComplete() {
+        //Every lazy UnitConversion() accessor across the model layer serves repeat lookups for
+        //this id from ReferenceCache - drop the stale snapshot now that the record has changed.
+        ReferenceCache.invalidate("Unit_Conversion", poModel.getConversionID());
     }
 
 

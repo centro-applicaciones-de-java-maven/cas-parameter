@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Branch extends Model {
@@ -33,8 +33,9 @@ public class Model_Branch extends Model {
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-            poTown = new ParamModels(poGRider).TownCity();
-            
+            //poTown is intentionally NOT constructed here - see TownCity() below, which builds
+            //it lazily on first access so opening this record never touches the TownCity table.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -43,15 +44,31 @@ public class Model_Branch extends Model {
     }
     
     public Model_TownCity TownCity() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTown.getEditMode() == EditMode.READY && 
-                poTown.getTownId().equals((String) getValue("sTownIDxx")))
+        if (poTown == null) {
+            poTown = new Model_TownCity();
+            poTown.setApplicationDriver(poGRider);
+            poTown.setXML("Model_TownCity");
+            poTown.setTableName("TownCity");
+            poTown.initialize();
+        }
+
+        String townId = (String) getValue("sTownIDxx");
+
+        if (!"".equals(townId)){
+            if (poTown.getEditMode() == EditMode.READY &&
+                poTown.getTownId().equals(townId))
                 return poTown;
             else{
-                poJSON = poTown.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("TownCity", townId, poTown)) {
                     return poTown;
+                }
+
+                poJSON = poTown.openRecord(townId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("TownCity", townId, poTown);
+                    return poTown;
+                }
                 else {
                     poTown.initialize();
                     return poTown;

@@ -1,11 +1,11 @@
 package org.guanzon.cas.parameter.model;
 
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.cashflow.model.Model_Account_ChartX;
 
@@ -37,8 +37,9 @@ public class Model_Unit_Conversion extends Model {
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-            poMeasure = new ParamModels(poGRider).Measurement();
-            poConvert = new ParamModels(poGRider).Measurement();
+            //poMeasure/poConvert are intentionally NOT constructed here - see Measurement()/
+            //ConvertTo() below, which build them lazily on first access so opening this record
+            //never touches the Measure table.
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -111,14 +112,29 @@ public class Model_Unit_Conversion extends Model {
     }
 
     public Model_Measure Measurement() throws SQLException, GuanzonException {
-        if (!"".equals((String) getValue("sMeasurID"))) {
+        if (poMeasure == null) {
+            poMeasure = new Model_Measure();
+            poMeasure.setApplicationDriver(poGRider);
+            poMeasure.setXML("Model_Measure");
+            poMeasure.setTableName("Measure");
+            poMeasure.initialize();
+        }
+
+        String measureId = (String) getValue("sMeasurID");
+
+        if (!"".equals(measureId)) {
             if (poMeasure.getEditMode() == EditMode.READY
-                    && poMeasure.getMeasureId().equals((String) getValue("sMeasurID"))) {
+                    && poMeasure.getMeasureId().equals(measureId)) {
                 return poMeasure;
             } else {
-                poJSON = poMeasure.openRecord((String) getValue("sMeasurID"));
+                if (ReferenceCache.tryLoad("Measure", measureId, poMeasure)) {
+                    return poMeasure;
+                }
+
+                poJSON = poMeasure.openRecord(measureId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Measure", measureId, poMeasure);
                     return poMeasure;
                 } else {
                     poMeasure.initialize();
@@ -131,14 +147,29 @@ public class Model_Unit_Conversion extends Model {
         }
     }
     public Model_Measure ConvertTo() throws SQLException, GuanzonException {
-        if (!"".equals((String) getValue("sConvrtID"))) {
+        if (poConvert == null) {
+            poConvert = new Model_Measure();
+            poConvert.setApplicationDriver(poGRider);
+            poConvert.setXML("Model_Measure");
+            poConvert.setTableName("Measure");
+            poConvert.initialize();
+        }
+
+        String convertId = (String) getValue("sConvrtID");
+
+        if (!"".equals(convertId)) {
             if (poConvert.getEditMode() == EditMode.READY
-                    && poConvert.getMeasureId().equals((String) getValue("sConvrtID"))) {
+                    && poConvert.getMeasureId().equals(convertId)) {
                 return poConvert;
             } else {
-                poJSON = poConvert.openRecord((String) getValue("sConvrtID"));
+                if (ReferenceCache.tryLoad("Measure", convertId, poConvert)) {
+                    return poConvert;
+                }
+
+                poJSON = poConvert.openRecord(convertId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Measure", convertId, poConvert);
                     return poConvert;
                 } else {
                     poConvert.initialize();

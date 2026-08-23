@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 /**
@@ -36,8 +36,9 @@ public class Model_Branch_Area extends Model {
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-            
-            poIndustry = new ParamModels(poGRider).Industry();
+
+            //poIndustry is intentionally NOT constructed here - see Industry() below, which
+            //builds it lazily on first access so opening this record never touches Industry.
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -140,13 +141,27 @@ public class Model_Branch_Area extends Model {
     }
 
     public Model_Industry Industry() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("cDivision"))) {
-            if (this.poIndustry.getEditMode() == 1 && this.poIndustry
-                    .getIndustryId().equals(getValue("cDivision"))) {
+        if (this.poIndustry == null) {
+            this.poIndustry = new Model_Industry();
+            this.poIndustry.setApplicationDriver(poGRider);
+            this.poIndustry.setXML("Model_Industry");
+            this.poIndustry.setTableName("Industry");
+            this.poIndustry.initialize();
+        }
+
+        String industryId = (String) getValue("cDivision");
+
+        if (!"".equals(industryId)) {
+            if (this.poIndustry.getEditMode() == EditMode.READY && this.poIndustry
+                    .getIndustryId().equals(industryId)) {
                 return this.poIndustry;
             }
-            this.poJSON = this.poIndustry.openRecord((String) getValue("cDivision"));
+            if (ReferenceCache.tryLoad("Industry", industryId, this.poIndustry)) {
+                return this.poIndustry;
+            }
+            this.poJSON = this.poIndustry.openRecord(industryId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Industry", industryId, this.poIndustry);
                 return this.poIndustry;
             }
             this.poIndustry.initialize();

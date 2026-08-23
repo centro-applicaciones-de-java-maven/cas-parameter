@@ -8,8 +8,8 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Province extends Model{
@@ -38,9 +38,8 @@ public class Model_Province extends Model{
             ID = poEntity.getMetaData().getColumnLabel(1);
 
             
-            //initialize other connections
-            poRegion = new ParamModels(poGRider).Region();
-            //end - initialize other connections
+            //poRegion is intentionally NOT constructed here - see Region()/setRegionId() below,
+            //which build it lazily on first access so opening this record never touches Region.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -66,18 +65,32 @@ public class Model_Province extends Model{
     }
     
     public JSONObject setRegionId(String regionId){
+        if (poRegion == null) {
+            poRegion = new Model_Region();
+            poRegion.setApplicationDriver(poGRider);
+            poRegion.setXML("Model_Region");
+            poRegion.setTableName("Region");
+            poRegion.initialize();
+        }
+
         poJSON = setValue("sRegionID", regionId);
-        
+
         if ("success".equals(poJSON.get("result"))){
             if (!regionId.isEmpty()) {
                 if (poRegion.getRegionId()== null ||
                     !poRegion.getRegionId().equals(regionId)) {
-                    
+
                     try {
-                        poJSON = poRegion.openRecord(regionId);
-                        
-                        if (!"success".equals(poJSON.get("result"))){
-                            return poJSON;
+                        //Region is a small, rarely-changing parameter table - serve repeat
+                        //lookups for the same id from memory instead of hitting the database.
+                        if (!ReferenceCache.tryLoad("Region", regionId, poRegion)) {
+                            poJSON = poRegion.openRecord(regionId);
+
+                            if (!"success".equals(poJSON.get("result"))){
+                                return poJSON;
+                            }
+
+                            ReferenceCache.store("Region", regionId, poRegion);
                         }
                     } catch (SQLException | GuanzonException e) {
                         poJSON = new JSONObject();
@@ -88,7 +101,7 @@ public class Model_Province extends Model{
                 }
             }
         }
-        
+
         return poJSON;
     }
     
@@ -121,11 +134,19 @@ public class Model_Province extends Model{
     }
     
     public Model_Region Region() throws SQLException, GuanzonException{
-        if (!getRegionId().isEmpty() && poRegion == null){
-            //load the province object if null but id has a value
-            setRegionId(getRegionId());
+        if (poRegion == null) {
+            poRegion = new Model_Region();
+            poRegion.setApplicationDriver(poGRider);
+            poRegion.setXML("Model_Region");
+            poRegion.setTableName("Region");
+            poRegion.initialize();
+
+            if (!getRegionId().isEmpty()){
+                //load the region object if just constructed but id has a value
+                setRegionId(getRegionId());
+            }
         }
-        
+
         return poRegion;
     }
     
