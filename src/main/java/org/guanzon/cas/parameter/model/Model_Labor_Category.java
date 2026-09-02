@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Labor_Category extends Model {
@@ -36,10 +36,10 @@ public class Model_Labor_Category extends Model {
 
             ID = "sLaborIDx";
             ID2 = "sCategrCd";
-            
-            ParamModels model = new ParamModels(poGRider);
-            poModelCategory = model.Category();
-            poLabor = model.Labor();            
+
+            //poModelCategory/poLabor are intentionally NOT constructed here - see Category()/
+            //Labor() below, which build them lazily on first access so opening this record never
+            //touches the Category/Labor tables.
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -48,14 +48,29 @@ public class Model_Labor_Category extends Model {
     }
     
     public Model_Category Category() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sCategrCd"))) {
+        if (poModelCategory == null) {
+            poModelCategory = new Model_Category();
+            poModelCategory.setApplicationDriver(poGRider);
+            poModelCategory.setXML("Model_Category");
+            poModelCategory.setTableName("Category");
+            poModelCategory.initialize();
+        }
+
+        String categoryId = (String) getValue("sCategrCd");
+
+        if (!"".equals(categoryId)) {
             if (poModelCategory.getEditMode() == EditMode.READY
-                    && poModelCategory.getCategoryId().equals((String) getValue("sCategrCd"))) {
+                    && poModelCategory.getCategoryId().equals(categoryId)) {
                 return poModelCategory;
             } else {
-                poJSON = poModelCategory.openRecord((String) getValue("sCategrCd"));
+                if (ReferenceCache.tryLoad("Category", categoryId, poModelCategory)) {
+                    return poModelCategory;
+                }
+
+                poJSON = poModelCategory.openRecord(categoryId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Category", categoryId, poModelCategory);
                     return poModelCategory;
                 } else {
                     poModelCategory.initialize();
@@ -67,17 +82,31 @@ public class Model_Labor_Category extends Model {
             return poModelCategory;
         }
     }
-    
+
     public Model_Labor Labor() throws SQLException, GuanzonException{
-        System.out.println("laborid == " + (String) getValue("sLaborIDx"));
-        if (!"".equals((String) getValue("sLaborIDx"))) {
+        if (poLabor == null) {
+            poLabor = new Model_Labor();
+            poLabor.setApplicationDriver(poGRider);
+            poLabor.setXML("Model_Labor");
+            poLabor.setTableName("Labor");
+            poLabor.initialize();
+        }
+
+        String laborId = (String) getValue("sLaborIDx");
+
+        if (!"".equals(laborId)) {
             if (poLabor.getEditMode() == EditMode.READY
-                    && poLabor.getLaborId().equals((String) getValue("sLaborIDx"))) {
+                    && poLabor.getLaborId().equals(laborId)) {
                 return poLabor;
             } else {
-                poJSON = poLabor.openRecord((String) getValue("sLaborIDx"));
+                if (ReferenceCache.tryLoad("Labor", laborId, poLabor)) {
+                    return poLabor;
+                }
+
+                poJSON = poLabor.openRecord(laborId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Labor", laborId, poLabor);
                     return poLabor;
                 } else {
                     poLabor.initialize();

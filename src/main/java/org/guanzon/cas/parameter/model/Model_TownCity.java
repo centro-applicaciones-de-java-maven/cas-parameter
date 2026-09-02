@@ -9,8 +9,8 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_TownCity extends Model{
@@ -40,9 +40,9 @@ public class Model_TownCity extends Model{
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poProvince = new ParamModels(poGRider).Province();
-            //end - initialize other connections
+            //poProvince is intentionally NOT constructed here - see Province()/setProvinceId()
+            //below, which build it lazily on first access so opening this record never touches
+            //the Province table.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -75,19 +75,33 @@ public class Model_TownCity extends Model{
         return (String) getValue("sZippCode");
     }
     
-    public JSONObject setProvinceId(String provinceId){     
+    public JSONObject setProvinceId(String provinceId){
+        if (poProvince == null) {
+            poProvince = new Model_Province();
+            poProvince.setApplicationDriver(poGRider);
+            poProvince.setXML("Model_Province");
+            poProvince.setTableName("Province");
+            poProvince.initialize();
+        }
+
         poJSON = setValue("sProvIDxx", provinceId);
-        
+
         if ("success".equals(poJSON.get("result"))){
             if (!provinceId.isEmpty()) {
                 if (poProvince.getProvinceId() == null ||
                     !poProvince.getProvinceId().equals(provinceId)) {
-                    
+
                     try {
-                        poJSON = poProvince.openRecord(provinceId);
-                        
-                        if (!"success".equals(poJSON.get("result"))){
-                            return poJSON;
+                        //Province is a small, rarely-changing parameter table - serve repeat
+                        //lookups for the same id from memory instead of hitting the database.
+                        if (!ReferenceCache.tryLoad("Province", provinceId, poProvince)) {
+                            poJSON = poProvince.openRecord(provinceId);
+
+                            if (!"success".equals(poJSON.get("result"))){
+                                return poJSON;
+                            }
+
+                            ReferenceCache.store("Province", provinceId, poProvince);
                         }
                     } catch (SQLException | GuanzonException e) {
                         poJSON = new JSONObject();
@@ -98,7 +112,7 @@ public class Model_TownCity extends Model{
                 }
             }
         }
-        
+
         return poJSON;
     }
     
@@ -155,11 +169,19 @@ public class Model_TownCity extends Model{
     }
     
     public Model_Province Province() throws SQLException, GuanzonException{
-        if (!getProvinceId().isEmpty() && poProvince == null){
-            //load the province object if null but id has a value
-            setProvinceId(getProvinceId());
+        if (poProvince == null) {
+            poProvince = new Model_Province();
+            poProvince.setApplicationDriver(poGRider);
+            poProvince.setXML("Model_Province");
+            poProvince.setTableName("Province");
+            poProvince.initialize();
+
+            if (!getProvinceId().isEmpty()){
+                //load the province object if just constructed but id has a value
+                setProvinceId(getProvinceId());
+            }
         }
-        
+
         return poProvince;
     }
     

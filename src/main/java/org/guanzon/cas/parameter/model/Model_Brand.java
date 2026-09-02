@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Brand extends Model {
@@ -34,10 +34,9 @@ public class Model_Brand extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poIndustry = new ParamModels(poGRider).Industry();
-            //end - initialize other connections
-            
+            //poIndustry is intentionally NOT constructed here - see Industry() below, which
+            //builds it lazily on first access so opening this record never touches Industry.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -100,15 +99,31 @@ public class Model_Brand extends Model {
     }
     
     public Model_Industry Industry() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sIndstCdx"))){
-            if (poIndustry.getEditMode() == EditMode.READY && 
-                poIndustry.getIndustryId().equals((String) getValue("sIndstCdx")))
+        if (poIndustry == null) {
+            poIndustry = new Model_Industry();
+            poIndustry.setApplicationDriver(poGRider);
+            poIndustry.setXML("Model_Industry");
+            poIndustry.setTableName("Industry");
+            poIndustry.initialize();
+        }
+
+        String industryId = (String) getValue("sIndstCdx");
+
+        if (!"".equals(industryId)){
+            if (poIndustry.getEditMode() == EditMode.READY &&
+                poIndustry.getIndustryId().equals(industryId))
                 return poIndustry;
             else{
-                poJSON = poIndustry.openRecord((String) getValue("sIndstCdx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Industry", industryId, poIndustry)) {
                     return poIndustry;
+                }
+
+                poJSON = poIndustry.openRecord(industryId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Industry", industryId, poIndustry);
+                    return poIndustry;
+                }
                 else {
                     poIndustry.initialize();
                     return poIndustry;

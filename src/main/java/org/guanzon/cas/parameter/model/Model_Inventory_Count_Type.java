@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Inventory_Count_Type extends Model {
@@ -33,8 +33,9 @@ public class Model_Inventory_Count_Type extends Model {
             poEntity.updateObject("dModified", poGRider.getServerDate());
             //end - assign default values
 
-            poDepartment = new ParamModels(poGRider).Department();
-            poIndustry = new ParamModels(poGRider).Industry();
+            //poDepartment/poIndustry are intentionally NOT constructed here - see Department()/
+            //Industry() below, which build them lazily on first access so opening this record
+            //never touches the Department/Industry tables.
             poEntity.insertRow();
             poEntity.moveToCurrentRow();
 
@@ -151,14 +152,29 @@ public class Model_Inventory_Count_Type extends Model {
     }
 
     public Model_Department Department() throws SQLException, GuanzonException {
-        if (!"".equals((String) getValue("sDeptIDxx"))) {
+        if (poDepartment == null) {
+            poDepartment = new Model_Department();
+            poDepartment.setApplicationDriver(poGRider);
+            poDepartment.setXML("Model_Department");
+            poDepartment.setTableName("Department");
+            poDepartment.initialize();
+        }
+
+        String departmentId = (String) getValue("sDeptIDxx");
+
+        if (!"".equals(departmentId)) {
             if (poDepartment.getEditMode() == EditMode.READY
-                    && poDepartment.getDepartmentId().equals((String) getValue("sDeptIDxx"))) {
+                    && poDepartment.getDepartmentId().equals(departmentId)) {
                 return poDepartment;
             } else {
-                poJSON = poDepartment.openRecord((String) getValue("sDeptIDxx"));
+                if (ReferenceCache.tryLoad("Department", departmentId, poDepartment)) {
+                    return poDepartment;
+                }
+
+                poJSON = poDepartment.openRecord(departmentId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Department", departmentId, poDepartment);
                     return poDepartment;
                 } else {
                     poDepartment.initialize();
@@ -172,14 +188,29 @@ public class Model_Inventory_Count_Type extends Model {
     }
 
     public Model_Industry Industry() throws SQLException, GuanzonException {
-        if (!"".equals((String) getValue("sIndstCdx"))) {
+        if (poIndustry == null) {
+            poIndustry = new Model_Industry();
+            poIndustry.setApplicationDriver(poGRider);
+            poIndustry.setXML("Model_Industry");
+            poIndustry.setTableName("Industry");
+            poIndustry.initialize();
+        }
+
+        String industryId = (String) getValue("sIndstCdx");
+
+        if (!"".equals(industryId)) {
             if (poIndustry.getEditMode() == EditMode.READY
-                    && poIndustry.getIndustryId().equals((String) getValue("sIndstCdx"))) {
+                    && poIndustry.getIndustryId().equals(industryId)) {
                 return poIndustry;
             } else {
-                poJSON = poIndustry.openRecord((String) getValue("sIndstCdx"));
+                if (ReferenceCache.tryLoad("Industry", industryId, poIndustry)) {
+                    return poIndustry;
+                }
+
+                poJSON = poIndustry.openRecord(industryId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Industry", industryId, poIndustry);
                     return poIndustry;
                 } else {
                     poIndustry.initialize();

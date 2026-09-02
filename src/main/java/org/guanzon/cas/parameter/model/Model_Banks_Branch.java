@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Banks_Branch extends Model {
@@ -34,11 +34,10 @@ private Model_TownCity poTown;
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poBanks = new ParamModels(poGRider).Banks();
-            poTown = new ParamModels(poGRider).TownCity();
-            //end - initialize other connections
-            
+            //poBanks/poTown are intentionally NOT constructed here - see Banks()/TownCity() below,
+            //which build them lazily on first access so opening this record never touches the
+            //Banks/TownCity tables.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -47,15 +46,31 @@ private Model_TownCity poTown;
     }
     
     public Model_Banks Banks() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBankIDxx"))){
-            if (poBanks.getEditMode() == EditMode.READY && 
-                poBanks.getBankID().equals((String) getValue("sBankIDxx")))
+        if (poBanks == null) {
+            poBanks = new Model_Banks();
+            poBanks.setApplicationDriver(poGRider);
+            poBanks.setXML("Model_Banks");
+            poBanks.setTableName("Banks");
+            poBanks.initialize();
+        }
+
+        String bankId = (String) getValue("sBankIDxx");
+
+        if (!"".equals(bankId)){
+            if (poBanks.getEditMode() == EditMode.READY &&
+                poBanks.getBankID().equals(bankId))
                 return poBanks;
             else{
-                poJSON = poBanks.openRecord((String) getValue("sBankIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Banks", bankId, poBanks)) {
                     return poBanks;
+                }
+
+                poJSON = poBanks.openRecord(bankId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Banks", bankId, poBanks);
+                    return poBanks;
+                }
                 else {
                     poBanks.initialize();
                     return poBanks;
@@ -66,17 +81,33 @@ private Model_TownCity poTown;
             return poBanks;
         }
     }
-    
+
     public Model_TownCity TownCity() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTown.getEditMode() == EditMode.READY && 
-                poTown.getTownId().equals((String) getValue("sTownIDxx")))
+        if (poTown == null) {
+            poTown = new Model_TownCity();
+            poTown.setApplicationDriver(poGRider);
+            poTown.setXML("Model_TownCity");
+            poTown.setTableName("TownCity");
+            poTown.initialize();
+        }
+
+        String townId = (String) getValue("sTownIDxx");
+
+        if (!"".equals(townId)){
+            if (poTown.getEditMode() == EditMode.READY &&
+                poTown.getTownId().equals(townId))
                 return poTown;
             else{
-                poJSON = poTown.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("TownCity", townId, poTown)) {
                     return poTown;
+                }
+
+                poJSON = poTown.openRecord(townId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("TownCity", townId, poTown);
+                    return poTown;
+                }
                 else {
                     poTown.initialize();
                     return poTown;

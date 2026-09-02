@@ -24,7 +24,6 @@ import org.guanzon.cas.parameter.model.Model_Department;
 import org.guanzon.cas.parameter.model.Model_Industry;
 import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Inv_Type;
-import org.guanzon.cas.parameter.model.Model_Inventory_Child_Unit;
 import org.guanzon.cas.parameter.model.Model_Inventory_Count_Type;
 import org.guanzon.cas.parameter.model.Model_Labor;
 import org.guanzon.cas.parameter.model.Model_Labor_Category;
@@ -785,20 +784,6 @@ public class ParamModels {
         return this.poConversion;
     }
 
-    public Model_Inventory_Child_Unit Inventory_Child_Unit() {
-        if (this.poGRider == null) {
-            System.err.println("ParamModels.Inventory_Child_Unit: Application driver is not set.");
-            return null;
-        }
-        if (this.poInvChildUnit == null) {
-            this.poInvChildUnit = new Model_Inventory_Child_Unit();
-            this.poInvChildUnit.setApplicationDriver(this.poGRider);
-            this.poInvChildUnit.setXML("Model_Inventory_Child_Unit");
-            this.poInvChildUnit.setTableName("Inventory_Child_Unit");
-            this.poInvChildUnit.initialize();
-        }
-        return this.poInvChildUnit;
-    }
     private final GRiderCAS poGRider;
 
     private Model_Barangay poBarangay;
@@ -844,6 +829,5 @@ public class ParamModels {
     private Model_xxxTransactionSource poTransactionSource;
     private Model_xxxTransactionSourceTable poTransactionSourceTable;
     private Model_Project poProject;
-    private Model_Inventory_Child_Unit poInvChildUnit;
     private Model_Unit_Conversion poConversion;
 }

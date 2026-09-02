@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Inv_Location extends Model {
@@ -35,11 +35,9 @@ public class Model_Inv_Location extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poWarehouse = new ParamModels(poGRider).Warehouse();
-            poSection = new ParamModels(poGRider).Section();
-            
-            //end - initialize other connections
+            //poWarehouse/poSection are intentionally NOT constructed here - see Warehouse()/
+            //Section() below, which build them lazily on first access so opening this record
+            //never touches the Warehouse/Section tables.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -110,15 +108,31 @@ public class Model_Inv_Location extends Model {
     }
     
     public Model_Warehouse Warehouse() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sWHouseID"))){
-            if (poWarehouse.getEditMode() == EditMode.READY && 
-                poWarehouse.getWarehouseId().equals((String) getValue("sWHouseID")))
+        if (poWarehouse == null) {
+            poWarehouse = new Model_Warehouse();
+            poWarehouse.setApplicationDriver(poGRider);
+            poWarehouse.setXML("Model_Warehouse");
+            poWarehouse.setTableName("Warehouse");
+            poWarehouse.initialize();
+        }
+
+        String warehouseId = (String) getValue("sWHouseID");
+
+        if (!"".equals(warehouseId)){
+            if (poWarehouse.getEditMode() == EditMode.READY &&
+                poWarehouse.getWarehouseId().equals(warehouseId))
                 return poWarehouse;
             else{
-                poJSON = poWarehouse.openRecord((String) getValue("sWHouseID"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Warehouse", warehouseId, poWarehouse)) {
                     return poWarehouse;
+                }
+
+                poJSON = poWarehouse.openRecord(warehouseId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Warehouse", warehouseId, poWarehouse);
+                    return poWarehouse;
+                }
                 else {
                     poWarehouse.initialize();
                     return poWarehouse;
@@ -129,17 +143,33 @@ public class Model_Inv_Location extends Model {
             return poWarehouse;
         }
     }
-    
+
     public Model_Section Section() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sSectnIDx"))){
-            if (poSection.getEditMode() == EditMode.READY && 
-                poSection.getSectionId().equals((String) getValue("sSectnIDx")))
+        if (poSection == null) {
+            poSection = new Model_Section();
+            poSection.setApplicationDriver(poGRider);
+            poSection.setXML("Model_Section");
+            poSection.setTableName("Section");
+            poSection.initialize();
+        }
+
+        String sectionId = (String) getValue("sSectnIDx");
+
+        if (!"".equals(sectionId)){
+            if (poSection.getEditMode() == EditMode.READY &&
+                poSection.getSectionId().equals(sectionId))
                 return poSection;
             else{
-                poJSON = poSection.openRecord((String) getValue("sSectnIDx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Section", sectionId, poSection)) {
                     return poSection;
+                }
+
+                poJSON = poSection.openRecord(sectionId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Section", sectionId, poSection);
+                    return poSection;
+                }
                 else {
                     poSection.initialize();
                     return poSection;

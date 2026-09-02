@@ -745,24 +745,6 @@ public class ParamControllers {
         return this.poTransactionSourceTable;
     }
     
-    public InventoryChildUnit InventoryChildUnit() throws SQLException, GuanzonException {
-        if (poGRider == null) {
-            poLogWrapper.severe("CashFlowcontrollers.InventoryChildUnit: Application driver is not set.");
-            return null;
-        }
-
-        if (poInvChildUnit != null) {
-            return poInvChildUnit;
-        }
-
-        poInvChildUnit = new InventoryChildUnit();
-        poInvChildUnit.setApplicationDriver(poGRider);
-        poInvChildUnit.setWithParentClass(false);
-        poInvChildUnit.setLogWrapper(poLogWrapper);
-        poInvChildUnit.initialize();
-        return poInvChildUnit;
-    }
-
     public Project Project() throws SQLException, GuanzonException {
         if (this.poGRider == null) {
             this.poLogWrapper.severe("DeliveryParamController.TransactionSourceTable: Application driver is not set.");
@@ -840,6 +822,5 @@ public class ParamControllers {
     private TransactionSource poTransactionSource;
     private TransactionSourceTable poTransactionSourceTable;
     private Project poProject;
-    private InventoryChildUnit poInvChildUnit;
     private UnitConversion poUnitConversion;
 }

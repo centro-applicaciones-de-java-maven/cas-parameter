@@ -6,8 +6,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Category_Level2 extends Model {
@@ -34,11 +34,10 @@ public class Model_Category_Level2 extends Model {
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poCategory = new ParamModels(poGRider).Category();
-            poInvType = new ParamModels(poGRider).InventoryType();
-            //end - initialize other connections
-            
+            //poCategory/poInvType are intentionally NOT constructed here - see Category()/InvType()
+            //below, which build them lazily on first access so opening this record never touches
+            //the Category/Inv_Type tables.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -47,15 +46,31 @@ public class Model_Category_Level2 extends Model {
     }
     
     public Model_Category Category() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sMainCatx"))){
-            if (poCategory.getEditMode() == EditMode.READY && 
-                poCategory.getCategoryId().equals((String) getValue("sMainCatx")))
+        if (poCategory == null) {
+            poCategory = new Model_Category();
+            poCategory.setApplicationDriver(poGRider);
+            poCategory.setXML("Model_Category");
+            poCategory.setTableName("Category");
+            poCategory.initialize();
+        }
+
+        String categoryId = (String) getValue("sMainCatx");
+
+        if (!"".equals(categoryId)){
+            if (poCategory.getEditMode() == EditMode.READY &&
+                poCategory.getCategoryId().equals(categoryId))
                 return poCategory;
             else{
-                poJSON = poCategory.openRecord((String) getValue("sMainCatx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Category", categoryId, poCategory)) {
                     return poCategory;
+                }
+
+                poJSON = poCategory.openRecord(categoryId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Category", categoryId, poCategory);
+                    return poCategory;
+                }
                 else {
                     poCategory.initialize();
                     return poCategory;
@@ -67,15 +82,31 @@ public class Model_Category_Level2 extends Model {
         }
     }
     public Model_Inv_Type InvType() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sInvTypCd"))){
-            if (poInvType.getEditMode() == EditMode.READY && 
-                poInvType.getInventoryTypeId().equals((String) getValue("sInvTypCd")))
+        if (poInvType == null) {
+            poInvType = new Model_Inv_Type();
+            poInvType.setApplicationDriver(poGRider);
+            poInvType.setXML("Model_Inv_Type");
+            poInvType.setTableName("Inv_Type");
+            poInvType.initialize();
+        }
+
+        String invTypeId = (String) getValue("sInvTypCd");
+
+        if (!"".equals(invTypeId)){
+            if (poInvType.getEditMode() == EditMode.READY &&
+                poInvType.getInventoryTypeId().equals(invTypeId))
                 return poInvType;
             else{
-                poJSON = poInvType.openRecord((String) getValue("sInvTypCd"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Inv_Type", invTypeId, poInvType)) {
                     return poInvType;
+                }
+
+                poJSON = poInvType.openRecord(invTypeId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Inv_Type", invTypeId, poInvType);
+                    return poInvType;
+                }
                 else {
                     poInvType.initialize();
                     return poInvType;
