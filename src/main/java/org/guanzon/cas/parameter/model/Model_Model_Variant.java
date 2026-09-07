@@ -138,7 +138,7 @@ public class Model_Model_Variant extends Model {
             poModel.initialize();
         }
 
-        String modelId = (String) getValue("sModelIDx");
+        String modelId = (String) (getValue("sModelIDx") == null ? "" : getValue("sModelIDx"));
 
         if (!"".equals(modelId)){
             if (poModel.getEditMode() == EditMode.READY &&
@@ -177,7 +177,7 @@ public class Model_Model_Variant extends Model {
             poColor.initialize();
         }
 
-        String colorId = (String) getValue("sColorIDx");
+        String colorId = (String) (getValue("sColorIDx") == null ? "" : getValue("sColorIDx"));
 
         if (!"".equals(colorId)){
             if (poColor.getEditMode() == EditMode.READY &&
