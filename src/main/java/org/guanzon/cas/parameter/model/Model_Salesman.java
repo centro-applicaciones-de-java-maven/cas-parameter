@@ -40,8 +40,6 @@ public class Model_Salesman extends Model {
         }
     }
     
-   
-    
     public JSONObject setBankID(String bankId) {
         return setValue("sBankIDxx", bankId);
     }
